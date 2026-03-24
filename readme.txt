@@ -59,7 +59,9 @@ Yes. AI Valve includes a workaround that checks whether the event dispatcher is 
 
 Yes. Each subsite has its own log table, settings, and budgets.
 
+= What happens when a plugin is blocked? =
 
+The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/ai-valve/blob/main/docs/how-blocking-works.md) for the full explanation.
 
 == Changelog ==
 
