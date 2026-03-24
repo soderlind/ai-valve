@@ -17,8 +17,11 @@ use AIValve\Tracking\UsageTracker;
 final class Plugin {
 
 	public function register(): void {
-		// Bail early if AI support is absent (pre-WP 7).
+		// Bail early if AI support is absent (pre-WP 7) or disabled.
 		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
+			return;
+		}
+		if ( function_exists( 'wp_supports_ai' ) && ! wp_supports_ai() ) {
 			return;
 		}
 

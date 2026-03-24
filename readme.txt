@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,16 @@ Yes. Each subsite has its own log table, settings, and budgets.
 
 == Changelog ==
 
+= 0.2.0 =
+* Fixed: Status column widened — denial reasons were silently truncated.
+* Fixed: "Denied" log filter now matches all denial variants.
+* Fixed: Respect the `wp_supports_ai` filter as a global kill switch.
+* Added: Date range filter (From / To) on the Logs tab.
+* Added: Context breakdown table on the Dashboard tab.
+* Added: Per-plugin budget threshold alerts (admin notices).
+* Added: CSV export button on the Logs tab.
+* Changed: Logs filter bar uses flex layout for better fit.
+
 = 0.1.0 =
 * Initial release.
 * Per-plugin access control (allow/deny).
@@ -76,6 +86,9 @@ Yes. Each subsite has its own log table, settings, and budgets.
 * GitHub release updater for automatic updates.
 
 == Upgrade Notice ==
+
+= 0.2.0 =
+Bug fixes for log status storage and filtering. New: date range filter, context breakdown, per-plugin alerts, CSV export.
 
 = 0.1.0 =
 Initial release.

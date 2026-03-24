@@ -3,7 +3,7 @@
  * Plugin Name: AI Valve
  * Plugin URI:  https://github.com/soderlind/ai-valve
  * Description: Control, meter, and permission-gate AI usage from plugins that connect through the WordPress 7 AI connector.
- * Version:     0.1.0
+ * Version:     0.2.0
  * Requires at least: 7.0
  * Requires PHP: 8.3
  * Author:      Per Søderlind
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
-define( 'AI_VALVE_VERSION', '0.1.0' );
+define( 'AI_VALVE_VERSION', '0.2.0' );
 define( 'AI_VALVE_FILE', __FILE__ );
 define( 'AI_VALVE_DIR', __DIR__ );
 define( 'AI_VALVE_BASENAME', plugin_basename( __FILE__ ) );

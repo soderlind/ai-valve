@@ -75,12 +75,51 @@ final class AlertManager {
 			);
 		}
 
+		// Check per-plugin budgets.
+		$plugin_budgets = (array) $this->settings->get( 'plugin_budgets', [] );
+		foreach ( $plugin_budgets as $slug => $limits ) {
+			$slug = (string) $slug;
+			$p_daily_pct = $this->usage_tracker->plugin_daily_pct( $slug );
+			if ( $p_daily_pct >= 100 ) {
+				$messages[] = sprintf(
+					/* translators: 1: plugin slug 2: percentage */
+					__( 'AI Valve: %1$s daily token budget exceeded (%2$s%% used).', 'ai-valve' ),
+					'<strong>' . esc_html( $slug ) . '</strong>',
+					number_format_i18n( (int) $p_daily_pct )
+				);
+			} elseif ( $p_daily_pct >= $threshold ) {
+				$messages[] = sprintf(
+					/* translators: 1: plugin slug 2: percentage */
+					__( 'AI Valve: %1$s daily token usage at %2$s%% of budget.', 'ai-valve' ),
+					'<strong>' . esc_html( $slug ) . '</strong>',
+					number_format_i18n( (int) $p_daily_pct )
+				);
+			}
+
+			$p_monthly_pct = $this->usage_tracker->plugin_monthly_pct( $slug );
+			if ( $p_monthly_pct >= 100 ) {
+				$messages[] = sprintf(
+					/* translators: 1: plugin slug 2: percentage */
+					__( 'AI Valve: %1$s monthly token budget exceeded (%2$s%% used).', 'ai-valve' ),
+					'<strong>' . esc_html( $slug ) . '</strong>',
+					number_format_i18n( (int) $p_monthly_pct )
+				);
+			} elseif ( $p_monthly_pct >= $threshold ) {
+				$messages[] = sprintf(
+					/* translators: 1: plugin slug 2: percentage */
+					__( 'AI Valve: %1$s monthly token usage at %2$s%% of budget.', 'ai-valve' ),
+					'<strong>' . esc_html( $slug ) . '</strong>',
+					number_format_i18n( (int) $p_monthly_pct )
+				);
+			}
+		}
+
 		foreach ( $messages as $msg ) {
 			$type = str_contains( $msg, 'exceeded' ) ? 'error' : 'warning';
 			printf(
 				'<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
 				esc_attr( $type ),
-				esc_html( $msg )
+				wp_kses( $msg, [ 'strong' => [] ] )
 			);
 		}
 	}

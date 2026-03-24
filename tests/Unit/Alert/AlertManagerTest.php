@@ -116,6 +116,7 @@ final class AlertManagerTest extends TestCase {
 		Functions\when( 'esc_attr' )->returnArg();
 		Functions\when( 'esc_html' )->returnArg();
 		Functions\when( '__' )->returnArg();
+		Functions\when( 'wp_kses' )->returnArg();
 
 		$settings = new Settings();
 		$tracker  = new UsageTracker( $settings );
@@ -162,6 +163,7 @@ final class AlertManagerTest extends TestCase {
 		Functions\when( 'esc_attr' )->returnArg();
 		Functions\when( 'esc_html' )->returnArg();
 		Functions\when( '__' )->returnArg();
+		Functions\when( 'wp_kses' )->returnArg();
 		Functions\when( 'is_email' )->justReturn( false );
 		Functions\when( 'get_transient' )->justReturn( false );
 
@@ -248,6 +250,7 @@ final class AlertManagerTest extends TestCase {
 		Functions\when( 'esc_attr' )->returnArg();
 		Functions\when( 'esc_html' )->returnArg();
 		Functions\when( '__' )->returnArg();
+		Functions\when( 'wp_kses' )->returnArg();
 		Functions\when( 'is_email' )->justReturn( true );
 		Functions\when( 'get_transient' )->justReturn( false );
 		Functions\when( 'get_bloginfo' )->justReturn( 'Test Site' );
@@ -300,6 +303,7 @@ final class AlertManagerTest extends TestCase {
 		Functions\when( 'esc_attr' )->returnArg();
 		Functions\when( 'esc_html' )->returnArg();
 		Functions\when( '__' )->returnArg();
+		Functions\when( 'wp_kses' )->returnArg();
 		Functions\when( 'is_email' )->justReturn( true );
 		Functions\when( 'get_transient' )->justReturn( 1 ); // Already sent.
 

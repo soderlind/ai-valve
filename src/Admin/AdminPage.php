@@ -26,6 +26,7 @@ final class AdminPage {
 	public function register(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu_page' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
+		add_action( 'admin_post_ai_valve_export_csv', [ $this, 'handle_csv_export' ] );
 	}
 
 	/* ------------------------------------------------------------------
@@ -56,6 +57,66 @@ final class AdminPage {
 				'default'           => Settings::defaults(),
 			]
 		);
+	}
+
+	/* ------------------------------------------------------------------
+	 * CSV export
+	 * ----------------------------------------------------------------*/
+
+	public function handle_csv_export(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Unauthorized.', 'ai-valve' ), 403 );
+		}
+
+		check_admin_referer( 'ai_valve_export_csv' );
+
+		$repo    = new LogRepository();
+		$filters = [
+			'plugin_slug' => sanitize_key( $_GET['filter_plugin'] ?? '' ),
+			'provider_id' => sanitize_key( $_GET['filter_provider'] ?? '' ),
+			'context'     => sanitize_key( $_GET['filter_context'] ?? '' ),
+			'status'      => sanitize_text_field( $_GET['filter_status'] ?? '' ),
+			'per_page'    => 10000,
+			'page'        => 1,
+		];
+
+		$date_from = sanitize_text_field( $_GET['filter_date_from'] ?? '' );
+		$date_to   = sanitize_text_field( $_GET['filter_date_to'] ?? '' );
+		if ( $date_from && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_from ) ) {
+			$filters['date_from'] = $date_from . ' 00:00:00';
+		}
+		if ( $date_to && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_to ) ) {
+			$filters['date_to'] = $date_to . ' 23:59:59';
+		}
+
+		$result = $repo->query( $filters );
+
+		$filename = 'ai-valve-logs-' . gmdate( 'Y-m-d' ) . '.csv';
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+
+		$output = fopen( 'php://output', 'w' );
+		fputcsv( $output, [ 'Time', 'Plugin', 'Provider', 'Model', 'Capability', 'Context', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Status' ] );
+
+		foreach ( $result['items'] as $row ) {
+			fputcsv( $output, [
+				$row->created_at ?? '',
+				$row->plugin_slug ?? '',
+				$row->provider_id ?? '',
+				$row->model_id ?? '',
+				$row->capability ?? '',
+				$row->context ?? '',
+				$row->prompt_tokens ?? 0,
+				$row->completion_tokens ?? 0,
+				$row->total_tokens ?? 0,
+				$row->status ?? '',
+			] );
+		}
+
+		fclose( $output );
+		exit;
 	}
 
 	/* ------------------------------------------------------------------
@@ -114,6 +175,7 @@ final class AdminPage {
 		$monthly_totals = $repo->totals( $month . '-01 00:00:00', $today . ' 23:59:59' );
 		$by_plugin      = $repo->totals_by_plugin( $month . '-01 00:00:00', $today . ' 23:59:59' );
 		$by_provider    = $repo->totals_by_provider( $month . '-01 00:00:00', $today . ' 23:59:59' );
+		$by_context     = $repo->totals_by_context( $month . '-01 00:00:00', $today . ' 23:59:59' );
 
 		$recent = $repo->query( [ 'per_page' => 10 ] );
 
@@ -296,6 +358,28 @@ final class AdminPage {
 				<?php foreach ( $by_provider as $row ) : ?>
 				<tr>
 					<td><?php echo esc_html( $row['provider_id'] ); ?></td>
+					<td style="text-align: right;"><?php echo esc_html( number_format_i18n( $row['request_count'] ) ); ?></td>
+					<td style="text-align: right;"><?php echo esc_html( number_format_i18n( $row['total_tokens'] ) ); ?></td>
+				</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+		<?php endif; ?>
+
+		<?php if ( $by_context ) : ?>
+		<h2><?php esc_html_e( 'Contexts (This Month)', 'ai-valve' ); ?></h2>
+		<table class="widefat fixed striped" style="max-width: 600px;">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Context', 'ai-valve' ); ?></th>
+					<th style="text-align: right;"><?php esc_html_e( 'Requests', 'ai-valve' ); ?></th>
+					<th style="text-align: right;"><?php esc_html_e( 'Tokens', 'ai-valve' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $by_context as $row ) : ?>
+				<tr>
+					<td><?php echo esc_html( $row['context'] ); ?></td>
 					<td style="text-align: right;"><?php echo esc_html( number_format_i18n( $row['request_count'] ) ); ?></td>
 					<td style="text-align: right;"><?php echo esc_html( number_format_i18n( $row['total_tokens'] ) ); ?></td>
 				</tr>
@@ -550,9 +634,19 @@ final class AdminPage {
 			'provider_id' => sanitize_key( $_GET['filter_provider'] ?? '' ),
 			'context'     => sanitize_key( $_GET['filter_context'] ?? '' ),
 			'status'      => sanitize_text_field( $_GET['filter_status'] ?? '' ),
+			'date_from'   => sanitize_text_field( $_GET['filter_date_from'] ?? '' ),
+			'date_to'     => sanitize_text_field( $_GET['filter_date_to'] ?? '' ),
 			'per_page'    => 25,
 			'page'        => max( 1, (int) ( $_GET['paged'] ?? 1 ) ),
 		];
+
+		// Normalise date filters to datetime strings for SQL.
+		if ( $filters['date_from'] && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $filters['date_from'] ) ) {
+			$filters['date_from'] .= ' 00:00:00';
+		}
+		if ( $filters['date_to'] && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $filters['date_to'] ) ) {
+			$filters['date_to'] .= ' 23:59:59';
+		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$result      = $repo->query( $filters );
@@ -563,19 +657,20 @@ final class AdminPage {
 		<form method="get" action="<?php echo esc_url( $base_url ); ?>" style="margin-bottom: 1em;">
 			<input type="hidden" name="page" value="<?php echo esc_attr( self::SLUG ); ?>">
 			<input type="hidden" name="tab" value="logs">
+			<div style="display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-end;">
 			<label>
 				<?php esc_html_e( 'Plugin:', 'ai-valve' ); ?>
 				<input type="text" name="filter_plugin"
 					   value="<?php echo esc_attr( $filters['plugin_slug'] ); ?>"
-					   class="regular-text" placeholder="e.g. vmfa-ai-organizer">
+					   style="width: 180px;" placeholder="e.g. vmfa-ai-organizer">
 			</label>
-			<label style="margin-left: 1em;">
+			<label>
 				<?php esc_html_e( 'Provider:', 'ai-valve' ); ?>
 				<input type="text" name="filter_provider"
 					   value="<?php echo esc_attr( $filters['provider_id'] ); ?>"
-					   class="regular-text" placeholder="e.g. openai">
+					   style="width: 180px;" placeholder="e.g. openai">
 			</label>
-			<label style="margin-left: 1em;">
+			<label>
 				<?php esc_html_e( 'Context:', 'ai-valve' ); ?>
 				<select name="filter_context">
 					<option value=""><?php esc_html_e( 'All', 'ai-valve' ); ?></option>
@@ -587,7 +682,7 @@ final class AdminPage {
 					<?php endforeach; ?>
 				</select>
 			</label>
-			<label style="margin-left: 1em;">
+			<label>
 				<?php esc_html_e( 'Status:', 'ai-valve' ); ?>
 				<select name="filter_status">
 					<option value=""><?php esc_html_e( 'All', 'ai-valve' ); ?></option>
@@ -599,7 +694,18 @@ final class AdminPage {
 					</option>
 				</select>
 			</label>
+			<label>
+				<?php esc_html_e( 'From:', 'ai-valve' ); ?>
+				<input type="date" name="filter_date_from"
+					   value="<?php echo esc_attr( $filters['date_from'] ); ?>">
+			</label>
+			<label>
+				<?php esc_html_e( 'To:', 'ai-valve' ); ?>
+				<input type="date" name="filter_date_to"
+					   value="<?php echo esc_attr( $filters['date_to'] ); ?>">
+			</label>
 			<?php submit_button( __( 'Filter', 'ai-valve' ), 'secondary', 'submit', false ); ?>
+			</div>
 		</form>
 
 		<p>
@@ -609,7 +715,26 @@ final class AdminPage {
 				esc_html__( '%s entries found.', 'ai-valve' ),
 				'<strong>' . esc_html( number_format_i18n( $result['total'] ) ) . '</strong>'
 			);
+
+			// Build CSV export URL with current filters.
+			$export_args = [
+				'action'           => 'ai_valve_export_csv',
+				'_wpnonce'         => wp_create_nonce( 'ai_valve_export_csv' ),
+				'filter_plugin'    => $filters['plugin_slug'],
+				'filter_provider'  => $filters['provider_id'],
+				'filter_context'   => $filters['context'],
+				'filter_status'    => $filters['status'],
+				'filter_date_from' => sanitize_text_field( $_GET['filter_date_from'] ?? '' ),
+				'filter_date_to'   => sanitize_text_field( $_GET['filter_date_to'] ?? '' ),
+			];
+			$export_url = add_query_arg(
+				array_filter( $export_args ),
+				admin_url( 'admin-post.php' )
+			);
 			?>
+			<a href="<?php echo esc_url( $export_url ); ?>" class="button button-secondary" style="margin-left: 1em;">
+				<?php esc_html_e( 'Export CSV', 'ai-valve' ); ?>
+			</a>
 		</p>
 
 		<?php

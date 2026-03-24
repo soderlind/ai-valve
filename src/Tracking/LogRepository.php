@@ -10,7 +10,7 @@ namespace AIValve\Tracking;
 final class LogRepository {
 
 	private const TABLE_SUFFIX  = 'ai_valve_log';
-	private const SCHEMA_VERSION = 1;
+	private const SCHEMA_VERSION = 2;
 	private const VERSION_KEY    = 'ai_valve_db_version';
 
 	/* ------------------------------------------------------------------
@@ -42,7 +42,7 @@ final class LogRepository {
 			prompt_tokens   INT UNSIGNED    NOT NULL DEFAULT 0,
 			completion_tokens INT UNSIGNED  NOT NULL DEFAULT 0,
 			total_tokens    INT UNSIGNED    NOT NULL DEFAULT 0,
-			status          VARCHAR(16)     NOT NULL DEFAULT 'allowed',
+			status          VARCHAR(64)     NOT NULL DEFAULT 'allowed',
 			created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			KEY idx_plugin_slug (plugin_slug),
@@ -53,6 +53,12 @@ final class LogRepository {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+
+		// Migrate existing tables: widen status column if upgrading from v1.
+		$current_version = (int) get_option( self::VERSION_KEY, 0 );
+		if ( $current_version < 2 ) {
+			$wpdb->query( "ALTER TABLE {$table} MODIFY status VARCHAR(64) NOT NULL DEFAULT 'allowed'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		}
 
 		update_option( self::VERSION_KEY, self::SCHEMA_VERSION, true );
 	}
@@ -147,8 +153,13 @@ final class LogRepository {
 			$values[] = $filters['context'];
 		}
 		if ( ! empty( $filters['status'] ) ) {
-			$where[]  = 'status = %s';
-			$values[] = $filters['status'];
+			if ( 'denied' === $filters['status'] ) {
+				$where[]  = 'status LIKE %s';
+				$values[] = 'denied%';
+			} else {
+				$where[]  = 'status = %s';
+				$values[] = $filters['status'];
+			}
 		}
 		if ( ! empty( $filters['date_from'] ) ) {
 			$where[]  = 'created_at >= %s';
@@ -248,6 +259,40 @@ final class LogRepository {
 		return array_map(
 			static fn( array $r ) => [
 				'plugin_slug'   => $r['plugin_slug'],
+				'total_tokens'  => (int) $r['total_tokens'],
+				'request_count' => (int) $r['request_count'],
+			],
+			$rows ?: []
+		);
+	}
+
+	/**
+	 * Token usage grouped by context for a date range.
+	 *
+	 * @return list<array{ context: string, total_tokens: int, request_count: int }>
+	 */
+	public function totals_by_context( string $from, string $to ): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		$sql   = $wpdb->prepare(
+			"SELECT context,
+				COALESCE( SUM(total_tokens), 0 ) AS total_tokens,
+				COUNT(*)                         AS request_count
+			FROM {$table}
+			WHERE created_at >= %s AND created_at <= %s AND status = %s
+			GROUP BY context
+			ORDER BY total_tokens DESC",
+			$from,
+			$to,
+			'allowed'
+		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		return array_map(
+			static fn( array $r ) => [
+				'context'       => $r['context'],
 				'total_tokens'  => (int) $r['total_tokens'],
 				'request_count' => (int) $r['request_count'],
 			],

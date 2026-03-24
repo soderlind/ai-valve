@@ -95,6 +95,22 @@ final class UsageTracker {
 		return ( $this->global_tokens_this_month() / $limit ) * 100;
 	}
 
+	public function plugin_daily_pct( string $slug ): float {
+		$limit = $this->settings->plugin_daily_budget( $slug );
+		if ( $limit <= 0 ) {
+			return 0.0;
+		}
+		return ( $this->plugin_tokens_today( $slug ) / $limit ) * 100;
+	}
+
+	public function plugin_monthly_pct( string $slug ): float {
+		$limit = $this->settings->plugin_monthly_budget( $slug );
+		if ( $limit <= 0 ) {
+			return 0.0;
+		}
+		return ( $this->plugin_tokens_this_month( $slug ) / $limit ) * 100;
+	}
+
 	/* ------------------------------------------------------------------
 	 * Internal helpers
 	 * ----------------------------------------------------------------*/
