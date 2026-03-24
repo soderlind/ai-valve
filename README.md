@@ -28,6 +28,8 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 3. Activate the plugin through the WordPress admin
 4. Go to **Settings → AI Valve** to configure.
 
+The plugin updates itself automatically via GitHub releases using [plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker).
+
 ### From source
 
 ```bash
