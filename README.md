@@ -2,7 +2,7 @@
 
 Control, meter, and permission-gate AI usage from plugins that connect through the WordPress 7 AI connector.
 
-> Tested using [Virtual Media Folders AI Organizer](https://github.com/soderlind/vmfa-ai-organizer?tab=readme-ov-file#virtual-media-folders-ai-organizer) and [AI Provider for Azure OpenAI](https://github.com/soderlind/ai-provider-azure-openai)
+> Tested using [Virtual Media Folders AI Organizer](https://github.com/soderlind/vmfa-ai-organizer?tab=readme-ov-file#virtual-media-folders-ai-organizer) and [AI Provider for Azure OpenAI](https://github.com/soderlind/ai-provider-for-azure-openai)
 
 ## Features
 
