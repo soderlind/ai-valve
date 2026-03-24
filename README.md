@@ -18,7 +18,7 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 - WordPress 7.0+
 - PHP 8.3+
-- A configured AI provider in **Settings → AI Services**
+- A configured AI provider in **Settings → Connectors**
 
 ## Installation
 

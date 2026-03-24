@@ -28,7 +28,7 @@ AI Valve gives site administrators visibility and control over how plugins use t
 
 * WordPress 7.0 or later
 * PHP 8.3 or later
-* A configured AI provider in Settings → AI Services
+* A configured AI provider in Settings → Connectors
 
 == Installation ==
 
