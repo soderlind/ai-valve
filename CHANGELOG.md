@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-03-24
+
+### Added
+
+- REST endpoint `GET /settings` for reading all plugin settings.
+- `by_context`, `recent`, and `known_slugs` fields in the `GET /usage` response.
+- `date_from` and `date_to` filter parameters on the `GET /logs` endpoint.
+- Dedicated CSS file for admin styles.
+
+### Changed
+
+- Admin UI rebuilt as a React single-page application using `@wordpress/scripts`.
+- Settings, dashboard, and logs now render client-side via the REST API.
+- AdminPage.php reduced from 850+ lines to a thin shell (~160 lines).
+- Build pipeline produces `build/index.js`, `build/index.css`, and `build/index.asset.php` with WP dependency extraction.
+
 ## [0.3.0] - 2026-03-24
 
 ### Added
@@ -56,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workaround for WordPress 7.0 event dispatcher bug.
 - GitHub release updater for automatic updates.
 
+[0.4.0]: https://github.com/soderlind/ai-valve/releases/tag/0.4.0
 [0.3.0]: https://github.com/soderlind/ai-valve/releases/tag/0.3.0
 [0.2.0]: https://github.com/soderlind/ai-valve/releases/tag/0.2.0
 [0.1.0]: https://github.com/soderlind/ai-valve/releases/tag/0.1.0

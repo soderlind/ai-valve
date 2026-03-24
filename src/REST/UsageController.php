@@ -77,11 +77,24 @@ final class UsageController extends WP_REST_Controller {
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					],
+					'date_from'     => [
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'date_to'       => [
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
 				],
 			],
 		] );
 
 		register_rest_route( $this->namespace, '/settings', [
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_settings' ],
+				'permission_callback' => [ $this, 'check_permissions' ],
+			],
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'update_settings' ],
@@ -120,13 +133,24 @@ final class UsageController extends WP_REST_Controller {
 		$today = gmdate( 'Y-m-d' );
 		$month = gmdate( 'Y-m' );
 
+		$month_from = $month . '-01 00:00:00';
+		$today_end  = $today . ' 23:59:59';
+
+		// Known plugin slugs from log table.
+		global $wpdb;
+		$table       = LogRepository::table_name();
+		$known_slugs = $wpdb->get_col( "SELECT DISTINCT plugin_slug FROM {$table} ORDER BY plugin_slug" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 		return rest_ensure_response( [
-			'daily'       => $repo->totals( $today . ' 00:00:00', $today . ' 23:59:59' ),
-			'monthly'     => $repo->totals( $month . '-01 00:00:00', $today . ' 23:59:59' ),
-			'by_plugin'   => $repo->totals_by_plugin( $month . '-01 00:00:00', $today . ' 23:59:59' ),
-			'by_provider'       => $repo->totals_by_provider( $month . '-01 00:00:00', $today . ' 23:59:59' ),
-			'by_provider_model' => $repo->totals_by_provider_model( $month . '-01 00:00:00', $today . ' 23:59:59' ),
-			'budgets'     => [
+			'daily'             => $repo->totals( $today . ' 00:00:00', $today_end ),
+			'monthly'           => $repo->totals( $month_from, $today_end ),
+			'by_plugin'         => $repo->totals_by_plugin( $month_from, $today_end ),
+			'by_provider'       => $repo->totals_by_provider( $month_from, $today_end ),
+			'by_provider_model' => $repo->totals_by_provider_model( $month_from, $today_end ),
+			'by_context'        => $repo->totals_by_context( $month_from, $today_end ),
+			'recent'            => $repo->query( [ 'per_page' => 10 ] )['items'],
+			'known_slugs'       => $known_slugs ?: [],
+			'budgets'           => [
 				'global_daily_limit'   => (int) $this->settings->get( 'global_daily_limit', 0 ),
 				'global_monthly_limit' => (int) $this->settings->get( 'global_monthly_limit', 0 ),
 				'global_daily_used'    => $this->usage_tracker->global_tokens_today(),
@@ -148,6 +172,14 @@ final class UsageController extends WP_REST_Controller {
 		$response->header( 'X-WP-TotalPages', (string) ceil( $result['total'] / max( 1, (int) $request->get_param( 'per_page' ) ) ) );
 
 		return $response;
+	}
+
+	/* ------------------------------------------------------------------
+	 * GET /settings
+	 * ----------------------------------------------------------------*/
+
+	public function get_settings( WP_REST_Request $request ): WP_REST_Response {
+		return rest_ensure_response( $this->settings->all() );
 	}
 
 	/* ------------------------------------------------------------------
