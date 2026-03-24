@@ -2,6 +2,8 @@
 
 Control, meter, and permission-gate AI usage from plugins that connect through the WordPress 7 AI connector.
 
+> Tested using [Virtual Media Folders AI Organizer](https://github.com/soderlind/vmfa-ai-organizer?tab=readme-ov-file#virtual-media-folders-ai-organizer)
+
 ## Features
 
 - **Per-plugin access control** — Allow or deny individual plugins from making AI requests.
