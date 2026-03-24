@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,6 +65,16 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 
 == Changelog ==
 
+= 0.4.0 =
+* Changed: Admin UI rebuilt as a React single-page application.
+* Changed: Settings, dashboard, and logs now render client-side via the REST API.
+* Added: REST endpoint `GET /settings` for reading all plugin settings.
+* Added: `by_context`, `recent`, and `known_slugs` fields in the `GET /usage` response.
+* Added: `date_from` and `date_to` filter parameters on the `GET /logs` endpoint.
+* Added: Dedicated CSS file for admin styles (replaces inline styles).
+* Changed: AdminPage.php reduced from 850+ lines to a thin shell (~160 lines).
+* Changed: Build pipeline uses `@wordpress/scripts` with dependency extraction.
+
 = 0.3.0 =
 * Added: Model filter on the Logs tab and CSV export.
 * Added: Provider & Model breakdown table on the Dashboard.
@@ -97,6 +107,9 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 * GitHub release updater for automatic updates.
 
 == Upgrade Notice ==
+
+= 0.4.0 =
+Admin UI rebuilt with React for faster, client-side rendering.
 
 = 0.3.0 =
 Dashboard enhancements: model filter, provider+model breakdown, per-plugin bar chart, side-by-side layout.
