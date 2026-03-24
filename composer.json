@@ -1,0 +1,22 @@
+{
+	"name": "persoderlind/ai-valve",
+	"description": "AIValve — Control, meter, and permission-gate AI usage from WordPress plugins connecting through the WP 7 AI connector.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.3",
+		"yahnis-elsts/plugin-update-checker": "^5.6"
+	},
+	"autoload": {
+		"psr-4": {
+			"AIValve\\": "src/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"require-dev": {
+		"brain/monkey": "^2.6",
+		"phpunit/phpunit": "^11.0"
+	}
+}
