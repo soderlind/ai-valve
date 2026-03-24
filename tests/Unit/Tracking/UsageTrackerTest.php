@@ -76,6 +76,64 @@ final class UsageTrackerTest extends TestCase {
 		$this->assertTrue( true );
 	}
 
+	public function test_record_increments_provider_counters_when_given(): void {
+		$today = gmdate( 'Y-m-d' );
+		$month = gmdate( 'Y-m' );
+
+		$updated = [];
+
+		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) {
+			if ( $key === 'ai_valve_settings' ) {
+				return [];
+			}
+			return 100;
+		} );
+
+		Functions\when( 'update_option' )->alias( function ( string $key, $value ) use ( &$updated ) {
+			$updated[ $key ] = $value;
+			return true;
+		} );
+
+		$settings = new Settings();
+		$tracker  = new UsageTracker( $settings );
+		$tracker->record( 'test-plugin', 500, 'openai' );
+
+		// Should increment 6 keys: 4 standard + 2 provider.
+		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_test-plugin' ] );
+		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_test-plugin' ] );
+		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_*' ] );
+		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_*' ] );
+		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_provider:openai' ] );
+		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_provider:openai' ] );
+	}
+
+	public function test_record_skips_provider_counters_when_empty(): void {
+		$today = gmdate( 'Y-m-d' );
+		$month = gmdate( 'Y-m' );
+
+		$updated = [];
+
+		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) {
+			if ( $key === 'ai_valve_settings' ) {
+				return [];
+			}
+			return 0;
+		} );
+
+		Functions\when( 'update_option' )->alias( function ( string $key, $value ) use ( &$updated ) {
+			$updated[ $key ] = $value;
+			return true;
+		} );
+
+		$settings = new Settings();
+		$tracker  = new UsageTracker( $settings );
+		$tracker->record( 'test-plugin', 200 );
+
+		// Only 4 standard keys — no provider keys.
+		$this->assertCount( 4, $updated );
+		$this->assertArrayNotHasKey( 'ai_valve_tokens_daily_' . $today . '_provider:', $updated );
+	}
+
 	/* ------------------------------------------------------------------
 	 * Read counters
 	 * ----------------------------------------------------------------*/
@@ -158,6 +216,46 @@ final class UsageTrackerTest extends TestCase {
 		$tracker  = new UsageTracker( $settings );
 
 		$this->assertSame( 99000, $tracker->global_tokens_this_month() );
+	}
+
+	public function test_provider_tokens_today_reads_correct_key(): void {
+		$today = gmdate( 'Y-m-d' );
+		$expected_key = 'ai_valve_tokens_daily_' . $today . '_provider:openai';
+
+		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
+			if ( $key === 'ai_valve_settings' ) {
+				return [];
+			}
+			if ( $key === $expected_key ) {
+				return 3000;
+			}
+			return $default;
+		} );
+
+		$settings = new Settings();
+		$tracker  = new UsageTracker( $settings );
+
+		$this->assertSame( 3000, $tracker->provider_tokens_today( 'openai' ) );
+	}
+
+	public function test_provider_tokens_this_month_reads_correct_key(): void {
+		$month = gmdate( 'Y-m' );
+		$expected_key = 'ai_valve_tokens_monthly_' . $month . '_provider:anthropic';
+
+		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
+			if ( $key === 'ai_valve_settings' ) {
+				return [];
+			}
+			if ( $key === $expected_key ) {
+				return 12000;
+			}
+			return $default;
+		} );
+
+		$settings = new Settings();
+		$tracker  = new UsageTracker( $settings );
+
+		$this->assertSame( 12000, $tracker->provider_tokens_this_month( 'anthropic' ) );
 	}
 
 	/* ------------------------------------------------------------------

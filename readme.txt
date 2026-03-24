@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,6 +65,15 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 
 == Changelog ==
 
+= 0.3.0 =
+* Added: Model filter on the Logs tab and CSV export.
+* Added: Provider & Model breakdown table on the Dashboard.
+* Added: Per-plugin token bar chart on the Dashboard.
+* Added: Per-provider token counters.
+* Added: How-blocking-works documentation.
+* Changed: Providers & Contexts tables displayed side by side.
+* Changed: Plugin list only shows plugins that used the AI connector.
+
 = 0.2.0 =
 * Fixed: Status column widened — denial reasons were silently truncated.
 * Fixed: "Denied" log filter now matches all denial variants.
@@ -88,6 +97,9 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 * GitHub release updater for automatic updates.
 
 == Upgrade Notice ==
+
+= 0.3.0 =
+Dashboard enhancements: model filter, provider+model breakdown, per-plugin bar chart, side-by-side layout.
 
 = 0.2.0 =
 Bug fixes for log status storage and filtering. New: date range filter, context breakdown, per-plugin alerts, CSV export.

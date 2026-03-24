@@ -33,7 +33,7 @@ final class UsageTracker {
 	/**
 	 * Increment both per-plugin and global counters.
 	 */
-	public function record( string $plugin_slug, int $tokens ): void {
+	public function record( string $plugin_slug, int $tokens, string $provider_id = '' ): void {
 		if ( $tokens <= 0 ) {
 			return;
 		}
@@ -49,6 +49,12 @@ final class UsageTracker {
 		$this->increment( self::daily_key( $today, '*' ), $tokens );
 		// Global monthly.
 		$this->increment( self::monthly_key( $month, '*' ), $tokens );
+
+		// Per-provider counters.
+		if ( '' !== $provider_id ) {
+			$this->increment( self::daily_key( $today, 'provider:' . $provider_id ), $tokens );
+			$this->increment( self::monthly_key( $month, 'provider:' . $provider_id ), $tokens );
+		}
 	}
 
 	/* ------------------------------------------------------------------
@@ -69,6 +75,14 @@ final class UsageTracker {
 
 	public function global_tokens_this_month(): int {
 		return $this->read( self::monthly_key( gmdate( 'Y-m' ), '*' ) );
+	}
+
+	public function provider_tokens_today( string $provider_id ): int {
+		return $this->read( self::daily_key( gmdate( 'Y-m-d' ), 'provider:' . $provider_id ) );
+	}
+
+	public function provider_tokens_this_month( string $provider_id ): int {
+		return $this->read( self::monthly_key( gmdate( 'Y-m' ), 'provider:' . $provider_id ) );
 	}
 
 	/* ------------------------------------------------------------------

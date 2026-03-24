@@ -57,7 +57,7 @@ Caller attribution uses `debug_backtrace()` to identify which plugin initiated t
 
 When a request is blocked, the calling plugin receives a `WP_Error` with code `prompt_prevented` and the denial reason is logged. See [docs/how-blocking-works.md](docs/how-blocking-works.md) for the full explanation.
 
-> **Note:** WordPress 7.0 has a core bug where the event dispatcher is not passed to the SDK PromptBuilder. AI Valve includes a reflection-based workaround that injects the dispatcher automatically. See [docs/howto-intercept-wp7-ai-requests.md](docs/howto-intercept-wp7-ai-requests.md) for details.
+> **Note:** WordPress 7.0-beta6 has a core bug where the event dispatcher is not passed to the SDK PromptBuilder. AI Valve includes a reflection-based workaround that injects the dispatcher automatically. See [docs/howto-intercept-wp7-ai-requests.md](docs/howto-intercept-wp7-ai-requests.md) for details.
 
 ## Development
 

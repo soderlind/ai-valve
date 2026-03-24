@@ -65,6 +65,10 @@ final class UsageController extends WP_REST_Controller {
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_key',
 					],
+					'model_id'      => [
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
 					'context'       => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_key',
@@ -120,7 +124,8 @@ final class UsageController extends WP_REST_Controller {
 			'daily'       => $repo->totals( $today . ' 00:00:00', $today . ' 23:59:59' ),
 			'monthly'     => $repo->totals( $month . '-01 00:00:00', $today . ' 23:59:59' ),
 			'by_plugin'   => $repo->totals_by_plugin( $month . '-01 00:00:00', $today . ' 23:59:59' ),
-			'by_provider' => $repo->totals_by_provider( $month . '-01 00:00:00', $today . ' 23:59:59' ),
+			'by_provider'       => $repo->totals_by_provider( $month . '-01 00:00:00', $today . ' 23:59:59' ),
+			'by_provider_model' => $repo->totals_by_provider_model( $month . '-01 00:00:00', $today . ' 23:59:59' ),
 			'budgets'     => [
 				'global_daily_limit'   => (int) $this->settings->get( 'global_daily_limit', 0 ),
 				'global_monthly_limit' => (int) $this->settings->get( 'global_monthly_limit', 0 ),

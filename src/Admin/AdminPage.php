@@ -74,6 +74,7 @@ final class AdminPage {
 		$filters = [
 			'plugin_slug' => sanitize_key( $_GET['filter_plugin'] ?? '' ),
 			'provider_id' => sanitize_key( $_GET['filter_provider'] ?? '' ),
+			'model_id'    => sanitize_text_field( $_GET['filter_model'] ?? '' ),
 			'context'     => sanitize_key( $_GET['filter_context'] ?? '' ),
 			'status'      => sanitize_text_field( $_GET['filter_status'] ?? '' ),
 			'per_page'    => 10000,
@@ -174,7 +175,7 @@ final class AdminPage {
 		$daily_totals   = $repo->totals( $today . ' 00:00:00', $today . ' 23:59:59' );
 		$monthly_totals = $repo->totals( $month . '-01 00:00:00', $today . ' 23:59:59' );
 		$by_plugin      = $repo->totals_by_plugin( $month . '-01 00:00:00', $today . ' 23:59:59' );
-		$by_provider    = $repo->totals_by_provider( $month . '-01 00:00:00', $today . ' 23:59:59' );
+		$by_provider_model = $repo->totals_by_provider_model( $month . '-01 00:00:00', $today . ' 23:59:59' );
 		$by_context     = $repo->totals_by_context( $month . '-01 00:00:00', $today . ' 23:59:59' );
 
 		$recent = $repo->query( [ 'per_page' => 10 ] );
@@ -187,7 +188,7 @@ final class AdminPage {
 		$budgets  = (array) ( $all['plugin_budgets'] ?? [] );
 		$opt      = Settings::option_key();
 
-		// Merge known slugs from policies, budgets, and recent log entries.
+		// Merge known slugs from policies, budgets, and log entries.
 		$known_slugs = array_unique( array_merge(
 			array_keys( $policies ),
 			array_keys( $budgets ),
@@ -200,6 +201,7 @@ final class AdminPage {
 		foreach ( $by_plugin as $row ) {
 			$plugin_usage[ $row['plugin_slug'] ] = $row;
 		}
+		$max_plugin_tokens = max( array_column( $by_plugin, 'total_tokens' ) ?: [ 0 ] );
 		?>
 
 		<style>
@@ -314,6 +316,13 @@ final class AdminPage {
 						</td>
 						<td style="text-align: right;">
 							<?php echo esc_html( number_format_i18n( $usage['total_tokens'] ) ); ?>
+							<?php if ( $max_plugin_tokens > 0 && (int) $usage['total_tokens'] > 0 ) :
+								$bar_pct = (int) round( ( (int) $usage['total_tokens'] / $max_plugin_tokens ) * 100 );
+							?>
+							<div class="ai-valve-bar-wrap" style="margin-top: 4px;">
+								<div class="ai-valve-bar ai-valve-bar--ok" style="width: <?php echo esc_attr( (string) $bar_pct ); ?>%;"></div>
+							</div>
+							<?php endif; ?>
 						</td>
 						<td>
 							<input type="number" min="0" step="1"
@@ -344,31 +353,39 @@ final class AdminPage {
 			<p><em><?php esc_html_e( 'No plugins have made AI requests yet. They will appear here automatically.', 'ai-valve' ); ?></em></p>
 		<?php endif; ?>
 
-		<?php if ( $by_provider ) : ?>
-		<h2><?php esc_html_e( 'Providers (This Month)', 'ai-valve' ); ?></h2>
-		<table class="widefat fixed striped" style="max-width: 600px;">
+		<?php if ( $by_provider_model || $by_context ) : ?>
+		<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;">
+
+		<?php if ( $by_provider_model ) : ?>
+		<div style="flex: 1 1 calc(50% - 12px); min-width: 320px; overflow: auto;">
+		<h2 style="margin-top: 0;"><?php esc_html_e( 'Providers & Models (This Month)', 'ai-valve' ); ?></h2>
+		<table class="widefat striped" style="width: 100%; table-layout: auto;">
 			<thead>
 				<tr>
 					<th><?php esc_html_e( 'Provider', 'ai-valve' ); ?></th>
+					<th><?php esc_html_e( 'Model', 'ai-valve' ); ?></th>
 					<th style="text-align: right;"><?php esc_html_e( 'Requests', 'ai-valve' ); ?></th>
 					<th style="text-align: right;"><?php esc_html_e( 'Tokens', 'ai-valve' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $by_provider as $row ) : ?>
+				<?php foreach ( $by_provider_model as $row ) : ?>
 				<tr>
 					<td><?php echo esc_html( $row['provider_id'] ); ?></td>
+					<td><?php echo esc_html( $row['model_id'] ); ?></td>
 					<td style="text-align: right;"><?php echo esc_html( number_format_i18n( $row['request_count'] ) ); ?></td>
 					<td style="text-align: right;"><?php echo esc_html( number_format_i18n( $row['total_tokens'] ) ); ?></td>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		</div>
 		<?php endif; ?>
 
 		<?php if ( $by_context ) : ?>
-		<h2><?php esc_html_e( 'Contexts (This Month)', 'ai-valve' ); ?></h2>
-		<table class="widefat fixed striped" style="max-width: 600px;">
+		<div style="flex: 1 1 calc(50% - 12px); min-width: 280px; overflow: auto;">
+		<h2 style="margin-top: 0;"><?php esc_html_e( 'Contexts (This Month)', 'ai-valve' ); ?></h2>
+		<table class="widefat striped" style="width: 100%; table-layout: auto;">
 			<thead>
 				<tr>
 					<th><?php esc_html_e( 'Context', 'ai-valve' ); ?></th>
@@ -386,6 +403,10 @@ final class AdminPage {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+		</div>
+		<?php endif; ?>
+
+		</div>
 		<?php endif; ?>
 
 		<?php if ( $recent['items'] ) : ?>
@@ -632,6 +653,7 @@ final class AdminPage {
 		$filters = [
 			'plugin_slug' => sanitize_key( $_GET['filter_plugin'] ?? '' ),
 			'provider_id' => sanitize_key( $_GET['filter_provider'] ?? '' ),
+			'model_id'    => sanitize_text_field( $_GET['filter_model'] ?? '' ),
 			'context'     => sanitize_key( $_GET['filter_context'] ?? '' ),
 			'status'      => sanitize_text_field( $_GET['filter_status'] ?? '' ),
 			'date_from'   => sanitize_text_field( $_GET['filter_date_from'] ?? '' ),
@@ -669,6 +691,12 @@ final class AdminPage {
 				<input type="text" name="filter_provider"
 					   value="<?php echo esc_attr( $filters['provider_id'] ); ?>"
 					   style="width: 180px;" placeholder="e.g. openai">
+			</label>
+			<label>
+				<?php esc_html_e( 'Model:', 'ai-valve' ); ?>
+				<input type="text" name="filter_model"
+					   value="<?php echo esc_attr( $filters['model_id'] ); ?>"
+					   style="width: 180px;" placeholder="e.g. gpt-4o">
 			</label>
 			<label>
 				<?php esc_html_e( 'Context:', 'ai-valve' ); ?>
@@ -722,6 +750,7 @@ final class AdminPage {
 				'_wpnonce'         => wp_create_nonce( 'ai_valve_export_csv' ),
 				'filter_plugin'    => $filters['plugin_slug'],
 				'filter_provider'  => $filters['provider_id'],
+				'filter_model'     => $filters['model_id'],
 				'filter_context'   => $filters['context'],
 				'filter_status'    => $filters['status'],
 				'filter_date_from' => sanitize_text_field( $_GET['filter_date_from'] ?? '' ),
@@ -820,4 +849,5 @@ final class AdminPage {
 		$slugs = $wpdb->get_col( "SELECT DISTINCT plugin_slug FROM {$table} ORDER BY plugin_slug" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $slugs ?: [];
 	}
+
 }

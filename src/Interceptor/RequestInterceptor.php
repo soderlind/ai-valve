@@ -185,7 +185,7 @@ final class RequestInterceptor {
 		] );
 
 		// Update rolling counters.
-		$this->usage_tracker->record( $plugin_slug, $total_tokens );
+		$this->usage_tracker->record( $plugin_slug, $total_tokens, $provider_id );
 
 		// Clear correlation state for the next request.
 		self::$current_plugin_slug = '';

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-03-24
+
+### Added
+
+- Model filter on the Logs tab and CSV export.
+- Provider & Model breakdown table on the Dashboard (replaces provider-only table).
+- Per-plugin token bar chart on the Dashboard plugins table.
+- Per-provider daily/monthly token counters in UsageTracker.
+- `model_id` filter parameter on the REST `/logs` endpoint.
+- `by_provider_model` data in the REST `/usage` response.
+- How-blocking-works documentation (`docs/how-blocking-works.md`) linked from READMEs.
+
+### Changed
+
+- Providers & Contexts tables displayed side by side on the Dashboard.
+- Plugin list on Dashboard only shows plugins that have used the AI connector.
+
 ## [0.2.0] - 2026-03-24
 
 ### Fixed
@@ -39,5 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workaround for WordPress 7.0 event dispatcher bug.
 - GitHub release updater for automatic updates.
 
+[0.3.0]: https://github.com/soderlind/ai-valve/releases/tag/0.3.0
 [0.2.0]: https://github.com/soderlind/ai-valve/releases/tag/0.2.0
 [0.1.0]: https://github.com/soderlind/ai-valve/releases/tag/0.1.0

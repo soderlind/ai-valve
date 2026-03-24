@@ -334,6 +334,41 @@ final class LogRepository {
 		);
 	}
 
+	/**
+	 * Token usage grouped by provider and model for a date range.
+	 *
+	 * @return list<array{ provider_id: string, model_id: string, total_tokens: int, request_count: int }>
+	 */
+	public function totals_by_provider_model( string $from, string $to ): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		$sql   = $wpdb->prepare(
+			"SELECT provider_id, model_id,
+				COALESCE( SUM(total_tokens), 0 ) AS total_tokens,
+				COUNT(*)                         AS request_count
+			FROM {$table}
+			WHERE created_at >= %s AND created_at <= %s AND status = %s
+			GROUP BY provider_id, model_id
+			ORDER BY total_tokens DESC",
+			$from,
+			$to,
+			'allowed'
+		); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		return array_map(
+			static fn( array $r ) => [
+				'provider_id'   => $r['provider_id'],
+				'model_id'      => $r['model_id'],
+				'total_tokens'  => (int) $r['total_tokens'],
+				'request_count' => (int) $r['request_count'],
+			],
+			$rows ?: []
+		);
+	}
+
 	/* ------------------------------------------------------------------
 	 * Cleanup
 	 * ----------------------------------------------------------------*/
