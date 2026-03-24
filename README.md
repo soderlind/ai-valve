@@ -22,9 +22,10 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 ## Installation
 
-1. Download `ai-valve.zip` from the [latest release](https://github.com/soderlind/ai-valve/releases/latest).
-2. In WordPress, go to **Plugins → Add New → Upload Plugin** and upload the zip.
-3. Activate the plugin.
+
+1. Download [`ai-valve.zip`](https://github.com/soderlind/ai-provider-for-azure-openai/releases/latest/download/ai-valve.zip)
+2. Upload via `Plugins → Add New → Upload Plugin`
+3. Activate the plugin through the WordPress admin
 4. Go to **Settings → AI Valve** to configure.
 
 ### From source
