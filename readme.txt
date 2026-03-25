@@ -2,9 +2,9 @@
 Contributors: PerS
 Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
-Tested up to: 7.0
+Tested up to: 7.0-RC1
 Requires PHP: 8.3
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,9 +51,9 @@ A limit of 0 means unlimited — no cap is enforced. Set a positive number to re
 
 It walks the PHP call stack (`debug_backtrace()`) and matches file paths against the plugins directory to determine the originating plugin slug.
 
-= Will this work when the WordPress core bug is fixed? =
+= Will this work with future WordPress updates? =
 
-Yes. AI Valve includes a workaround that checks whether the event dispatcher is already set. Once WordPress core passes it properly, the workaround is automatically skipped.
+Yes. AI Valve relies only on the stable public hooks (`wp_ai_client_prevent_prompt`, `wp_ai_client_before_generate_result`, `wp_ai_client_after_generate_result`) provided by the WordPress AI connector API.
 
 = Does AI Valve work on multisite? =
 
@@ -64,6 +64,11 @@ Yes. Each subsite has its own log table, settings, and budgets.
 The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/ai-valve/blob/main/docs/how-blocking-works.md) for the full explanation.
 
 == Changelog ==
+
+= 0.5.0 =
+* Removed: Reflection-based event dispatcher injection workaround (fixed in WP 7 RC1).
+* Changed: Tested up to WP 7.0-RC1.
+* Changed: Updated howto documentation to mark the core bug as resolved.
 
 = 0.4.0 =
 * Changed: Admin UI rebuilt as a React single-page application.
