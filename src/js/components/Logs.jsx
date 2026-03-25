@@ -1,11 +1,42 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
-import { Spinner, Button } from '@wordpress/components';
+import { Spinner, Button, SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { fetchLogs } from '../api';
+import { fetchLogs, fetchLogFilterOptions, purgeLogs } from '../api';
 import LogFilters from './LogFilters';
 import LogTable from './LogTable';
 
-export default function Logs() {
+function getDateRange( preset ) {
+	const today = new Date();
+	const fmt = ( d ) => d.toISOString().slice( 0, 10 );
+	const to = fmt( today );
+
+	switch ( preset ) {
+		case '24h': {
+			return { date_from: to, date_to: to };
+		}
+		case '7d': {
+			const from = new Date( today );
+			from.setDate( from.getDate() - 6 );
+			return { date_from: fmt( from ), date_to: to };
+		}
+		case '30d': {
+			const from = new Date( today );
+			from.setDate( from.getDate() - 29 );
+			return { date_from: fmt( from ), date_to: to };
+		}
+		case 'month': {
+			return {
+				date_from: to.slice( 0, 8 ) + '01',
+				date_to: to,
+			};
+		}
+		default:
+			return { date_from: '', date_to: '' };
+	}
+}
+
+export default function Logs( { setNotice } ) {
+	const [ timeRange, setTimeRange ] = useState( '' );
 	const [ filters, setFilters ] = useState( {
 		plugin_slug: '',
 		provider_id: '',
@@ -18,6 +49,14 @@ export default function Logs() {
 	const [ page, setPage ] = useState( 1 );
 	const [ data, setData ] = useState( null );
 	const [ loading, setLoading ] = useState( true );
+	const [ purging, setPurging ] = useState( false );
+	const [ filterOptions, setFilterOptions ] = useState( { plugins: [], providers: [], models: [] } );
+
+	useEffect( () => {
+		fetchLogFilterOptions()
+			.then( setFilterOptions )
+			.catch( () => {} );
+	}, [] );
 
 	const load = useCallback( async () => {
 		setLoading( true );
@@ -40,7 +79,43 @@ export default function Logs() {
 
 	function handleFilter( newFilters ) {
 		setFilters( newFilters );
+		setTimeRange( '' );
 		setPage( 1 );
+	}
+
+	function handleTimeRange( value ) {
+		setTimeRange( value );
+		const range = getDateRange( value );
+		setFilters( ( prev ) => ( { ...prev, ...range } ) );
+		setPage( 1 );
+	}
+
+	async function handlePurge() {
+		if (
+			! window.confirm(
+				__(
+					'Permanently delete ALL logged requests? This cannot be undone.',
+					'ai-valve'
+				)
+			)
+		) {
+			return;
+		}
+		setPurging( true );
+		try {
+			await purgeLogs();
+			setNotice( {
+				type: 'success',
+				message: __( 'All logs purged.', 'ai-valve' ),
+			} );
+			load();
+		} catch {
+			setNotice( {
+				type: 'error',
+				message: __( 'Failed to purge logs.', 'ai-valve' ),
+			} );
+		}
+		setPurging( false );
 	}
 
 	// Build CSV export URL (admin-post action).
@@ -70,7 +145,22 @@ export default function Logs() {
 
 	return (
 		<div style={ { marginTop: '1em' } }>
-			<LogFilters filters={ filters } onChange={ handleFilter } />
+			<div style={ { display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 12 } }>
+				<SelectControl
+					label={ __( 'Time range', 'ai-valve' ) }
+					value={ timeRange }
+					options={ [
+						{ label: __( 'All time', 'ai-valve' ), value: '' },
+						{ label: __( 'Last 24 hours', 'ai-valve' ), value: '24h' },
+						{ label: __( 'Last 7 days', 'ai-valve' ), value: '7d' },
+						{ label: __( 'Last 30 days', 'ai-valve' ), value: '30d' },
+						{ label: __( 'This month', 'ai-valve' ), value: 'month' },
+					] }
+					onChange={ handleTimeRange }
+					__nextHasNoMarginBottom
+				/>
+			</div>
+			<LogFilters filters={ filters } onChange={ handleFilter } filterOptions={ filterOptions } />
 
 			{ loading ? (
 				<Spinner />
@@ -125,6 +215,29 @@ export default function Logs() {
 					) }
 				</>
 			) }
+
+			{ /* --- Danger Zone --- */ }
+			<hr style={ { marginTop: 32 } } />
+			<h2 style={ { color: '#d63638' } }>
+				{ __( 'Danger Zone', 'ai-valve' ) }
+			</h2>
+			<p className="description">
+				{ __(
+					'Permanently delete all logged requests. This action cannot be undone.',
+					'ai-valve'
+				) }
+			</p>
+			<p>
+				<Button
+					variant="secondary"
+					isDestructive
+					isBusy={ purging }
+					disabled={ purging }
+					onClick={ handlePurge }
+				>
+					{ __( 'Purge All Logs', 'ai-valve' ) }
+				</Button>
+			</p>
 		</div>
 	);
 }

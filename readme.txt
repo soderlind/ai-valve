@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,16 @@ Yes. Each subsite has its own log table, settings, and budgets.
 The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/ai-valve/blob/main/docs/how-blocking-works.md) for the full explanation.
 
 == Changelog ==
+
+= 0.6.0 =
+* Added: Request duration tracking (duration_ms column, schema v3).
+* Added: Log retention setting — auto-delete logs older than N days via daily cron.
+* Added: Purge all logs REST endpoint (DELETE /logs) and Danger Zone UI on Logs tab.
+* Added: Time-range preset selector (24h / 7d / 30d / This month) on Logs tab.
+* Added: Combined Provider / Model column in log tables with duration display.
+* Added: Dropdown filters for Plugin, Provider, and Model on Logs tab (GET /logs/filters).
+* Changed: Database schema upgraded to v3.
+* Changed: Moved Danger Zone (purge) from Settings to Logs tab.
 
 = 0.5.0 =
 * Removed: Reflection-based event dispatcher injection workaround (fixed in WP 7 RC1).

@@ -55,3 +55,16 @@ export async function fetchLogs( params = {} ) {
 		};
 	} );
 }
+
+/** GET /ai-valve/v1/logs/filters — distinct filter values */
+export async function fetchLogFilterOptions() {
+	return apiFetch( { path: `${ BASE }/logs/filters` } );
+}
+
+/** DELETE /ai-valve/v1/logs */
+export async function purgeLogs() {
+	return apiFetch( {
+		path: `${ BASE }/logs`,
+		method: 'DELETE',
+	} );
+}

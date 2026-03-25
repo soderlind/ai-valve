@@ -134,7 +134,7 @@ final class AdminPage {
 		header( 'Expires: 0' );
 
 		$output = fopen( 'php://output', 'w' );
-		fputcsv( $output, [ 'Time', 'Plugin', 'Provider', 'Model', 'Capability', 'Context', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Status' ] );
+		fputcsv( $output, [ 'Time', 'Plugin', 'Provider', 'Model', 'Capability', 'Context', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Duration (ms)', 'Status' ] );
 
 		foreach ( $result['items'] as $row ) {
 			fputcsv( $output, [
@@ -147,6 +147,7 @@ final class AdminPage {
 				$row->prompt_tokens ?? 0,
 				$row->completion_tokens ?? 0,
 				$row->total_tokens ?? 0,
+				$row->duration_ms ?? 0,
 				$row->status ?? '',
 			] );
 		}

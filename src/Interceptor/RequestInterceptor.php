@@ -23,6 +23,7 @@ final class RequestInterceptor {
 	/** Correlation state for the current request. */
 	private static string $current_plugin_slug = '';
 	private static string $current_context     = '';
+	private static float  $request_start_time  = 0.0;
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -84,6 +85,8 @@ final class RequestInterceptor {
 	 * ----------------------------------------------------------------*/
 
 	public function on_before_generate( BeforeGenerateResultEvent $event ): void {
+		self::$request_start_time = hrtime( true );
+
 		// Ensure we have attribution even if prevent_prompt wasn't called
 		// (e.g. is_supported checks bypass prevent_prompt but generate still fires).
 		if ( '' === self::$current_plugin_slug ) {
@@ -129,6 +132,12 @@ final class RequestInterceptor {
 		$plugin_slug = self::$current_plugin_slug ?: 'unknown';
 		$context     = self::$current_context ?: CallerDetector::context();
 
+		// Compute request duration.
+		$duration_ms = 0;
+		if ( self::$request_start_time > 0 ) {
+			$duration_ms = (int) round( ( hrtime( true ) - self::$request_start_time ) / 1000000 );
+		}
+
 		// Write to the log table.
 		$repo = new LogRepository();
 		$repo->insert( [
@@ -140,6 +149,7 @@ final class RequestInterceptor {
 			'prompt_tokens'     => $prompt_tokens,
 			'completion_tokens' => $completion_tokens,
 			'total_tokens'      => $total_tokens,
+			'duration_ms'       => $duration_ms,
 			'status'            => 'allowed',
 		] );
 
@@ -149,6 +159,7 @@ final class RequestInterceptor {
 		// Clear correlation state for the next request.
 		self::$current_plugin_slug = '';
 		self::$current_context     = '';
+		self::$request_start_time  = 0.0;
 		CallerDetector::reset();
 	}
 }

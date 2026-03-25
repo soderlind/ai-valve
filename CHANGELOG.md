@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-03-25
+
+### Added
+
+- Request duration tracking (`duration_ms` column, schema v3).
+- Log retention setting — automatically delete logs older than N days via daily cron.
+- Purge all logs REST endpoint (`DELETE /logs`) and Danger Zone UI on the Logs tab.
+- Time-range preset selector (24h / 7d / 30d / This month) on the Logs tab.
+- Combined Provider / Model column in log tables with duration display.
+- Dropdown filters for Plugin, Provider, and Model on Logs tab, populated from logged data via `GET /logs/filters`.
+
+### Changed
+
+- Database schema upgraded to v3 with safe migration.
+- Moved Danger Zone (purge) from Settings to Logs tab.
+
 ## [0.5.0] - 2026-03-25
 
 ### Removed

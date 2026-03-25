@@ -56,6 +56,9 @@ final class Settings {
 
 			// Email notification on budget exceeded.
 			'alert_email'          => '',
+
+			// Log retention in days (0 = keep forever).
+			'log_retention_days'   => 0,
 		];
 	}
 
@@ -202,6 +205,9 @@ final class Settings {
 
 		// Alert email.
 		$clean['alert_email'] = sanitize_email( $input['alert_email'] ?? '' );
+
+		// Log retention.
+		$clean['log_retention_days'] = absint( $input['log_retention_days'] ?? 0 );
 
 		// Per-plugin policies.
 		if ( isset( $input['plugin_policies'] ) && is_array( $input['plugin_policies'] ) ) {
