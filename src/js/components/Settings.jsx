@@ -338,6 +338,41 @@ export default function Settings( { setNotice } ) {
 				</tbody>
 			</table>
 
+			{ /* --- Log Retention --- */ }
+			<h2>{ __( 'Log Retention', 'ai-valve' ) }</h2>
+			<table className="form-table">
+				<tbody>
+					<tr>
+						<th scope="row">
+							{ __( 'Retention period', 'ai-valve' ) }
+						</th>
+						<td>
+							<TextControl
+								type="number"
+								min={ 0 }
+								step={ 1 }
+								value={ String(
+									settings.log_retention_days || 0
+								) }
+								onChange={ ( val ) =>
+									update(
+										'log_retention_days',
+										parseInt( val, 10 ) || 0
+									)
+								}
+								__nextHasNoMarginBottom
+							/>
+							<p className="description">
+								{ __(
+									'Automatically delete logs older than this many days. 0 = keep forever.',
+									'ai-valve'
+								) }
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
 			<p className="submit">
 				<Button
 					variant="primary"

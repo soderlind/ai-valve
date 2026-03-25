@@ -87,6 +87,19 @@ final class UsageController extends WP_REST_Controller {
 					],
 				],
 			],
+			[
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => [ $this, 'purge_logs' ],
+				'permission_callback' => [ $this, 'check_permissions' ],
+			],
+		] );
+
+		register_rest_route( $this->namespace, '/logs/filters', [
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_log_filters' ],
+				'permission_callback' => [ $this, 'check_permissions' ],
+			],
 		] );
 
 		register_rest_route( $this->namespace, '/settings', [
@@ -175,6 +188,15 @@ final class UsageController extends WP_REST_Controller {
 	}
 
 	/* ------------------------------------------------------------------
+	 * GET /logs/filters — distinct filter values
+	 * ----------------------------------------------------------------*/
+
+	public function get_log_filters( WP_REST_Request $request ): WP_REST_Response {
+		$repo = new LogRepository();
+		return rest_ensure_response( $repo->distinct_filter_values() );
+	}
+
+	/* ------------------------------------------------------------------
 	 * GET /settings
 	 * ----------------------------------------------------------------*/
 
@@ -195,5 +217,16 @@ final class UsageController extends WP_REST_Controller {
 			'updated'  => true,
 			'settings' => $sanitized,
 		] );
+	}
+
+	/* ------------------------------------------------------------------
+	 * DELETE /logs
+	 * ----------------------------------------------------------------*/
+
+	public function purge_logs( WP_REST_Request $request ): WP_REST_Response {
+		$repo = new LogRepository();
+		$repo->purge();
+
+		return rest_ensure_response( [ 'purged' => true ] );
 	}
 }

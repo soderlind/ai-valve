@@ -2,7 +2,7 @@ import { useState } from '@wordpress/element';
 import { Button, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-export default function LogFilters( { filters, onChange } ) {
+export default function LogFilters( { filters, onChange, filterOptions = {} } ) {
 	const [ local, setLocal ] = useState( { ...filters } );
 
 	function update( key, value ) {
@@ -27,25 +27,43 @@ export default function LogFilters( { filters, onChange } ) {
 					alignItems: 'flex-end',
 				} }
 			>
-				<TextControl
+				<SelectControl
 					label={ __( 'Plugin', 'ai-valve' ) }
 					value={ local.plugin_slug }
+					options={ [
+						{ label: __( 'All', 'ai-valve' ), value: '' },
+						...( filterOptions.plugins || [] ).map( ( v ) => ( {
+							label: v,
+							value: v,
+						} ) ),
+					] }
 					onChange={ ( v ) => update( 'plugin_slug', v ) }
-					placeholder="e.g. vmfa-ai-organizer"
 					__nextHasNoMarginBottom
 				/>
-				<TextControl
+				<SelectControl
 					label={ __( 'Provider', 'ai-valve' ) }
 					value={ local.provider_id }
+					options={ [
+						{ label: __( 'All', 'ai-valve' ), value: '' },
+						...( filterOptions.providers || [] ).map( ( v ) => ( {
+							label: v,
+							value: v,
+						} ) ),
+					] }
 					onChange={ ( v ) => update( 'provider_id', v ) }
-					placeholder="e.g. openai"
 					__nextHasNoMarginBottom
 				/>
-				<TextControl
+				<SelectControl
 					label={ __( 'Model', 'ai-valve' ) }
 					value={ local.model_id }
+					options={ [
+						{ label: __( 'All', 'ai-valve' ), value: '' },
+						...( filterOptions.models || [] ).map( ( v ) => ( {
+							label: v,
+							value: v,
+						} ) ),
+					] }
 					onChange={ ( v ) => update( 'model_id', v ) }
-					placeholder="e.g. gpt-4o"
 					__nextHasNoMarginBottom
 				/>
 				<SelectControl

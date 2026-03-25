@@ -4,6 +4,17 @@ function fmt( n ) {
 	return Number( n ).toLocaleString();
 }
 
+function fmtDuration( ms ) {
+	const n = Number( ms );
+	if ( ! n ) {
+		return '\u2014';
+	}
+	if ( n >= 1000 ) {
+		return `${ ( n / 1000 ).toFixed( 1 ) }s`;
+	}
+	return `${ n }ms`;
+}
+
 export default function RecentRequests( { items } ) {
 	if ( ! items || ! items.length ) {
 		return null;
@@ -16,12 +27,14 @@ export default function RecentRequests( { items } ) {
 					<tr>
 						<th>{ __( 'Time', 'ai-valve' ) }</th>
 						<th>{ __( 'Plugin', 'ai-valve' ) }</th>
-						<th>{ __( 'Provider', 'ai-valve' ) }</th>
-						<th>{ __( 'Model', 'ai-valve' ) }</th>
+						<th>{ __( 'Provider / Model', 'ai-valve' ) }</th>
 						<th>{ __( 'Capability', 'ai-valve' ) }</th>
 						<th>{ __( 'Context', 'ai-valve' ) }</th>
 						<th style={ { textAlign: 'right' } }>
 							{ __( 'Tokens', 'ai-valve' ) }
+						</th>
+						<th style={ { textAlign: 'right' } }>
+							{ __( 'Duration', 'ai-valve' ) }
 						</th>
 						<th>{ __( 'Status', 'ai-valve' ) }</th>
 					</tr>
@@ -36,12 +49,24 @@ export default function RecentRequests( { items } ) {
 								<td>
 									<code>{ row.plugin_slug }</code>
 								</td>
-								<td>{ row.provider_id }</td>
-								<td>{ row.model_id }</td>
+								<td>
+									{ row.provider_id }
+									{ row.model_id && (
+										<>
+											<br />
+											<small style={ { opacity: 0.7 } }>
+												{ row.model_id }
+											</small>
+										</>
+									) }
+								</td>
 								<td>{ row.capability }</td>
 								<td>{ row.context }</td>
 								<td style={ { textAlign: 'right' } }>
 									{ fmt( row.total_tokens ) }
+								</td>
+								<td style={ { textAlign: 'right' } }>
+									{ fmtDuration( row.duration_ms ) }
 								</td>
 								<td>
 									<span

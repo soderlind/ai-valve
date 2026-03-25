@@ -10,7 +10,7 @@ namespace AIValve\Tracking;
 final class LogRepository {
 
 	private const TABLE_SUFFIX  = 'ai_valve_log';
-	private const SCHEMA_VERSION = 2;
+	private const SCHEMA_VERSION = 3;
 	private const VERSION_KEY    = 'ai_valve_db_version';
 
 	/* ------------------------------------------------------------------
@@ -42,6 +42,7 @@ final class LogRepository {
 			prompt_tokens   INT UNSIGNED    NOT NULL DEFAULT 0,
 			completion_tokens INT UNSIGNED  NOT NULL DEFAULT 0,
 			total_tokens    INT UNSIGNED    NOT NULL DEFAULT 0,
+			duration_ms     INT UNSIGNED    NOT NULL DEFAULT 0,
 			status          VARCHAR(64)     NOT NULL DEFAULT 'allowed',
 			created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
@@ -54,10 +55,24 @@ final class LogRepository {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
-		// Migrate existing tables: widen status column if upgrading from v1.
 		$current_version = (int) get_option( self::VERSION_KEY, 0 );
+
+		// v1 → v2: widen status column.
 		if ( $current_version < 2 ) {
 			$wpdb->query( "ALTER TABLE {$table} MODIFY status VARCHAR(64) NOT NULL DEFAULT 'allowed'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		}
+
+		// v2 → v3: add duration_ms column.
+		if ( $current_version < 3 ) {
+			$col = $wpdb->get_var( $wpdb->prepare(
+				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
+				DB_NAME,
+				$table,
+				'duration_ms'
+			) );
+			if ( null === $col ) {
+				$wpdb->query( "ALTER TABLE {$table} ADD COLUMN duration_ms INT UNSIGNED NOT NULL DEFAULT 0 AFTER total_tokens" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			}
 		}
 
 		update_option( self::VERSION_KEY, self::SCHEMA_VERSION, true );
@@ -92,6 +107,7 @@ final class LogRepository {
 			'prompt_tokens'     => 0,
 			'completion_tokens' => 0,
 			'total_tokens'      => 0,
+			'duration_ms'       => 0,
 			'status'            => 'allowed',
 		];
 
@@ -109,6 +125,7 @@ final class LogRepository {
 				'%d', // prompt_tokens
 				'%d', // completion_tokens
 				'%d', // total_tokens
+				'%d', // duration_ms
 				'%s', // status
 			]
 		);
@@ -370,8 +387,50 @@ final class LogRepository {
 	}
 
 	/* ------------------------------------------------------------------
+	 * Distinct filter values
+	 * ----------------------------------------------------------------*/
+
+	/**
+	 * Return distinct non-empty values for the filterable columns.
+	 *
+	 * @return array{ plugins: list<string>, providers: list<string>, models: list<string> }
+	 */
+	public function distinct_filter_values(): array {
+		global $wpdb;
+		$table = self::table_name();
+
+		return [
+			'plugins'   => $wpdb->get_col( "SELECT DISTINCT plugin_slug FROM {$table} WHERE plugin_slug != '' ORDER BY plugin_slug" ),   // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'providers' => $wpdb->get_col( "SELECT DISTINCT provider_id FROM {$table} WHERE provider_id != '' ORDER BY provider_id" ),   // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'models'    => $wpdb->get_col( "SELECT DISTINCT model_id    FROM {$table} WHERE model_id    != '' ORDER BY model_id" ),      // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		];
+	}
+
+	/* ------------------------------------------------------------------
 	 * Cleanup
 	 * ----------------------------------------------------------------*/
+
+	/**
+	 * Delete all rows from the log table.
+	 */
+	public function purge(): int {
+		global $wpdb;
+		$table = self::table_name();
+		return (int) $wpdb->query( "TRUNCATE TABLE {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	}
+
+	/**
+	 * Delete rows older than the given number of days.
+	 */
+	public function delete_older_than( int $days ): int {
+		global $wpdb;
+		$table    = self::table_name();
+		$cutoff   = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );
+		return (int) $wpdb->query( $wpdb->prepare(
+			"DELETE FROM {$table} WHERE created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$cutoff
+		) );
+	}
 
 	/**
 	 * Drop the table and remove the schema version option.

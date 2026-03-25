@@ -41,7 +41,7 @@ export default function App() {
 						case 'settings':
 							return <Settings setNotice={ setNotice } />;
 						case 'logs':
-							return <Logs />;
+							return <Logs setNotice={ setNotice } />;
 						default:
 							return null;
 					}
