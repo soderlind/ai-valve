@@ -45,9 +45,6 @@ final class RequestInterceptorTest extends TestCase {
 
 		// Brain Monkey tracks add_filter / add_action calls.
 		$this->assertTrue(
-			Filters\has( 'wp_ai_client_prevent_prompt', [ $interceptor, 'ensure_event_dispatcher' ] ) !== false
-		);
-		$this->assertTrue(
 			Filters\has( 'wp_ai_client_prevent_prompt', [ $interceptor, 'maybe_prevent' ] ) !== false
 		);
 		$this->assertTrue(

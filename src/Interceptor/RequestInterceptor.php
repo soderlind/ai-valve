@@ -7,7 +7,6 @@ namespace AIValve\Interceptor;
 use AIValve\Settings\Settings;
 use AIValve\Tracking\LogRepository;
 use AIValve\Tracking\UsageTracker;
-use WordPress\AiClient\AiClient;
 use WordPress\AiClient\Events\AfterGenerateResultEvent;
 use WordPress\AiClient\Events\BeforeGenerateResultEvent;
 use WP_AI_Client_Prompt_Builder;
@@ -15,14 +14,9 @@ use WP_AI_Client_Prompt_Builder;
 /**
  * Wires the three WP 7 AI connector hooks:
  *
- * 1. `wp_ai_client_prevent_prompt`        — gate / ACL + inject event dispatcher
+ * 1. `wp_ai_client_prevent_prompt`        — gate / ACL
  * 2. `wp_ai_client_before_generate_result` — start tracking
  * 3. `wp_ai_client_after_generate_result`  — log token usage
- *
- * NOTE: WP 7.0 has a core bug where `wp_ai_client_prompt()` creates the
- * PromptBuilder without passing the event dispatcher. We fix this by injecting
- * the dispatcher via reflection in our `prevent_prompt` filter. The clone
- * shares the same inner SDK PromptBuilder, so the fix propagates to the original.
  */
 final class RequestInterceptor {
 
@@ -36,44 +30,9 @@ final class RequestInterceptor {
 	) {}
 
 	public function register(): void {
-		// Priority 5: inject event dispatcher before any other prevent_prompt filter.
-		add_filter( 'wp_ai_client_prevent_prompt', [ $this, 'ensure_event_dispatcher' ], 5, 2 );
-		// Priority 10: evaluate policy.
 		add_filter( 'wp_ai_client_prevent_prompt', [ $this, 'maybe_prevent' ], 10, 2 );
 		add_action( 'wp_ai_client_before_generate_result', [ $this, 'on_before_generate' ], 10, 1 );
 		add_action( 'wp_ai_client_after_generate_result', [ $this, 'on_after_generate' ], 10, 1 );
-	}
-
-	/* ------------------------------------------------------------------
-	 * 0. Fix WP 7 core bug — inject event dispatcher into PromptBuilder
-	 *
-	 * wp_ai_client_prompt() creates WP_AI_Client_Prompt_Builder which
-	 * constructs the SDK PromptBuilder WITHOUT passing the event dispatcher.
-	 * The prevent_prompt filter receives a clone that shares the same inner
-	 * PromptBuilder, so we inject the dispatcher via reflection here.
-	 * ----------------------------------------------------------------*/
-
-	public function ensure_event_dispatcher( bool $prevent, WP_AI_Client_Prompt_Builder $builder ): bool {
-		try {
-			$wp_ref      = new \ReflectionClass( $builder );
-			$builder_prop = $wp_ref->getProperty( 'builder' );
-			$sdk_builder = $builder_prop->getValue( $builder );
-
-			$sdk_ref     = new \ReflectionClass( $sdk_builder );
-			$disp_prop   = $sdk_ref->getProperty( 'eventDispatcher' );
-			$current     = $disp_prop->getValue( $sdk_builder );
-
-			if ( null === $current ) {
-				$dispatcher = AiClient::getEventDispatcher();
-				if ( null !== $dispatcher ) {
-					$disp_prop->setValue( $sdk_builder, $dispatcher );
-				}
-			}
-		} catch ( \Throwable ) {
-			// Reflection failed — don't block the request.
-		}
-
-		return $prevent;
 	}
 
 	/* ------------------------------------------------------------------

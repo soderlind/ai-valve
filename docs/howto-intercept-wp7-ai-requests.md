@@ -1,6 +1,6 @@
 # How to Intercept WordPress 7 AI Connector Requests
 
-A practical guide to hooking into the WP 7 AI client, working around the event-dispatcher bug, and correctly reading token usage from the SDK.
+A practical guide to hooking into the WP 7 AI client and correctly reading token usage from the SDK.
 
 ---
 
@@ -33,81 +33,17 @@ add_action( 'wp_ai_client_after_generate_result', function ( AfterGenerateResult
 
 ---
 
-## WP 7.0 Core Bug: Event Dispatcher Not Injected
+## ~~WP 7.0 Core Bug: Event Dispatcher Not Injected~~ (Fixed in RC1)
 
-### Symptom
-
-`wp_ai_client_prevent_prompt` fires normally, but `wp_ai_client_before_generate_result` and `wp_ai_client_after_generate_result` **never fire**.
-
-### Root Cause
-
-In `wp-includes/ai-client.php`, the function `wp_ai_client_prompt()` creates the prompt builder like this:
-
-```php
-new WP_AI_Client_Prompt_Builder( AiClient::defaultRegistry(), $prompt );
-```
-
-The underlying SDK `PromptBuilder` constructor accepts an **optional third parameter**:
-
-```php
-public function __construct(
-    ProviderRegistryInterface $registry,
-    string $prompt,
-    ?EventDispatcherInterface $eventDispatcher = null,  // <-- never passed
-)
-```
-
-Because `$eventDispatcher` is never passed, it stays `null`. The SDK's `dispatchEvent()` method silently skips all event dispatching when the dispatcher is null:
-
-```php
-// PromptBuilder.php line ~1460
-private function dispatchEvent( object $event ): void {
-    if ( null !== $this->eventDispatcher ) {
-        $this->eventDispatcher->dispatch( $event );
-    }
-}
-```
-
-Meanwhile, `wp-settings.php` **does** set a global dispatcher via `AiClient::setEventDispatcher(new WP_AI_Client_Event_Dispatcher())` — it's just never plumbed into the PromptBuilder.
-
-### Workaround: Reflection Injection
-
-The `prevent_prompt` filter receives a **clone** of the `WP_AI_Client_Prompt_Builder`. Crucially, `WP_AI_Client_Prompt_Builder` has no `__clone()` method, so PHP performs a shallow copy — the clone shares the **same inner SDK `PromptBuilder` object**. Modifying it via the clone propagates to the original.
-
-Use an early-priority filter to inject the dispatcher before anything else runs:
-
-```php
-use WordPress\AiClient\AiClient;
-
-add_filter( 'wp_ai_client_prevent_prompt', function ( bool $prevent, \WP_AI_Client_Prompt_Builder $builder ): bool {
-    try {
-        // Reach the private SDK PromptBuilder inside the WP wrapper.
-        $wp_ref       = new ReflectionClass( $builder );
-        $builder_prop = $wp_ref->getProperty( 'builder' );
-        $sdk_builder  = $builder_prop->getValue( $builder );
-
-        // Check if the dispatcher is already set.
-        $sdk_ref   = new ReflectionClass( $sdk_builder );
-        $disp_prop = $sdk_ref->getProperty( 'eventDispatcher' );
-        $current   = $disp_prop->getValue( $sdk_builder );
-
-        if ( null === $current ) {
-            $dispatcher = AiClient::getEventDispatcher();
-            if ( null !== $dispatcher ) {
-                $disp_prop->setValue( $sdk_builder, $dispatcher );
-            }
-        }
-    } catch ( \Throwable ) {
-        // Reflection failed — don't break the request.
-    }
-
-    return $prevent;
-}, 5, 2 ); // Priority 5 — before any policy/gating filters at 10.
-```
-
-**Why priority 5?** The injection must happen before any filter at priority 10+ that relies on the before/after actions firing. Since `prevent_prompt` is the only hook that fires before the HTTP call, it's the only place to fix the dispatcher.
-
-**Will this break when WP fixes the bug?** No. The code checks `if ( null === $current )` — once core passes the dispatcher properly, the reflection is skipped entirely.
+> **Resolved.** WP 7.0 beta shipped without passing the event dispatcher to the SDK
+> `PromptBuilder`. This caused `wp_ai_client_before_generate_result` and
+> `wp_ai_client_after_generate_result` to never fire. AI Valve previously worked
+> around the bug by injecting the dispatcher via reflection at priority 5 of the
+> `wp_ai_client_prevent_prompt` filter.
+>
+> As of **WP 7 RC1**, the `WP_AI_Client_Prompt_Builder` constructor now passes
+> `AiClient::getEventDispatcher()` to the SDK `PromptBuilder` directly. The
+> reflection workaround has been removed from AI Valve.
 
 ---
 
@@ -188,18 +124,11 @@ foreach ( $trace as $frame ) {
 
 ## Complete Logging Example
 
-Putting it all together — a self-contained snippet that injects the dispatcher, gates requests, and logs token usage:
+Putting it all together — a self-contained snippet that gates requests and logs token usage:
 
 ```php
-add_filter( 'wp_ai_client_prevent_prompt', 'my_inject_dispatcher', 5, 2 );
 add_filter( 'wp_ai_client_prevent_prompt', 'my_gate_prompt', 10, 2 );
 add_action( 'wp_ai_client_after_generate_result', 'my_log_usage', 10, 1 );
-
-function my_inject_dispatcher( bool $prevent, WP_AI_Client_Prompt_Builder $builder ): bool {
-    // See "Workaround: Reflection Injection" above.
-    // ... reflection code ...
-    return $prevent;
-}
 
 function my_gate_prompt( bool $prevent, WP_AI_Client_Prompt_Builder $builder ): bool {
     if ( $prevent ) {
@@ -237,7 +166,7 @@ If hooks aren't firing as expected:
 
 1. **Is the AI connector configured?** — `wp_supports_ai()` must return `true`.
 2. **Is `wp_ai_client_prompt()` being used?** — Only this function triggers the hooks. Direct SDK usage bypasses them.
-3. **Are before/after actions silent?** — Apply the reflection workaround above (WP 7.0 core bug).
+3. **Are before/after actions silent?** — Ensure you're on WP 7 RC1+. Earlier betas had a core bug where the event dispatcher wasn't injected (now fixed).
 4. **Are you getting errors on token access?** — Use getter methods, not property access.
 5. **Is your `prevent_prompt` filter returning the wrong type?** — Must return `bool`. Returning a non-bool can break the filter chain.
 6. **Check hook registration:** `wp eval 'var_dump( has_filter("wp_ai_client_prevent_prompt") );'`
