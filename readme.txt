@@ -2,7 +2,7 @@
 Contributors: PerS
 Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
-Tested up to: 7.0-RC1
+Tested up to: 7.0
 Requires PHP: 8.3
 Stable tag: 0.5.0
 License: GPL-2.0-or-later
