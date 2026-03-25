@@ -99,6 +99,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workaround for WordPress 7.0 event dispatcher bug.
 - GitHub release updater for automatic updates.
 
+[0.6.0]: https://github.com/soderlind/ai-valve/releases/tag/0.6.0
+[0.5.0]: https://github.com/soderlind/ai-valve/releases/tag/0.5.0
 [0.4.0]: https://github.com/soderlind/ai-valve/releases/tag/0.4.0
 [0.3.0]: https://github.com/soderlind/ai-valve/releases/tag/0.3.0
 [0.2.0]: https://github.com/soderlind/ai-valve/releases/tag/0.2.0
