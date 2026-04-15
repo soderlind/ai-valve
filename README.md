@@ -2,6 +2,8 @@
 
 Control, meter, and permission-gate AI usage from plugins that connect through the WordPress 7 AI connector.
 
+Heavily inspired by the [WordPress AI Connectors Need More Friction, Not Less](https://thewp.world/wordpress-ai-connectors-need-more-friction-not-less/) article.
+
 > Works with WordPress 7 RC2. Tested using WordPress [AI](https://wordpress.org/plugins/ai/),  [Virtual Media Folders AI Organizer](https://github.com/soderlind/vmfa-ai-organizer?tab=readme-ov-file#virtual-media-folders-ai-organizer) and the [AI Provider for Azure OpenAI](https://github.com/soderlind/ai-provider-for-azure-openai?tab=readme-ov-file#ai-provider-for-azure-openai).
 
 <img width="100%"  alt="Screenshot 2026-03-24 at 23 55 20" src="https://github.com/user-attachments/assets/3b619ba2-1432-4029-be3f-7556bcb991e2" />
@@ -110,9 +112,6 @@ src/
   REST/UsageController.php    REST API endpoints
 ```
 
-## Credits
-
-Heavily inspired by the [WordPress AI Connectors Need More Friction, Not Less](https://thewp.world/wordpress-ai-connectors-need-more-friction-not-less/) article.
 
 ## License
 
