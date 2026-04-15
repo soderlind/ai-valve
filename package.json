@@ -1,6 +1,6 @@
 {
 	"name": "ai-valve",
-	"version": "0.6.0",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"build": "wp-scripts build src/js/index.js --output-path=build",

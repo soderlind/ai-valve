@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 0.6.0
+Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,13 @@ Yes. Each subsite has its own log table, settings, and budgets.
 The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/ai-valve/blob/main/docs/how-blocking-works.md) for the full explanation.
 
 == Changelog ==
+
+= 1.0.0 =
+* Fixed: AI requests that fail (auth errors, timeouts, bad deployments) now logged with status = 'error'.
+* Fixed: Schema migrations run on every load (version-gated) so in-place updates work without deactivate/activate.
+* Changed: on_before_generate inserts a pending log row immediately; on_after_generate updates it.
+* Changed: Shutdown handler catches orphaned pending rows and marks them as errors.
+* Added: LogRepository::update() for updating existing log rows by ID.
 
 = 0.6.0 =
 * Added: Request duration tracking (duration_ms column, schema v3).

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-04-15
+
+### Fixed
+
+- AI requests that fail (auth errors, timeouts, bad deployments) are now logged with `status = 'error'` instead of being silently lost.
+- Schema migrations now run on every load (version-gated) via `LogRepository::maybe_upgrade()`, so in-place file updates without deactivate/activate no longer leave the DB in an outdated state.
+
+### Changed
+
+- `on_before_generate` now inserts a pending log row immediately, ensuring every request that enters the AI pipeline is visible — even if the SDK throws before the after-event fires.
+- `on_after_generate` updates the pending row with token counts and `status = 'allowed'` instead of inserting a new row.
+- Added shutdown handler to catch orphaned pending rows and mark them as errors.
+- Added `LogRepository::update()` method for updating existing log rows by ID.
+- Extracted `LogRepository::run_migrations()` from `activate()`; new `maybe_upgrade()` calls it when the stored schema version is behind.
+
 ## [0.6.0] - 2026-03-25
 
 ### Added
@@ -99,6 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workaround for WordPress 7.0 event dispatcher bug.
 - GitHub release updater for automatic updates.
 
+[1.0.0]: https://github.com/soderlind/ai-valve/releases/tag/1.0.0
 [0.6.0]: https://github.com/soderlind/ai-valve/releases/tag/0.6.0
 [0.5.0]: https://github.com/soderlind/ai-valve/releases/tag/0.5.0
 [0.4.0]: https://github.com/soderlind/ai-valve/releases/tag/0.4.0

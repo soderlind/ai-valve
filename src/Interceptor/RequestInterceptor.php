@@ -15,8 +15,12 @@ use WP_AI_Client_Prompt_Builder;
  * Wires the three WP 7 AI connector hooks:
  *
  * 1. `wp_ai_client_prevent_prompt`        — gate / ACL
- * 2. `wp_ai_client_before_generate_result` — start tracking
- * 3. `wp_ai_client_after_generate_result`  — log token usage
+ * 2. `wp_ai_client_before_generate_result` — insert pending log row
+ * 3. `wp_ai_client_after_generate_result`  — finalise with token usage
+ *
+ * If the SDK throws during generation (auth error, timeout, etc.),
+ * the after-event never fires. A shutdown handler catches orphaned
+ * pending rows and marks them as errors.
  */
 final class RequestInterceptor {
 
@@ -24,6 +28,12 @@ final class RequestInterceptor {
 	private static string $current_plugin_slug = '';
 	private static string $current_context     = '';
 	private static float  $request_start_time  = 0.0;
+
+	/** Pending log row ID written in on_before_generate. */
+	private static int $pending_log_id = 0;
+
+	/** Whether the shutdown handler has been registered. */
+	private static bool $shutdown_registered = false;
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -81,7 +91,7 @@ final class RequestInterceptor {
 	}
 
 	/* ------------------------------------------------------------------
-	 * 2. Before generate — capture attribution
+	 * 2. Before generate — insert pending log row
 	 * ----------------------------------------------------------------*/
 
 	public function on_before_generate( BeforeGenerateResultEvent $event ): void {
@@ -94,10 +104,49 @@ final class RequestInterceptor {
 			self::$current_plugin_slug = CallerDetector::detect();
 			self::$current_context     = CallerDetector::context();
 		}
+
+		// Extract provider / model / capability from the event.
+		$model       = $event->getModel();
+		$provider_id = '';
+		$model_id    = '';
+		$capability  = '';
+
+		try {
+			$provider_id = $model->providerMetadata()->getId();
+		} catch ( \Throwable ) {
+		}
+
+		try {
+			$model_id = $model->metadata()->getId();
+		} catch ( \Throwable ) {
+		}
+
+		if ( null !== $event->getCapability() ) {
+			$capability = (string) $event->getCapability();
+		}
+
+		// Write a pending row so the request is visible even if after-event never fires.
+		$repo   = new LogRepository();
+		$row_id = $repo->insert( [
+			'plugin_slug' => self::$current_plugin_slug ?: 'unknown',
+			'provider_id' => $provider_id,
+			'model_id'    => $model_id,
+			'capability'  => $capability,
+			'context'     => self::$current_context ?: CallerDetector::context(),
+			'status'      => 'pending',
+		] );
+
+		self::$pending_log_id = is_int( $row_id ) ? $row_id : 0;
+
+		// Register a one-time shutdown handler to catch orphaned pending rows.
+		if ( ! self::$shutdown_registered ) {
+			self::$shutdown_registered = true;
+			register_shutdown_function( [ self::class, 'finalise_on_shutdown' ] );
+		}
 	}
 
 	/* ------------------------------------------------------------------
-	 * 3. After generate — log token usage
+	 * 3. After generate — finalise pending row with token usage
 	 * ----------------------------------------------------------------*/
 
 	public function on_after_generate( AfterGenerateResultEvent $event ): void {
@@ -130,7 +179,6 @@ final class RequestInterceptor {
 		$total_tokens      = $usage->getTotalTokens();
 
 		$plugin_slug = self::$current_plugin_slug ?: 'unknown';
-		$context     = self::$current_context ?: CallerDetector::context();
 
 		// Compute request duration.
 		$duration_ms = 0;
@@ -138,20 +186,35 @@ final class RequestInterceptor {
 			$duration_ms = (int) round( ( hrtime( true ) - self::$request_start_time ) / 1000000 );
 		}
 
-		// Write to the log table.
 		$repo = new LogRepository();
-		$repo->insert( [
-			'plugin_slug'       => $plugin_slug,
-			'provider_id'       => $provider_id,
-			'model_id'          => $model_id,
-			'capability'        => $capability,
-			'context'           => $context,
-			'prompt_tokens'     => $prompt_tokens,
-			'completion_tokens' => $completion_tokens,
-			'total_tokens'      => $total_tokens,
-			'duration_ms'       => $duration_ms,
-			'status'            => 'allowed',
-		] );
+
+		if ( self::$pending_log_id > 0 ) {
+			// Update the pending row inserted by on_before_generate.
+			$repo->update( self::$pending_log_id, [
+				'provider_id'       => $provider_id,
+				'model_id'          => $model_id,
+				'capability'        => $capability,
+				'prompt_tokens'     => $prompt_tokens,
+				'completion_tokens' => $completion_tokens,
+				'total_tokens'      => $total_tokens,
+				'duration_ms'       => $duration_ms,
+				'status'            => 'allowed',
+			] );
+		} else {
+			// Fallback: no pending row (unlikely but defensive).
+			$repo->insert( [
+				'plugin_slug'       => $plugin_slug,
+				'provider_id'       => $provider_id,
+				'model_id'          => $model_id,
+				'capability'        => $capability,
+				'context'           => self::$current_context ?: CallerDetector::context(),
+				'prompt_tokens'     => $prompt_tokens,
+				'completion_tokens' => $completion_tokens,
+				'total_tokens'      => $total_tokens,
+				'duration_ms'       => $duration_ms,
+				'status'            => 'allowed',
+			] );
+		}
 
 		// Update rolling counters.
 		$this->usage_tracker->record( $plugin_slug, $total_tokens, $provider_id );
@@ -160,6 +223,49 @@ final class RequestInterceptor {
 		self::$current_plugin_slug = '';
 		self::$current_context     = '';
 		self::$request_start_time  = 0.0;
+		self::$pending_log_id      = 0;
 		CallerDetector::reset();
+	}
+
+	/* ------------------------------------------------------------------
+	 * Shutdown handler — catch orphaned pending rows
+	 * ----------------------------------------------------------------*/
+
+	/**
+	 * If on_after_generate never fired, mark the pending row as an error.
+	 *
+	 * @internal Called via register_shutdown_function.
+	 */
+	public static function finalise_on_shutdown(): void {
+		if ( self::$pending_log_id <= 0 ) {
+			return;
+		}
+
+		$duration_ms = 0;
+		if ( self::$request_start_time > 0 ) {
+			$duration_ms = (int) round( ( hrtime( true ) - self::$request_start_time ) / 1000000 );
+		}
+
+		$repo = new LogRepository();
+		$repo->update( self::$pending_log_id, [
+			'duration_ms' => $duration_ms,
+			'status'      => 'error',
+		] );
+
+		self::$pending_log_id     = 0;
+		self::$request_start_time = 0.0;
+	}
+
+	/**
+	 * Reset all static state. Intended for tests only.
+	 *
+	 * @internal
+	 */
+	public static function reset_state(): void {
+		self::$current_plugin_slug = '';
+		self::$current_context     = '';
+		self::$request_start_time  = 0.0;
+		self::$pending_log_id      = 0;
+		self::$shutdown_registered = false;
 	}
 }
