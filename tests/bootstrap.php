@@ -39,3 +39,7 @@ if ( ! class_exists( 'WP_AI_Client_Prompt_Builder' ) ) {
 	// @phpcs:ignore
 	class WP_AI_Client_Prompt_Builder {}
 }
+
+// Stub WordPress\AiClient SDK classes used by RequestInterceptor.
+require_once __DIR__ . '/stubs/ai-client-sdk.php';
+

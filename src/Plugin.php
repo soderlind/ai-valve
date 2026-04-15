@@ -26,6 +26,10 @@ final class Plugin {
 			return;
 		}
 
+		// Run schema migrations on version bump (activation hook only
+		// fires on activate, not on in-place file updates).
+		LogRepository::maybe_upgrade();
+
 		$settings      = new Settings();
 		$usage_tracker = new UsageTracker( $settings );
 		$interceptor   = new RequestInterceptor( $settings, $usage_tracker );

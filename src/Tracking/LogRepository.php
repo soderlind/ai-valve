@@ -27,6 +27,25 @@ final class LogRepository {
 	 * ----------------------------------------------------------------*/
 
 	public static function activate(): void {
+		self::run_migrations();
+	}
+
+	/**
+	 * Run schema migrations if the stored version is behind.
+	 *
+	 * Called from Plugin::register() on every request so that in-place
+	 * file updates (without deactivate/activate) still apply migrations.
+	 * The version check makes this a no-op on most requests.
+	 */
+	public static function maybe_upgrade(): void {
+		$current_version = (int) get_option( self::VERSION_KEY, 0 );
+
+		if ( $current_version < self::SCHEMA_VERSION ) {
+			self::run_migrations();
+		}
+	}
+
+	private static function run_migrations(): void {
 		global $wpdb;
 
 		$table   = self::table_name();
@@ -131,6 +150,49 @@ final class LogRepository {
 		);
 
 		return false === $result ? false : (int) $wpdb->insert_id;
+	}
+
+	/* ------------------------------------------------------------------
+	 * Update
+	 * ----------------------------------------------------------------*/
+
+	/**
+	 * Update an existing log row by ID.
+	 *
+	 * @param int                  $id   Row ID to update.
+	 * @param array<string, mixed> $data Column => value pairs to set.
+	 * @return bool True on success, false on failure.
+	 */
+	public function update( int $id, array $data ): bool {
+		global $wpdb;
+
+		$allowed = [
+			'plugin_slug'       => '%s',
+			'provider_id'       => '%s',
+			'model_id'          => '%s',
+			'capability'        => '%s',
+			'context'           => '%s',
+			'prompt_tokens'     => '%d',
+			'completion_tokens' => '%d',
+			'total_tokens'      => '%d',
+			'duration_ms'       => '%d',
+			'status'            => '%s',
+		];
+
+		$set     = array_intersect_key( $data, $allowed );
+		$formats = array_map( static fn( string $col ) => $allowed[ $col ], array_keys( $set ) );
+
+		if ( empty( $set ) ) {
+			return false;
+		}
+
+		return (bool) $wpdb->update(
+			self::table_name(),
+			$set,
+			[ 'id' => $id ],
+			$formats,
+			[ '%d' ]
+		);
 	}
 
 	/* ------------------------------------------------------------------
