@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-04-15
+
+### Fixed
+
+- Removed stale beta6 dispatcher workaround note and doc from README.
+
+### Changed
+
+- Hook table and project structure descriptions updated to reflect the pending-row pattern.
+
+### Added
+
+- FAQ entry: how to deny all plugins by default and allow specific ones.
+
 ## [1.0.0] - 2026-04-15
 
 ### Fixed
@@ -114,6 +128,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workaround for WordPress 7.0 event dispatcher bug.
 - GitHub release updater for automatic updates.
 
+[1.0.1]: https://github.com/soderlind/ai-valve/releases/tag/1.0.1
 [1.0.0]: https://github.com/soderlind/ai-valve/releases/tag/1.0.0
 [0.6.0]: https://github.com/soderlind/ai-valve/releases/tag/0.6.0
 [0.5.0]: https://github.com/soderlind/ai-valve/releases/tag/0.5.0
