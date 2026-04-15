@@ -63,6 +63,15 @@ Yes. Each subsite has its own log table, settings, and budgets.
 
 The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/ai-valve/blob/main/docs/how-blocking-works.md) for the full explanation.
 
+= How do I block all plugins and only allow specific ones? =
+
+1. Go to Settings → AI Valve → Settings.
+2. Set the Default policy to Deny.
+3. Switch to the Dashboard tab.
+4. In the Per-plugin access table, set the plugins you want to allow to Allow.
+
+Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
+
 == Changelog ==
 
 = 1.0.0 =

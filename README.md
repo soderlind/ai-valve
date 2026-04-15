@@ -55,13 +55,26 @@ AI Valve hooks into three WordPress 7 AI connector events:
 
 | Hook | Purpose |
 |---|---|
-| `wp_ai_client_prevent_prompt` | Gate requests — evaluate policy, inject event dispatcher |
-| `wp_ai_client_before_generate_result` | Capture caller attribution |
-| `wp_ai_client_after_generate_result` | Log token usage and update counters |
+| `wp_ai_client_prevent_prompt` | Gate requests — evaluate policy |
+| `wp_ai_client_before_generate_result` | Insert a pending log row with caller attribution |
+| `wp_ai_client_after_generate_result` | Update the pending row with token usage and status |
+
+A pending log row is created *before* the AI provider is called. If the provider throws (auth error, timeout, bad deployment), a shutdown handler marks the row as `error` so failed requests are never lost.
 
 Caller attribution uses `debug_backtrace()` to identify which plugin initiated the AI request.
 
 When a request is blocked, the calling plugin receives a `WP_Error` with code `prompt_prevented` and the denial reason is logged. See [docs/how-blocking-works.md](docs/how-blocking-works.md) for the full explanation.
+
+## FAQ
+
+### How do I block all plugins and only allow specific ones?
+
+1. Go to **Settings → AI Valve → Settings**.
+2. Set the **Default policy** to **Deny**.
+3. Switch to the **Dashboard** tab.
+4. In the **Per-plugin access** table, set the plugins you want to allow to **Allow**.
+
+Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
 
 ## Development
 
@@ -86,7 +99,7 @@ src/
   Plugin.php                  Hook registration orchestrator
   Settings/Settings.php       Options read/write/sanitize
   Interceptor/
-    RequestInterceptor.php    WP 7 AI hook wiring + dispatcher fix
+    RequestInterceptor.php    WP 7 AI hook wiring + pending-row logging
     PolicyEngine.php          Allow/deny/budget evaluation
     CallerDetector.php        Backtrace → plugin slug
   Tracking/
