@@ -84,6 +84,15 @@ final class RequestInterceptor {
 				'status'      => 'denied:' . $engine->denial_reason(),
 			] );
 
+			/**
+			 * Fires when an AI request is denied by AI Valve.
+			 *
+			 * @param string $plugin_slug The plugin slug that made the request.
+			 * @param string $context    Execution context: admin|frontend|cron|rest|ajax|cli.
+			 * @param string $reason     Denial reason code.
+			 */
+			do_action( 'ai_valve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
+
 			return true; // Prevent the prompt.
 		}
 
@@ -218,6 +227,30 @@ final class RequestInterceptor {
 
 		// Update rolling counters.
 		$this->usage_tracker->record( $plugin_slug, $total_tokens, $provider_id );
+
+		/**
+		 * Fires after an AI request completes successfully.
+		 *
+		 * @param string $plugin_slug       The plugin slug that made the request.
+		 * @param string $provider_id       Provider identifier.
+		 * @param string $model_id          Model identifier.
+		 * @param string $capability        Capability used (e.g. 'text-generation').
+		 * @param int    $prompt_tokens     Tokens consumed by the prompt.
+		 * @param int    $completion_tokens Tokens consumed by the completion.
+		 * @param int    $total_tokens      Total tokens consumed.
+		 * @param int    $duration_ms       Request duration in milliseconds.
+		 */
+		do_action(
+			'ai_valve_request_completed',
+			$plugin_slug,
+			$provider_id,
+			$model_id,
+			$capability,
+			$prompt_tokens,
+			$completion_tokens,
+			$total_tokens,
+			$duration_ms
+		);
 
 		// Clear correlation state for the next request.
 		self::$current_plugin_slug = '';

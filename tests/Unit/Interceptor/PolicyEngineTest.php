@@ -9,6 +9,7 @@ use AIValve\Settings\Settings;
 use AIValve\Tracking\UsageTracker;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use Brain\Monkey\Filters;
 use PHPUnit\Framework\TestCase;
 
 final class PolicyEngineTest extends TestCase {
@@ -249,5 +250,58 @@ final class PolicyEngineTest extends TestCase {
 
 		$this->assertFalse( $engine->evaluate( 'my-plugin', 'admin' ) );
 		$this->assertSame( 'ai_valve_disabled', $engine->denial_reason() );
+	}
+
+	/* ------------------------------------------------------------------
+	 * ai_valve_plugin_policy filter
+	 * ----------------------------------------------------------------*/
+
+	public function test_filter_can_deny_an_allowed_plugin(): void {
+		// Database says allow, but filter overrides to deny.
+		Functions\when( 'get_option' )->justReturn( [
+			'plugin_policies' => [ 'trusted-plugin' => 'allow' ],
+		] );
+		$settings = new Settings();
+		$tracker  = new UsageTracker( $settings );
+		$engine   = new PolicyEngine( $settings, $tracker );
+
+		Filters\expectApplied( 'ai_valve_plugin_policy' )
+			->once()
+			->with( 'allow', 'trusted-plugin', 'admin' )
+			->andReturn( 'deny' );
+
+		$this->assertFalse( $engine->evaluate( 'trusted-plugin', 'admin' ) );
+		$this->assertSame( 'plugin_denied', $engine->denial_reason() );
+	}
+
+	public function test_filter_can_allow_a_denied_plugin(): void {
+		// Database says deny, but filter overrides to allow.
+		Functions\when( 'get_option' )->justReturn( [
+			'plugin_policies' => [ 'bad-plugin' => 'deny' ],
+		] );
+		$settings = new Settings();
+		$tracker  = new UsageTracker( $settings );
+		$engine   = new PolicyEngine( $settings, $tracker );
+
+		Filters\expectApplied( 'ai_valve_plugin_policy' )
+			->once()
+			->with( 'deny', 'bad-plugin', 'admin' )
+			->andReturn( 'allow' );
+
+		$this->assertTrue( $engine->evaluate( 'bad-plugin', 'admin' ) );
+		$this->assertSame( '', $engine->denial_reason() );
+	}
+
+	public function test_filter_receives_plugin_slug_and_context(): void {
+		$engine = new PolicyEngine( $this->settings, $this->usage_tracker );
+
+		Filters\expectApplied( 'ai_valve_plugin_policy' )
+			->once()
+			->with( 'allow', 'my-plugin', 'cron' )
+			->andReturnFirstArg();
+
+		$result = $engine->evaluate( 'my-plugin', 'cron' );
+
+		$this->assertTrue( $result );
 	}
 }
