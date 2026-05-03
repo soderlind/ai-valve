@@ -39,7 +39,14 @@ final class PolicyEngine {
 		}
 
 		// 2. Per-plugin policy.
-		if ( 'deny' === $this->settings->plugin_policy( $plugin_slug ) ) {
+		// Filterable so external code can override the stored policy for a slug.
+		$policy = (string) apply_filters(
+			'ai_valve_plugin_policy',
+			$this->settings->plugin_policy( $plugin_slug ),
+			$plugin_slug,
+			$context
+		);
+		if ( 'deny' === $policy ) {
 			$this->denial_reason = 'plugin_denied';
 			return false;
 		}
