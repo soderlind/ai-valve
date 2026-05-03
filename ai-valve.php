@@ -50,15 +50,15 @@ register_deactivation_hook( __FILE__, static function (): void {
  */
 add_action( 'plugins_loaded', static function (): void {
 	// Update checker via GitHub releases.
-	if ( ! class_exists( \Soderlind\WordPress\GitHubUpdater::class ) ) {
+	if ( ! class_exists( \Soderlind\WordPress\GitHubUpdater::class) ) {
 		require_once AI_VALVE_DIR . '/class-github-updater.php';
 	}
 	\Soderlind\WordPress\GitHubUpdater::init(
-		github_url:  'https://github.com/soderlind/ai-valve',
+		github_url: 'https://github.com/soderlind/ai-valve',
 		plugin_file: AI_VALVE_FILE,
 		plugin_slug: 'ai-valve',
-		name_regex:  '/ai-valve\.zip/',
-		branch:      'main',
+		name_regex: '/ai-valve\.zip/',
+		branch: 'main',
 	);
 
 	( new Plugin() )->register();
