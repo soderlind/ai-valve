@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,10 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
 
 == Changelog ==
+
+= 1.0.2 =
+* Fixed: Resolve multiple security vulnerabilities in transitive dependencies.
+* Changed: Update README — add inspiration note and remove duplicate credit section.
 
 = 1.0.1 =
 * Fixed: Removed stale beta6 dispatcher workaround note from README.
