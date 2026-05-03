@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,9 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
 
 == Changelog ==
+
+= 1.0.4 =
+* Changed: Update npm dependencies to latest versions.
 
 = 1.0.3 =
 * Added: `ai_valve_plugin_policy` filter to override allow/deny policy programmatically.
