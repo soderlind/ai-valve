@@ -70,6 +70,10 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 
 Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
 
+==  Screenshots ==
+
+1. Dashboard with usage summary cards and per-plugin breakdown.
+
 == Changelog ==
 
 = 1.1.1 =
