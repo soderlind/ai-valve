@@ -6,6 +6,7 @@ namespace AIValve\REST;
 
 use AIValve\Settings\Settings;
 use AIValve\Tracking\LogRepository;
+use AIValve\Tracking\UsageClock;
 use AIValve\Tracking\UsageTracker;
 use WP_Error;
 use WP_REST_Controller;
@@ -145,8 +146,8 @@ final class UsageController extends WP_REST_Controller {
 
 	public function get_usage( WP_REST_Request $request ): WP_REST_Response {
 		$repo  = new LogRepository();
-		$today = gmdate( 'Y-m-d' );
-		$month = gmdate( 'Y-m' );
+		$today = UsageClock::current_date();
+		$month = UsageClock::current_month();
 
 		$month_from = $month . '-01 00:00:00';
 		$today_end  = $today . ' 23:59:59';

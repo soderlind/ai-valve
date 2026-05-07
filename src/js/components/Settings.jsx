@@ -109,6 +109,7 @@ export default function Settings( { setNotice } ) {
 									update( 'default_policy', val )
 								}
 								__nextHasNoMarginBottom
+								__next40pxDefaultSize
 							/>
 							<p className="description">
 								{ __(

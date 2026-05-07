@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,12 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed: Dashboard usage date buckets now keep Today, plugin totals, and Recent Requests aligned around database/PHP day boundaries.
+* Fixed: WordPress 6.8 SelectControl deprecation warnings in the admin UI.
+* Added: WordPress.org icon and banner assets.
+* Changed: Clarified installation instructions in README.
 
 = 1.1.0 =
 * Removed: GitHub release updater for WordPress.org distribution.
