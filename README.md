@@ -4,7 +4,7 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 > Inspired by [WordPress AI Connectors Need More Friction, Not Less](https://thewp.world/wordpress-ai-connectors-need-more-friction-not-less/). Works with WordPress 7 RC2. Tested with [WordPress AI](https://wordpress.org/plugins/ai/), [Virtual Media Folders AI Organizer](https://github.com/soderlind/vmfa-ai-organizer), and [AI Provider for Azure OpenAI](https://github.com/soderlind/ai-provider-for-azure-openai).
 
-<img width="100%" alt="AI Valve dashboard" src="https://github.com/user-attachments/assets/3b619ba2-1432-4029-be3f-7556bcb991e2" />
+<img width="100%" alt="AI Valve dashboard" src=".wordpress-org/screenshot-1.png" />
 
 ## Features
 
