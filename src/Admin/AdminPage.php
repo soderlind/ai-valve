@@ -8,6 +8,8 @@ use AIValve\Settings\Settings;
 use AIValve\Tracking\LogRepository;
 use AIValve\Tracking\UsageTracker;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Registers the Settings → AI Valve admin page.
  *
@@ -62,8 +64,8 @@ final class AdminPage {
 		wp_enqueue_script(
 			'ai-valve-admin',
 			plugins_url( 'build/index.js', AI_VALVE_FILE ),
-			$asset['dependencies'],
-			$asset['version'],
+			$asset[ 'dependencies' ],
+			$asset[ 'version' ],
 			true
 		);
 
@@ -71,7 +73,7 @@ final class AdminPage {
 			'ai-valve-admin',
 			plugins_url( 'build/index.css', AI_VALVE_FILE ),
 			[ 'wp-components' ],
-			$asset['version']
+			$asset[ 'version' ]
 		);
 
 		wp_localize_script( 'ai-valve-admin', 'aiValve', [
@@ -107,22 +109,22 @@ final class AdminPage {
 
 		$repo    = new LogRepository();
 		$filters = [
-			'plugin_slug' => sanitize_key( $_GET['filter_plugin'] ?? '' ),
-			'provider_id' => sanitize_key( $_GET['filter_provider'] ?? '' ),
-			'model_id'    => sanitize_text_field( $_GET['filter_model'] ?? '' ),
-			'context'     => sanitize_key( $_GET['filter_context'] ?? '' ),
-			'status'      => sanitize_text_field( $_GET['filter_status'] ?? '' ),
+			'plugin_slug' => sanitize_key( wp_unslash( $_GET[ 'filter_plugin' ] ?? '' ) ),
+			'provider_id' => sanitize_key( wp_unslash( $_GET[ 'filter_provider' ] ?? '' ) ),
+			'model_id'    => sanitize_text_field( wp_unslash( $_GET[ 'filter_model' ] ?? '' ) ),
+			'context'     => sanitize_key( wp_unslash( $_GET[ 'filter_context' ] ?? '' ) ),
+			'status'      => sanitize_text_field( wp_unslash( $_GET[ 'filter_status' ] ?? '' ) ),
 			'per_page'    => 10000,
 			'page'        => 1,
 		];
 
-		$date_from = sanitize_text_field( $_GET['filter_date_from'] ?? '' );
-		$date_to   = sanitize_text_field( $_GET['filter_date_to'] ?? '' );
+		$date_from = sanitize_text_field( wp_unslash( $_GET[ 'filter_date_from' ] ?? '' ) );
+		$date_to   = sanitize_text_field( wp_unslash( $_GET[ 'filter_date_to' ] ?? '' ) );
 		if ( $date_from && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_from ) ) {
-			$filters['date_from'] = $date_from . ' 00:00:00';
+			$filters[ 'date_from' ] = $date_from . ' 00:00:00';
 		}
 		if ( $date_to && preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_to ) ) {
-			$filters['date_to'] = $date_to . ' 23:59:59';
+			$filters[ 'date_to' ] = $date_to . ' 23:59:59';
 		}
 
 		$result = $repo->query( $filters );
@@ -136,7 +138,7 @@ final class AdminPage {
 		$output = fopen( 'php://output', 'w' );
 		fputcsv( $output, [ 'Time', 'Plugin', 'Provider', 'Model', 'Capability', 'Context', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Duration (ms)', 'Status' ] );
 
-		foreach ( $result['items'] as $row ) {
+		foreach ( $result[ 'items' ] as $row ) {
 			fputcsv( $output, [
 				$row->created_at ?? '',
 				$row->plugin_slug ?? '',
@@ -152,7 +154,6 @@ final class AdminPage {
 			] );
 		}
 
-		fclose( $output );
 		exit;
 	}
 }

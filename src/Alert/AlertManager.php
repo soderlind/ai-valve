@@ -7,6 +7,8 @@ namespace AIValve\Alert;
 use AIValve\Settings\Settings;
 use AIValve\Tracking\UsageTracker;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Shows admin notices when token usage approaches / exceeds budget thresholds.
  * Optionally sends a one-time email alert per day when the budget is exceeded.
@@ -78,7 +80,7 @@ final class AlertManager {
 		// Check per-plugin budgets.
 		$plugin_budgets = (array) $this->settings->get( 'plugin_budgets', [] );
 		foreach ( $plugin_budgets as $slug => $limits ) {
-			$slug = (string) $slug;
+			$slug        = (string) $slug;
 			$p_daily_pct = $this->usage_tracker->plugin_daily_pct( $slug );
 			if ( $p_daily_pct >= 100 ) {
 				$messages[] = sprintf(
@@ -190,10 +192,10 @@ final class AlertManager {
 
 		printf(
 			'<div style="background:#f0f0f1;border-radius:3px;height:12px;margin-top:4px;overflow:hidden;">'
-			. '<div style="background:%s;height:100%%;width:%d%%;transition:width 0.3s;"></div>'
+			. '<div style="background:%s;height:100%%;width:%s%%;transition:width 0.3s;"></div>'
 			. '</div>',
 			esc_attr( $color ),
-			$pct
+			esc_attr( (string) absint( $pct ) )
 		);
 	}
 

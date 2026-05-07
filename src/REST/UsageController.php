@@ -13,6 +13,8 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * REST API endpoints for the AI Valve dashboard.
  *
@@ -44,44 +46,44 @@ final class UsageController extends WP_REST_Controller {
 				'callback'            => [ $this, 'get_logs' ],
 				'permission_callback' => [ $this, 'check_permissions' ],
 				'args'                => [
-					'page'          => [
+					'page'        => [
 						'type'              => 'integer',
 						'default'           => 1,
 						'minimum'           => 1,
 						'sanitize_callback' => 'absint',
 					],
-					'per_page'      => [
+					'per_page'    => [
 						'type'              => 'integer',
 						'default'           => 20,
 						'minimum'           => 1,
 						'maximum'           => 100,
 						'sanitize_callback' => 'absint',
 					],
-					'plugin_slug'   => [
+					'plugin_slug' => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_key',
 					],
-					'provider_id'   => [
+					'provider_id' => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_key',
 					],
-					'model_id'      => [
+					'model_id'    => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'context'       => [
+					'context'     => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_key',
 					],
-					'status'        => [
+					'status'      => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'date_from'     => [
+					'date_from'   => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					],
-					'date_to'       => [
+					'date_to'     => [
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					],
@@ -161,7 +163,7 @@ final class UsageController extends WP_REST_Controller {
 			'by_provider'       => $repo->totals_by_provider( $month_from, $today_end ),
 			'by_provider_model' => $repo->totals_by_provider_model( $month_from, $today_end ),
 			'by_context'        => $repo->totals_by_context( $month_from, $today_end ),
-			'recent'            => $repo->query( [ 'per_page' => 10 ] )['items'],
+			'recent'            => $repo->query( [ 'per_page' => 10 ] )[ 'items' ],
 			'known_slugs'       => $known_slugs ?: [],
 			'budgets'           => [
 				'global_daily_limit'   => (int) $this->settings->get( 'global_daily_limit', 0 ),
@@ -180,9 +182,9 @@ final class UsageController extends WP_REST_Controller {
 		$repo   = new LogRepository();
 		$result = $repo->query( $request->get_params() );
 
-		$response = rest_ensure_response( $result['items'] );
-		$response->header( 'X-WP-Total', (string) $result['total'] );
-		$response->header( 'X-WP-TotalPages', (string) ceil( $result['total'] / max( 1, (int) $request->get_param( 'per_page' ) ) ) );
+		$response = rest_ensure_response( $result[ 'items' ] );
+		$response->header( 'X-WP-Total', (string) $result[ 'total' ] );
+		$response->header( 'X-WP-TotalPages', (string) ceil( $result[ 'total' ] / max( 1, (int) $request->get_param( 'per_page' ) ) ) );
 
 		return $response;
 	}

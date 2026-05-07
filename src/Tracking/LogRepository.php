@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace AIValve\Tracking;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Manages the custom `{prefix}ai_valve_log` database table.
  */
 final class LogRepository {
 
-	private const TABLE_SUFFIX  = 'ai_valve_log';
+	private const TABLE_SUFFIX   = 'ai_valve_log';
 	private const SCHEMA_VERSION = 3;
 	private const VERSION_KEY    = 'ai_valve_db_version';
 
@@ -211,42 +213,42 @@ final class LogRepository {
 		$table    = self::table_name();
 		$where    = [];
 		$values   = [];
-		$per_page = max( 1, min( 100, (int) ( $filters['per_page'] ?? 20 ) ) );
-		$page     = max( 1, (int) ( $filters['page'] ?? 1 ) );
+		$per_page = max( 1, min( 100, (int) ( $filters[ 'per_page' ] ?? 20 ) ) );
+		$page     = max( 1, (int) ( $filters[ 'page' ] ?? 1 ) );
 		$offset   = ( $page - 1 ) * $per_page;
 
-		if ( ! empty( $filters['plugin_slug'] ) ) {
+		if ( ! empty( $filters[ 'plugin_slug' ] ) ) {
 			$where[]  = 'plugin_slug = %s';
-			$values[] = $filters['plugin_slug'];
+			$values[] = $filters[ 'plugin_slug' ];
 		}
-		if ( ! empty( $filters['provider_id'] ) ) {
+		if ( ! empty( $filters[ 'provider_id' ] ) ) {
 			$where[]  = 'provider_id = %s';
-			$values[] = $filters['provider_id'];
+			$values[] = $filters[ 'provider_id' ];
 		}
-		if ( ! empty( $filters['model_id'] ) ) {
+		if ( ! empty( $filters[ 'model_id' ] ) ) {
 			$where[]  = 'model_id = %s';
-			$values[] = $filters['model_id'];
+			$values[] = $filters[ 'model_id' ];
 		}
-		if ( ! empty( $filters['context'] ) ) {
+		if ( ! empty( $filters[ 'context' ] ) ) {
 			$where[]  = 'context = %s';
-			$values[] = $filters['context'];
+			$values[] = $filters[ 'context' ];
 		}
-		if ( ! empty( $filters['status'] ) ) {
-			if ( 'denied' === $filters['status'] ) {
+		if ( ! empty( $filters[ 'status' ] ) ) {
+			if ( 'denied' === $filters[ 'status' ] ) {
 				$where[]  = 'status LIKE %s';
 				$values[] = 'denied%';
 			} else {
 				$where[]  = 'status = %s';
-				$values[] = $filters['status'];
+				$values[] = $filters[ 'status' ];
 			}
 		}
-		if ( ! empty( $filters['date_from'] ) ) {
+		if ( ! empty( $filters[ 'date_from' ] ) ) {
 			$where[]  = 'created_at >= %s';
-			$values[] = $filters['date_from'];
+			$values[] = $filters[ 'date_from' ];
 		}
-		if ( ! empty( $filters['date_to'] ) ) {
+		if ( ! empty( $filters[ 'date_to' ] ) ) {
 			$where[]  = 'created_at <= %s';
-			$values[] = $filters['date_to'];
+			$values[] = $filters[ 'date_to' ];
 		}
 
 		$where_sql = $where ? 'WHERE ' . implode( ' AND ', $where ) : '';
@@ -287,8 +289,8 @@ final class LogRepository {
 		$vals  = [ $from, $to, 'allowed' ];
 
 		if ( '' !== $plugin_slug ) {
-			$where .= ' AND plugin_slug = %s';
-			$vals[] = $plugin_slug;
+			$where  .= ' AND plugin_slug = %s';
+			$vals[]  = $plugin_slug;
 		}
 
 		$sql = $wpdb->prepare(
@@ -304,10 +306,10 @@ final class LogRepository {
 		$row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return [
-			'prompt_tokens'     => (int) ( $row['prompt_tokens'] ?? 0 ),
-			'completion_tokens' => (int) ( $row['completion_tokens'] ?? 0 ),
-			'total_tokens'      => (int) ( $row['total_tokens'] ?? 0 ),
-			'request_count'     => (int) ( $row['request_count'] ?? 0 ),
+			'prompt_tokens'     => (int) ( $row[ 'prompt_tokens' ] ?? 0 ),
+			'completion_tokens' => (int) ( $row[ 'completion_tokens' ] ?? 0 ),
+			'total_tokens'      => (int) ( $row[ 'total_tokens' ] ?? 0 ),
+			'request_count'     => (int) ( $row[ 'request_count' ] ?? 0 ),
 		];
 	}
 
@@ -337,9 +339,9 @@ final class LogRepository {
 
 		return array_map(
 			static fn( array $r ) => [
-				'plugin_slug'   => $r['plugin_slug'],
-				'total_tokens'  => (int) $r['total_tokens'],
-				'request_count' => (int) $r['request_count'],
+				'plugin_slug'   => $r[ 'plugin_slug' ],
+				'total_tokens'  => (int) $r[ 'total_tokens' ],
+				'request_count' => (int) $r[ 'request_count' ],
 			],
 			$rows ?: []
 		);
@@ -371,9 +373,9 @@ final class LogRepository {
 
 		return array_map(
 			static fn( array $r ) => [
-				'context'       => $r['context'],
-				'total_tokens'  => (int) $r['total_tokens'],
-				'request_count' => (int) $r['request_count'],
+				'context'       => $r[ 'context' ],
+				'total_tokens'  => (int) $r[ 'total_tokens' ],
+				'request_count' => (int) $r[ 'request_count' ],
 			],
 			$rows ?: []
 		);
@@ -405,9 +407,9 @@ final class LogRepository {
 
 		return array_map(
 			static fn( array $r ) => [
-				'provider_id'   => $r['provider_id'],
-				'total_tokens'  => (int) $r['total_tokens'],
-				'request_count' => (int) $r['request_count'],
+				'provider_id'   => $r[ 'provider_id' ],
+				'total_tokens'  => (int) $r[ 'total_tokens' ],
+				'request_count' => (int) $r[ 'request_count' ],
 			],
 			$rows ?: []
 		);
@@ -439,10 +441,10 @@ final class LogRepository {
 
 		return array_map(
 			static fn( array $r ) => [
-				'provider_id'   => $r['provider_id'],
-				'model_id'      => $r['model_id'],
-				'total_tokens'  => (int) $r['total_tokens'],
-				'request_count' => (int) $r['request_count'],
+				'provider_id'   => $r[ 'provider_id' ],
+				'model_id'      => $r[ 'model_id' ],
+				'total_tokens'  => (int) $r[ 'total_tokens' ],
+				'request_count' => (int) $r[ 'request_count' ],
 			],
 			$rows ?: []
 		);
@@ -486,8 +488,8 @@ final class LogRepository {
 	 */
 	public function delete_older_than( int $days ): int {
 		global $wpdb;
-		$table    = self::table_name();
-		$cutoff   = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );
+		$table  = self::table_name();
+		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );
 		return (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$table} WHERE created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$cutoff

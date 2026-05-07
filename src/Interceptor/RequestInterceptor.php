@@ -11,6 +11,8 @@ use WordPress\AiClient\Events\AfterGenerateResultEvent;
 use WordPress\AiClient\Events\BeforeGenerateResultEvent;
 use WP_AI_Client_Prompt_Builder;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Wires the three WP 7 AI connector hooks:
  *
@@ -26,8 +28,8 @@ final class RequestInterceptor {
 
 	/** Correlation state for the current request. */
 	private static string $current_plugin_slug = '';
-	private static string $current_context     = '';
-	private static float  $request_start_time  = 0.0;
+	private static string $current_context = '';
+	private static float $request_start_time = 0.0;
 
 	/** Pending log row ID written in on_before_generate. */
 	private static int $pending_log_id = 0;
@@ -122,12 +124,12 @@ final class RequestInterceptor {
 
 		try {
 			$provider_id = $model->providerMetadata()->getId();
-		} catch ( \Throwable ) {
+		} catch (\Throwable) {
 		}
 
 		try {
 			$model_id = $model->metadata()->getId();
-		} catch ( \Throwable ) {
+		} catch (\Throwable) {
 		}
 
 		if ( null !== $event->getCapability() ) {
@@ -169,13 +171,13 @@ final class RequestInterceptor {
 
 		try {
 			$provider_id = $model->providerMetadata()->getId();
-		} catch ( \Throwable ) {
+		} catch (\Throwable) {
 			// Some models may not expose provider metadata gracefully.
 		}
 
 		try {
 			$model_id = $model->metadata()->getId();
-		} catch ( \Throwable ) {
+		} catch (\Throwable) {
 			// Defensive.
 		}
 

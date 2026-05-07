@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,6 @@ AI Valve gives site administrators visibility and control over how plugins use t
 * **Usage dashboard** — See token consumption at a glance with summary cards, progress bars, and per-plugin breakdowns.
 * **Request logging** — Every AI request is logged with provider, model, capability, tokens, and caller attribution.
 * **Budget alerts** — Admin notices and optional email when usage approaches or exceeds limits.
-* **Automatic updates** — Receives updates directly from GitHub releases.
 
 = Requirements =
 
@@ -32,10 +31,9 @@ AI Valve gives site administrators visibility and control over how plugins use t
 
 == Installation ==
 
-1. Download `ai-valve.zip` from the [latest release](https://github.com/soderlind/ai-valve/releases/latest).
-2. In WordPress, go to Plugins → Add New → Upload Plugin and upload the zip.
-3. Activate the plugin.
-4. Go to Settings → AI Valve to configure.
+1. Install AI Valve from the WordPress plugin directory, or upload `ai-valve.zip` via Plugins → Add New → Upload Plugin.
+2. Activate the plugin.
+3. Go to Settings → AI Valve to configure.
 
 == Frequently Asked Questions ==
 
@@ -73,6 +71,12 @@ The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI r
 Only explicitly allowed plugins will be able to make AI requests; everything else is denied by default.
 
 == Changelog ==
+
+= 1.1.0 =
+* Removed: GitHub release updater for WordPress.org distribution.
+* Removed: plugin-update-checker dependency and bundled updater files.
+* Changed: Release zip workflows now package WordPress.org-style builds.
+* Fixed: Added direct-access guards and Plugin Check cleanup for production files.
 
 = 1.0.4 =
 * Changed: Update npm dependencies to latest versions.
@@ -154,7 +158,6 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 * Budget alert notices and optional email notifications.
 * REST API endpoints for usage and log data.
 * Workaround for WordPress 7.0 event dispatcher bug.
-* GitHub release updater for automatic updates.
 
 == Upgrade Notice ==
 

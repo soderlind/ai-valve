@@ -15,7 +15,6 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 - **Request logging** — Every AI request is logged with provider, model, capability, tokens, and caller attribution.
 - **Budget alerts** — Admin notices and optional email when usage approaches or exceeds limits.
 - **Developer hooks** — Filter and action hooks to extend behaviour without modifying the plugin.
-- **Automatic updates** — Receives updates directly from GitHub releases.
 
 ## Requirements
 
@@ -25,12 +24,9 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 ## Installation
 
-1. Download [`ai-valve.zip`](https://github.com/soderlind/ai-valve/releases/latest/download/ai-valve.zip)
-2. Upload via **Plugins → Add New → Upload Plugin**
-3. Activate the plugin
-4. Go to **Settings → AI Valve** to configure
-
-The plugin updates itself automatically via GitHub releases using [plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker).
+1. Install from the WordPress plugin directory, or upload `ai-valve.zip` via **Plugins → Add New → Upload Plugin**.
+2. Activate the plugin.
+3. Go to **Settings → AI Valve** to configure.
 
 ### From source
 
@@ -110,7 +106,6 @@ npx vitest run
 
 ```
 ai-valve.php                  Bootstrap
-class-github-updater.php      GitHub release updater
 src/
   Plugin.php                  Hook registration orchestrator
   Settings/Settings.php       Options read/write/sanitize
