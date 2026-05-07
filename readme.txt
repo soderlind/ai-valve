@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,11 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 1. Dashboard with usage summary cards and per-plugin breakdown.
 
 == Changelog ==
+
+= 1.1.2 =
+* Added: Developer hooks section to README.md with link to documentation.
+* Fixed: Updated image source in README.md to correct path for AI Valve dashboard.
+* Changed: Refactored code structure for improved readability and maintainability.
 
 = 1.1.1 =
 * Fixed: Dashboard usage date buckets now keep Today, plugin totals, and Recent Requests aligned around database/PHP day boundaries.

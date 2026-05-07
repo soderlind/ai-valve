@@ -107,21 +107,46 @@ npx vitest run
 ### Project structure
 
 ```
-ai-valve.php                  Bootstrap
+ai-valve.php                    Plugin bootstrap and metadata
+uninstall.php                   Cleanup on uninstall
+readme.txt                      WordPress.org readme
+README.md                       GitHub documentation
+CHANGELOG.md                    Release notes
+.wordpress-org/                 WordPress.org icons, banners, screenshots
+docs/                           Developer documentation
+  README.md                     Documentation index
+  hooks.md                      Filters/actions reference
+  how-blocking-works.md         Blocking flow details
 src/
-  Plugin.php                  Hook registration orchestrator
-  Settings/Settings.php       Options read/write/sanitize
+  Plugin.php                    Hook registration orchestrator
+  Admin/AdminPage.php           Settings page shell for the React admin app
+  Alert/AlertManager.php        Budget threshold notices and email alerts
   Interceptor/
-    RequestInterceptor.php    WP 7 AI hook wiring + pending-row logging
-    PolicyEngine.php          Allow/deny/budget evaluation
-    CallerDetector.php        Backtrace → plugin slug
+    RequestInterceptor.php      WP 7 AI hook wiring and pending-row logging
+    PolicyEngine.php            Allow/deny/context/budget evaluation
+    CallerDetector.php          Backtrace to plugin slug attribution
+  REST/UsageController.php      REST API endpoints for admin screens
+  Settings/Settings.php         Options read/write/sanitize
   Tracking/
-    LogRepository.php         Custom DB table CRUD
-    UsageTracker.php          Rolling token counters
-  Admin/AdminPage.php         Settings page (dashboard, settings, logs)
-  Alert/AlertManager.php      Budget threshold notices + email
-  REST/UsageController.php    REST API endpoints
-docs/                         Developer documentation
+    LogRepository.php           Custom DB table CRUD and migrations
+    UsageClock.php              Database-aligned date buckets
+    UsageTracker.php            Rolling daily/monthly token counters
+  js/
+    index.js                    React admin entry point
+    App.jsx                     Admin app shell and tab routing
+    api.js                      REST client wiring
+    admin-api.js                Shared JS API helpers
+    admin.css                   Admin UI styles
+    components/                 Dashboard, settings, logs, and tables
+build/                          Generated admin assets
+tests/
+  Unit/                         PHPUnit + Brain Monkey tests
+  js/                           Vitest tests
+  stubs/                        Test stubs for WordPress AI connector
+composer.json                   PHP dependency metadata
+package.json                    npm scripts and JS dependencies
+phpunit.xml.dist                PHPUnit configuration
+vitest.config.mjs               Vitest configuration
 ```
 
 ## Documentation

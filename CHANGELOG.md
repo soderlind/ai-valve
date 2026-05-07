@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-05-08
+
+### Added
+
+- Developer hooks section to README.md with link to documentation.
+
+### Changed
+
+- Refactored code structure for improved readability and maintainability.
+
+### Fixed
+
+- Updated image source in README.md to correct path for AI Valve dashboard.
+
 ## [1.1.1] - 2026-05-08
 
 ### Added
