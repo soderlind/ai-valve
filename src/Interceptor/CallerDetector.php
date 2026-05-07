@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AIValve\Interceptor;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Walks the call stack to identify which plugin triggered the AI request.
  *

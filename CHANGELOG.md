@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-05-07
+
+### Removed
+
+- GitHub release updater for WordPress.org distribution.
+- `plugin-update-checker` dependency and bundled updater files.
+
+### Changed
+
+- Release zip workflows now package WordPress.org-style builds.
+
+### Fixed
+
+- Added direct-access guards and Plugin Check cleanup for production files.
+
 ## [1.0.4] - 2026-05-03
 
 ### Changed
@@ -156,8 +171,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Budget alert notices and optional email notifications.
 - REST API endpoints for usage and log data.
 - Workaround for WordPress 7.0 event dispatcher bug.
-- GitHub release updater for automatic updates.
 
+[1.1.0]: https://github.com/soderlind/ai-valve/releases/tag/1.1.0
 [1.0.4]: https://github.com/soderlind/ai-valve/releases/tag/1.0.4
 [1.0.3]: https://github.com/soderlind/ai-valve/releases/tag/1.0.3
 [1.0.2]: https://github.com/soderlind/ai-valve/releases/tag/1.0.2

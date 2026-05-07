@@ -12,6 +12,8 @@ use AIValve\Settings\Settings;
 use AIValve\Tracking\LogRepository;
 use AIValve\Tracking\UsageTracker;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Central orchestrator — registers all hooks for the plugin.
  */

@@ -6,6 +6,8 @@ namespace AIValve\Tracking;
 
 use AIValve\Settings\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Maintains rolling daily/monthly token counters per-plugin and globally.
  *

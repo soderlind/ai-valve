@@ -30,9 +30,9 @@ jobs:
           exclusions: >-
             *.git* /*.github/* /*.vscode/* /*node_modules/* /*tests/* /*docs/*
             /src/js/*
-            composer.lock package.json package-lock.json
-            phpunit.xml phpunit.xml.dist vitest.config.js
-            .editorconfig .eslintignore .phpunit.result.cache .phpunit.cache .gitignore .gitattributes
+            composer.lock package.json package-lock.json patchwork.json
+            phpunit.xml phpunit.xml.dist vitest.config.js vitest.config.mjs
+            .editorconfig .eslintignore .phpunit.result.cache .phpunit.cache .gitignore .gitattributes .DS_Store
             *.log CHANGELOG.md README.md
 
       - name: Verify Archive Contents
@@ -41,11 +41,11 @@ jobs:
           unzip -l ai-valve.zip || { echo "Failed to list zip contents"; exit 1; }
           echo "Total files: $(unzip -l ai-valve.zip | awk 'END{print $2}')"
 
-          # Verify plugin-update-checker is included
-          if unzip -l ai-valve.zip | grep -q "yahnis-elsts/plugin-update-checker"; then
-            echo "✓ plugin-update-checker is included"
+          # Verify the plugin bootstrap is included
+          if unzip -l ai-valve.zip | grep -q "ai-valve.php"; then
+            echo "✓ plugin bootstrap is included"
           else
-            echo "✗ ERROR: plugin-update-checker is missing from the release!"
+            echo "✗ ERROR: plugin bootstrap is missing from the release!"
             exit 1
           fi
 

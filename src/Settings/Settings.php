@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AIValve\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Reads / writes the plugin option array stored in `ai_valve_settings`.
  */

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AIValve\Tracking;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Manages the custom `{prefix}ai_valve_log` database table.
  */

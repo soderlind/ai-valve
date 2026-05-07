@@ -13,6 +13,8 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * REST API endpoints for the AI Valve dashboard.
  *

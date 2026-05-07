@@ -11,6 +11,8 @@ use WordPress\AiClient\Events\AfterGenerateResultEvent;
 use WordPress\AiClient\Events\BeforeGenerateResultEvent;
 use WP_AI_Client_Prompt_Builder;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Wires the three WP 7 AI connector hooks:
  *

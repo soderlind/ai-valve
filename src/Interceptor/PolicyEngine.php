@@ -7,6 +7,8 @@ namespace AIValve\Interceptor;
 use AIValve\Settings\Settings;
 use AIValve\Tracking\UsageTracker;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Evaluates whether a given AI request should be allowed or denied.
  *
