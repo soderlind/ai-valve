@@ -53,6 +53,10 @@ It walks the PHP call stack (`debug_backtrace()`) and matches file paths against
 
 Yes. AI Valve relies only on the stable public hooks (`wp_ai_client_prevent_prompt`, `wp_ai_client_before_generate_result`, `wp_ai_client_after_generate_result`) provided by the WordPress AI connector API.
 
+= Are there developer hooks? =
+
+Yes. See the [developer hooks documentation](https://github.com/soderlind/ai-valve/blob/main/docs/hooks.md) for available filters and actions.
+
 = Does AI Valve work on multisite? =
 
 Yes. Each subsite has its own log table, settings, and budgets.
