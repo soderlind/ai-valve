@@ -40,8 +40,8 @@ final class UsageTracker {
 			return;
 		}
 
-		$today = gmdate( 'Y-m-d' );
-		$month = gmdate( 'Y-m' );
+		$today = UsageClock::current_date();
+		$month = UsageClock::current_month();
 
 		// Per-plugin daily.
 		$this->increment( self::daily_key( $today, $plugin_slug ), $tokens );
@@ -64,27 +64,27 @@ final class UsageTracker {
 	 * ----------------------------------------------------------------*/
 
 	public function plugin_tokens_today( string $slug ): int {
-		return $this->read( self::daily_key( gmdate( 'Y-m-d' ), $slug ) );
+		return $this->read( self::daily_key( UsageClock::current_date(), $slug ) );
 	}
 
 	public function plugin_tokens_this_month( string $slug ): int {
-		return $this->read( self::monthly_key( gmdate( 'Y-m' ), $slug ) );
+		return $this->read( self::monthly_key( UsageClock::current_month(), $slug ) );
 	}
 
 	public function global_tokens_today(): int {
-		return $this->read( self::daily_key( gmdate( 'Y-m-d' ), '*' ) );
+		return $this->read( self::daily_key( UsageClock::current_date(), '*' ) );
 	}
 
 	public function global_tokens_this_month(): int {
-		return $this->read( self::monthly_key( gmdate( 'Y-m' ), '*' ) );
+		return $this->read( self::monthly_key( UsageClock::current_month(), '*' ) );
 	}
 
 	public function provider_tokens_today( string $provider_id ): int {
-		return $this->read( self::daily_key( gmdate( 'Y-m-d' ), 'provider:' . $provider_id ) );
+		return $this->read( self::daily_key( UsageClock::current_date(), 'provider:' . $provider_id ) );
 	}
 
 	public function provider_tokens_this_month( string $provider_id ): int {
-		return $this->read( self::monthly_key( gmdate( 'Y-m' ), 'provider:' . $provider_id ) );
+		return $this->read( self::monthly_key( UsageClock::current_month(), 'provider:' . $provider_id ) );
 	}
 
 	/* ------------------------------------------------------------------

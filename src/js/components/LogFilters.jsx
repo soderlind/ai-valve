@@ -39,6 +39,7 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					] }
 					onChange={ ( v ) => update( 'plugin_slug', v ) }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<SelectControl
 					label={ __( 'Provider', 'ai-valve' ) }
@@ -52,6 +53,7 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					] }
 					onChange={ ( v ) => update( 'provider_id', v ) }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<SelectControl
 					label={ __( 'Model', 'ai-valve' ) }
@@ -65,6 +67,7 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					] }
 					onChange={ ( v ) => update( 'model_id', v ) }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<SelectControl
 					label={ __( 'Context', 'ai-valve' ) }
@@ -80,6 +83,7 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					] }
 					onChange={ ( v ) => update( 'context', v ) }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<SelectControl
 					label={ __( 'Status', 'ai-valve' ) }
@@ -97,6 +101,7 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					] }
 					onChange={ ( v ) => update( 'status', v ) }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 				<TextControl
 					label={ __( 'From', 'ai-valve' ) }

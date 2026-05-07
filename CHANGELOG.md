@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-05-08
+
+### Added
+
+- WordPress.org icon and banner assets.
+
+### Changed
+
+- Clarified installation instructions in README.
+
+### Fixed
+
+- Dashboard usage date buckets now keep Today, plugin totals, and Recent Requests aligned around database/PHP day boundaries.
+- WordPress 6.8 SelectControl deprecation warnings in the admin UI.
+
 ## [1.1.0] - 2026-05-07
 
 ### Removed

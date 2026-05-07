@@ -158,6 +158,7 @@ export default function Logs( { setNotice } ) {
 					] }
 					onChange={ handleTimeRange }
 					__nextHasNoMarginBottom
+					__next40pxDefaultSize
 				/>
 			</div>
 			<LogFilters filters={ filters } onChange={ handleFilter } filterOptions={ filterOptions } />

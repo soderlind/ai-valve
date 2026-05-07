@@ -172,6 +172,7 @@ export default function PluginTable( {
 											} ) )
 										}
 										__nextHasNoMarginBottom
+										__next40pxDefaultSize
 									/>
 								</td>
 								<td style={ { textAlign: 'right' } }>
