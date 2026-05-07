@@ -113,7 +113,7 @@ final class Settings {
 	 */
 	public function plugin_daily_budget( string $slug ): int {
 		$budgets = $this->get( 'plugin_budgets', [] );
-		return (int) ( $budgets[ $slug ]['daily'] ?? 0 );
+		return (int) ( $budgets[ $slug ][ 'daily' ] ?? 0 );
 	}
 
 	/**
@@ -121,7 +121,7 @@ final class Settings {
 	 */
 	public function plugin_monthly_budget( string $slug ): int {
 		$budgets = $this->get( 'plugin_budgets', [] );
-		return (int) ( $budgets[ $slug ]['monthly'] ?? 0 );
+		return (int) ( $budgets[ $slug ][ 'monthly' ] ?? 0 );
 	}
 
 	/* ------------------------------------------------------------------
@@ -187,9 +187,9 @@ final class Settings {
 
 		$clean = self::defaults();
 
-		$clean['enabled']              = ! empty( $input['enabled'] );
-		$clean['default_policy']       = in_array( $input['default_policy'] ?? '', [ 'allow', 'deny' ], true )
-			? $input['default_policy']
+		$clean[ 'enabled' ]        = ! empty( $input[ 'enabled' ] );
+		$clean[ 'default_policy' ] = in_array( $input[ 'default_policy' ] ?? '', [ 'allow', 'deny' ], true )
+			? $input[ 'default_policy' ]
 			: 'allow';
 
 		// Context toggles.
@@ -198,42 +198,42 @@ final class Settings {
 		}
 
 		// Global budgets.
-		$clean['global_daily_limit']   = absint( $input['global_daily_limit'] ?? 0 );
-		$clean['global_monthly_limit'] = absint( $input['global_monthly_limit'] ?? 0 );
+		$clean[ 'global_daily_limit' ]   = absint( $input[ 'global_daily_limit' ] ?? 0 );
+		$clean[ 'global_monthly_limit' ] = absint( $input[ 'global_monthly_limit' ] ?? 0 );
 
 		// Alert threshold.
-		$pct = (int) ( $input['alert_threshold_pct'] ?? 80 );
-		$clean['alert_threshold_pct']  = max( 1, min( 100, $pct ) );
+		$pct                          = (int) ( $input[ 'alert_threshold_pct' ] ?? 80 );
+		$clean[ 'alert_threshold_pct' ] = max( 1, min( 100, $pct ) );
 
 		// Alert email.
-		$clean['alert_email'] = sanitize_email( $input['alert_email'] ?? '' );
+		$clean[ 'alert_email' ] = sanitize_email( $input[ 'alert_email' ] ?? '' );
 
 		// Log retention.
-		$clean['log_retention_days'] = absint( $input['log_retention_days'] ?? 0 );
+		$clean[ 'log_retention_days' ] = absint( $input[ 'log_retention_days' ] ?? 0 );
 
 		// Per-plugin policies.
-		if ( isset( $input['plugin_policies'] ) && is_array( $input['plugin_policies'] ) ) {
+		if ( isset( $input[ 'plugin_policies' ] ) && is_array( $input[ 'plugin_policies' ] ) ) {
 			$policies = [];
-			foreach ( $input['plugin_policies'] as $slug => $policy ) {
+			foreach ( $input[ 'plugin_policies' ] as $slug => $policy ) {
 				$slug = sanitize_key( $slug );
 				if ( in_array( $policy, [ 'allow', 'deny' ], true ) ) {
 					$policies[ $slug ] = $policy;
 				}
 			}
-			$clean['plugin_policies'] = $policies;
+			$clean[ 'plugin_policies' ] = $policies;
 		}
 
 		// Per-plugin budgets.
-		if ( isset( $input['plugin_budgets'] ) && is_array( $input['plugin_budgets'] ) ) {
+		if ( isset( $input[ 'plugin_budgets' ] ) && is_array( $input[ 'plugin_budgets' ] ) ) {
 			$budgets = [];
-			foreach ( $input['plugin_budgets'] as $slug => $limits ) {
-				$slug = sanitize_key( $slug );
+			foreach ( $input[ 'plugin_budgets' ] as $slug => $limits ) {
+				$slug             = sanitize_key( $slug );
 				$budgets[ $slug ] = [
-					'daily'   => absint( $limits['daily'] ?? 0 ),
-					'monthly' => absint( $limits['monthly'] ?? 0 ),
+					'daily'   => absint( $limits[ 'daily' ] ?? 0 ),
+					'monthly' => absint( $limits[ 'monthly' ] ?? 0 ),
 				];
 			}
-			$clean['plugin_budgets'] = $budgets;
+			$clean[ 'plugin_budgets' ] = $budgets;
 		}
 
 		return $clean;

@@ -80,7 +80,7 @@ final class AlertManager {
 		// Check per-plugin budgets.
 		$plugin_budgets = (array) $this->settings->get( 'plugin_budgets', [] );
 		foreach ( $plugin_budgets as $slug => $limits ) {
-			$slug = (string) $slug;
+			$slug        = (string) $slug;
 			$p_daily_pct = $this->usage_tracker->plugin_daily_pct( $slug );
 			if ( $p_daily_pct >= 100 ) {
 				$messages[] = sprintf(

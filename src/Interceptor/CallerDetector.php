@@ -44,11 +44,11 @@ final class CallerDetector {
 		$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 30 );
 
 		foreach ( $trace as $frame ) {
-			if ( ! isset( $frame['file'] ) ) {
+			if ( ! isset( $frame[ 'file' ] ) ) {
 				continue;
 			}
 
-			$file = wp_normalize_path( $frame['file'] );
+			$file = wp_normalize_path( $frame[ 'file' ] );
 
 			// Must be under wp-content/plugins/.
 			if ( ! str_starts_with( $file, $plugin_dir . '/' ) ) {
@@ -69,8 +69,8 @@ final class CallerDetector {
 			$relative = substr( $file, strlen( $plugin_dir ) + 1 );
 			$parts    = explode( '/', $relative, 2 );
 
-			if ( ! empty( $parts[0] ) ) {
-				self::$cached_slug = sanitize_key( $parts[0] );
+			if ( ! empty( $parts[ 0 ] ) ) {
+				self::$cached_slug = sanitize_key( $parts[ 0 ] );
 				return self::$cached_slug;
 			}
 		}
@@ -80,23 +80,23 @@ final class CallerDetector {
 		$theme_dir = wp_normalize_path( get_theme_root() );
 
 		foreach ( $trace as $frame ) {
-			if ( ! isset( $frame['file'] ) ) {
+			if ( ! isset( $frame[ 'file' ] ) ) {
 				continue;
 			}
 
-			$file = wp_normalize_path( $frame['file'] );
+			$file = wp_normalize_path( $frame[ 'file' ] );
 
 			if ( $mu_dir && str_starts_with( $file, $mu_dir . '/' ) ) {
-				$relative = substr( $file, strlen( $mu_dir ) + 1 );
-				$parts    = explode( '/', $relative, 2 );
-				self::$cached_slug = 'mu:' . sanitize_key( $parts[0] );
+				$relative          = substr( $file, strlen( $mu_dir ) + 1 );
+				$parts             = explode( '/', $relative, 2 );
+				self::$cached_slug = 'mu:' . sanitize_key( $parts[ 0 ] );
 				return self::$cached_slug;
 			}
 
 			if ( str_starts_with( $file, $theme_dir . '/' ) ) {
-				$relative = substr( $file, strlen( $theme_dir ) + 1 );
-				$parts    = explode( '/', $relative, 2 );
-				self::$cached_slug = 'theme:' . sanitize_key( $parts[0] );
+				$relative          = substr( $file, strlen( $theme_dir ) + 1 );
+				$parts             = explode( '/', $relative, 2 );
+				self::$cached_slug = 'theme:' . sanitize_key( $parts[ 0 ] );
 				return self::$cached_slug;
 			}
 		}
