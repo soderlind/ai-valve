@@ -24,9 +24,11 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 ## Installation
 
-1. Install from the WordPress plugin directory, or upload `ai-valve.zip` via **Plugins → Add New → Upload Plugin**.
-2. Activate the plugin.
-3. Go to **Settings → AI Valve** to configure.
+
+1. Download [`ai-valve.zip`](https://github.com/soderlind/ai-valve/releases/latest/download/ai-valve.zip)
+2. Upload via  `Plugins → Add New → Upload Plugin`
+3. Activate via `WordPress Admin → Plugins`
+4. Configure settings via `Settings → AI Valve`
 
 ### From source
 
