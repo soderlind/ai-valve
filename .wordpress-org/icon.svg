@@ -1,60 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-  <title>AI Valve plugin icon</title>
-  <desc>A control valve with connected AI nodes, representing metered and permission-gated AI usage.</desc>
-  <defs>
-    <linearGradient id="background" x1="32" y1="18" x2="222" y2="236" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0ea5a4"/>
-      <stop offset="0.48" stop-color="#2563eb"/>
-      <stop offset="1" stop-color="#111827"/>
-    </linearGradient>
-    <linearGradient id="metal" x1="72" y1="64" x2="184" y2="194" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f8fafc"/>
-      <stop offset="0.45" stop-color="#cbd5e1"/>
-      <stop offset="1" stop-color="#64748b"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="72" y1="84" x2="180" y2="170" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#facc15"/>
-      <stop offset="1" stop-color="#22c55e"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#020617" flood-opacity="0.28"/>
-    </filter>
-  </defs>
-
-  <rect width="256" height="256" rx="54" fill="url(#background)"/>
-  <path d="M42 58c36-28 83-31 124-13 28 12 43 30 58 57 12 21 10 56-3 82-18 34-49 52-85 55-42 3-84-13-110-47C0 158 10 83 42 58Z" fill="#ffffff" opacity="0.08"/>
-
-  <g fill="none" stroke="#dbeafe" stroke-linecap="round" stroke-linejoin="round" opacity="0.74">
-    <path d="M66 76h42" stroke-width="8"/>
-    <path d="M148 76h42" stroke-width="8"/>
-    <path d="M128 58v36" stroke-width="8"/>
-    <path d="M57 181h142" stroke-width="8" opacity="0.36"/>
-    <path d="M80 104 48 86" stroke-width="5" opacity="0.56"/>
-    <path d="M176 104 208 86" stroke-width="5" opacity="0.56"/>
-    <path d="M78 154 46 171" stroke-width="5" opacity="0.56"/>
-    <path d="M178 154 210 171" stroke-width="5" opacity="0.56"/>
-  </g>
-
-  <g filter="url(#shadow)">
-    <path d="M82 88h92c11 0 20 9 20 20v42c0 11-9 20-20 20H82c-11 0-20-9-20-20v-42c0-11 9-20 20-20Z" fill="url(#metal)"/>
-    <path d="M86 101h84c5 0 10 4 10 10v36c0 5-5 10-10 10H86c-5 0-10-5-10-10v-36c0-6 5-10 10-10Z" fill="#0f172a" opacity="0.86"/>
-    <path d="M103 129h50" stroke="url(#accent)" stroke-width="12" stroke-linecap="round"/>
-    <path d="M128 104v50" stroke="#e0f2fe" stroke-width="9" stroke-linecap="round" opacity="0.9"/>
-    <circle cx="128" cy="129" r="20" fill="#0f172a" stroke="url(#accent)" stroke-width="8"/>
-    <path d="M120 129h16" stroke="#f8fafc" stroke-width="6" stroke-linecap="round"/>
-    <path d="M128 121v16" stroke="#f8fafc" stroke-width="6" stroke-linecap="round"/>
-  </g>
-
-  <g fill="#f8fafc" stroke="#0f172a" stroke-width="4">
-    <circle cx="48" cy="86" r="10"/>
-    <circle cx="208" cy="86" r="10"/>
-    <circle cx="46" cy="171" r="10"/>
-    <circle cx="210" cy="171" r="10"/>
-  </g>
-  <g fill="#22c55e">
-    <circle cx="48" cy="86" r="4"/>
-    <circle cx="208" cy="86" r="4"/>
-    <circle cx="46" cy="171" r="4"/>
-    <circle cx="210" cy="171" r="4"/>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>AI Valve</title>
+  <desc>Industrial valve wheel — control, meter, and permission-gate AI usage in WordPress.</desc>
+  <rect width="256" height="256" fill="#0D4A4F"/>
+  <circle cx="128" cy="128" r="78" fill="none" stroke="#E8DFC9" stroke-width="14"/>
+  <line x1="128" y1="50" x2="128" y2="206" stroke="#E8DFC9" stroke-width="14" stroke-linecap="round"/>
+  <line x1="50" y1="128" x2="206" y2="128" stroke="#E8DFC9" stroke-width="14" stroke-linecap="round"/>
+  <line x1="73" y1="73" x2="183" y2="183" stroke="#E8DFC9" stroke-width="14" stroke-linecap="round"/>
+  <line x1="73" y1="183" x2="183" y2="73" stroke="#E8DFC9" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="128" cy="128" r="20" fill="#0D4A4F"/>
+  <circle cx="128" cy="128" r="11" fill="#B85427"/>
 </svg>

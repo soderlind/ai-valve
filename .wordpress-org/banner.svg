@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" width="1544" height="500">
+  <title>AI Valve</title>
+  <desc>Control, meter, and permission-gate AI usage in WordPress.</desc>
+
+  <!-- Background -->
+  <rect width="1544" height="500" fill="#0D4A4F"/>
+
+  <!-- Subtle texture: dots in upper left -->
+  <g opacity="0.08" fill="#E8DFC9">
+    <circle cx="60" cy="60" r="2"/><circle cx="120" cy="60" r="2"/><circle cx="180" cy="60" r="2"/><circle cx="240" cy="60" r="2"/><circle cx="300" cy="60" r="2"/>
+    <circle cx="60" cy="120" r="2"/><circle cx="120" cy="120" r="2"/><circle cx="180" cy="120" r="2"/><circle cx="240" cy="120" r="2"/>
+    <circle cx="60" cy="180" r="2"/><circle cx="120" cy="180" r="2"/><circle cx="180" cy="180" r="2"/>
+  </g>
+
+  <!-- Pipe-flow on the right side (controlled stream of tokens) -->
+  <g opacity="0.85">
+    <rect x="900" y="230" width="500" height="40" rx="6" fill="#0A3B3F"/>
+    <rect x="900" y="234" width="500" height="6" fill="#1F5B60"/>
+    <circle cx="980" cy="250" r="9" fill="#E8A547"/>
+    <circle cx="1050" cy="250" r="9" fill="#E8A547" opacity="0.85"/>
+    <circle cx="1120" cy="250" r="9" fill="#E8A547" opacity="0.7"/>
+    <circle cx="1190" cy="250" r="9" fill="#E8A547" opacity="0.55"/>
+    <circle cx="1260" cy="250" r="9" fill="#E8A547" opacity="0.4"/>
+    <rect x="1330" y="210" width="60" height="80" rx="6" fill="#B85427"/>
+    <rect x="1356" y="170" width="8" height="48" fill="#E8DFC9"/>
+    <g transform="rotate(-25 1360 168)">
+      <rect x="1310" y="162" width="100" height="12" rx="6" fill="#E8DFC9"/>
+      <circle cx="1310" cy="168" r="8" fill="#E8DFC9"/>
+      <circle cx="1410" cy="168" r="8" fill="#E8DFC9"/>
+    </g>
+  </g>
+
+  <!-- Main valve wheel logo (left) -->
+  <g transform="translate(140 175)">
+    <circle cx="75" cy="75" r="68" fill="none" stroke="#E8DFC9" stroke-width="12"/>
+    <line x1="75" y1="7" x2="75" y2="143" stroke="#E8DFC9" stroke-width="12" stroke-linecap="round"/>
+    <line x1="7" y1="75" x2="143" y2="75" stroke="#E8DFC9" stroke-width="12" stroke-linecap="round"/>
+    <line x1="27" y1="27" x2="123" y2="123" stroke="#E8DFC9" stroke-width="12" stroke-linecap="round"/>
+    <line x1="27" y1="123" x2="123" y2="27" stroke="#E8DFC9" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="75" cy="75" r="17" fill="#0D4A4F"/>
+    <circle cx="75" cy="75" r="9" fill="#B85427"/>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <g transform="translate(330 220)">
+    <text x="0" y="0" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="84" font-weight="700" fill="#F4F1EC" letter-spacing="-2">AI Valve</text>
+    <text x="3" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="400" fill="#A8C0C2" letter-spacing="-0.3">Control, meter, and permission-gate AI usage in WordPress.</text>
+    <g transform="translate(3 95)">
+      <rect x="0" y="0" width="200" height="32" rx="16" fill="rgba(232, 165, 71, 0.15)" stroke="rgba(232, 165, 71, 0.4)" stroke-width="1"/>
+      <text x="14" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#E8A547" letter-spacing="1">FOR WORDPRESS 7+</text>
+    </g>
+  </g>
+
+  <!-- Author signature -->
+  <text x="50" y="470" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#5C7E80" letter-spacing="0.5">soderlind · GPL-2.0</text>
+</svg>
