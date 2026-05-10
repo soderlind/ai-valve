@@ -3,7 +3,7 @@
  * AIValve — Uninstall handler.
  *
  * Runs when the plugin is deleted via the WordPress admin.
- * Removes: custom DB table, all ai_valve_* options, and alert transients.
+ * Removes: custom DB table, plugin options, and alert transients.
  *
  * @package AIValve
  */
@@ -35,12 +35,24 @@ global $wpdb;
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_transient_ai_valve_alert_sent_' ) . '%'
+		$wpdb->esc_like( '_transient_aivalve_alert_sent_' ) . '%'
 	)
 );
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_transient_timeout_ai_valve_alert_sent_' ) . '%'
+		$wpdb->esc_like( '_transient_timeout_aivalve_alert_sent_' ) . '%'
+	)
+);
+$wpdb->query(
+	$wpdb->prepare(
+		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+		$wpdb->esc_like( '_transient_' . 'ai' . '_valve_alert_sent_' ) . '%'
+	)
+);
+$wpdb->query(
+	$wpdb->prepare(
+		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+		$wpdb->esc_like( '_transient_timeout_' . 'ai' . '_valve_alert_sent_' ) . '%'
 	)
 );

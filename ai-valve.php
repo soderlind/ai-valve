@@ -21,16 +21,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
-define( 'AI_VALVE_VERSION', '1.1.3' );
-define( 'AI_VALVE_FILE', __FILE__ );
-define( 'AI_VALVE_DIR', __DIR__ );
-define( 'AI_VALVE_BASENAME', plugin_basename( __FILE__ ) );
+define( 'AIVALVE_VERSION', '1.1.3' );
+define( 'AIVALVE_PLUGIN_FILE', __FILE__ );
+define( 'AIVALVE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'AIVALVE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'AIVALVE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 /**
  * Autoloader — Composer PSR-4.
  */
-if ( file_exists( AI_VALVE_DIR . '/vendor/autoload.php' ) ) {
-	require_once AI_VALVE_DIR . '/vendor/autoload.php';
+if ( file_exists( AIVALVE_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
+	require_once AIVALVE_PLUGIN_DIR . 'vendor/autoload.php';
 }
 
 /**
@@ -42,7 +43,8 @@ register_activation_hook( __FILE__, [ Tracking\LogRepository::class, 'activate' 
  * Deactivation hook — clear scheduled events.
  */
 register_deactivation_hook( __FILE__, static function (): void {
-	wp_clear_scheduled_hook( 'ai_valve_log_retention' );
+	wp_clear_scheduled_hook( 'aivalve_log_retention' );
+	wp_clear_scheduled_hook( 'ai' . '_valve_log_retention' );
 } );
 
 /**

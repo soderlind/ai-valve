@@ -93,7 +93,7 @@ final class RequestInterceptor {
 			 * @param string $context    Execution context: admin|frontend|cron|rest|ajax|cli.
 			 * @param string $reason     Denial reason code.
 			 */
-			do_action( 'ai_valve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
+			do_action( 'aivalve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
 
 			return true; // Prevent the prompt.
 		}
@@ -243,7 +243,7 @@ final class RequestInterceptor {
 		 * @param int    $duration_ms       Request duration in milliseconds.
 		 */
 		do_action(
-			'ai_valve_request_completed',
+			'aivalve_request_completed',
 			$plugin_slug,
 			$provider_id,
 			$model_id,

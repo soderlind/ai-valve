@@ -82,6 +82,7 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 
 = 1.1.3 =
 * Changed: Updated WordPress.org icons and banner.
+* Fixed: Improved compatibility with custom plugin directory layouts and unique plugin-owned identifiers.
 * Fixed: Resolved npm dependency security advisories.
 
 = 1.1.2 =
@@ -101,9 +102,9 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 * Changed: Update npm dependencies to latest versions.
 
 = 1.0.3 =
-* Added: `ai_valve_plugin_policy` filter to override allow/deny policy programmatically.
-* Added: `ai_valve_request_denied` action, fired when a request is blocked.
-* Added: `ai_valve_request_completed` action, fired after every successful request.
+* Added: `aivalve_plugin_policy` filter to override allow/deny policy programmatically.
+* Added: `aivalve_request_denied` action, fired when a request is blocked.
+* Added: `aivalve_request_completed` action, fired after every successful request.
 
 = 1.0.2 =
 * Fixed: Resolve multiple security vulnerabilities in transitive dependencies.

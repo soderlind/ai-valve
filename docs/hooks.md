@@ -6,7 +6,7 @@ AI Valve exposes three hooks that let you extend or react to its decisions witho
 
 ## Filters
 
-### `ai_valve_plugin_policy`
+### `aivalve_plugin_policy`
 
 Dynamically override the allow/deny policy for any plugin.
 
@@ -15,7 +15,7 @@ Fires during the policy evaluation step, after the stored setting is read but be
 **Signature**
 
 ```php
-apply_filters( 'ai_valve_plugin_policy', string $policy, string $plugin_slug, string $context )
+apply_filters( 'aivalve_plugin_policy', string $policy, string $plugin_slug, string $context )
 ```
 
 | Parameter | Type | Description |
@@ -29,7 +29,7 @@ apply_filters( 'ai_valve_plugin_policy', string $policy, string $plugin_slug, st
 Deny a specific plugin regardless of what the Settings UI says:
 
 ```php
-add_filter( 'ai_valve_plugin_policy', function ( string $policy, string $slug ): string {
+add_filter( 'aivalve_plugin_policy', function ( string $policy, string $slug ): string {
     if ( 'my-untrusted-plugin' === $slug ) {
         return 'deny';
     }
@@ -40,7 +40,7 @@ add_filter( 'ai_valve_plugin_policy', function ( string $policy, string $slug ):
 Allow a plugin only when running in the admin context:
 
 ```php
-add_filter( 'ai_valve_plugin_policy', function ( string $policy, string $slug, string $context ): string {
+add_filter( 'aivalve_plugin_policy', function ( string $policy, string $slug, string $context ): string {
     if ( 'my-plugin' === $slug && 'admin' !== $context ) {
         return 'deny';
     }
@@ -51,14 +51,14 @@ add_filter( 'ai_valve_plugin_policy', function ( string $policy, string $slug, s
 Allow all plugins unconditionally (effectively disable the deny list):
 
 ```php
-add_filter( 'ai_valve_plugin_policy', fn() => 'allow' );
+add_filter( 'aivalve_plugin_policy', fn() => 'allow' );
 ```
 
 ---
 
 ## Actions
 
-### `ai_valve_request_denied`
+### `aivalve_request_denied`
 
 Fires immediately after AI Valve blocks an AI request.
 
@@ -67,7 +67,7 @@ Use this to log denials to an external system, trigger a notification, or increm
 **Signature**
 
 ```php
-do_action( 'ai_valve_request_denied', string $plugin_slug, string $context, string $reason )
+do_action( 'aivalve_request_denied', string $plugin_slug, string $context, string $reason )
 ```
 
 | Parameter | Type | Description |
@@ -80,8 +80,8 @@ do_action( 'ai_valve_request_denied', string $plugin_slug, string $context, stri
 
 | Code | Cause |
 |---|---|
-| `ai_valve_disabled` | The master switch is off. |
-| `plugin_denied` | The plugin's policy is `deny` (including via the `ai_valve_plugin_policy` filter). |
+| `aivalve_disabled` | The master switch is off. |
+| `plugin_denied` | The plugin's policy is `deny` (including via the `aivalve_plugin_policy` filter). |
 | `context_denied` | The execution context is not allowed in Settings. |
 | `plugin_daily_budget_exceeded` | Plugin hit its per-day token limit. |
 | `plugin_monthly_budget_exceeded` | Plugin hit its per-month token limit. |
@@ -93,7 +93,7 @@ do_action( 'ai_valve_request_denied', string $plugin_slug, string $context, stri
 Send a Slack message when a plugin is blocked:
 
 ```php
-add_action( 'ai_valve_request_denied', function ( string $slug, string $context, string $reason ): void {
+add_action( 'aivalve_request_denied', function ( string $slug, string $context, string $reason ): void {
     if ( str_starts_with( $reason, 'plugin_' ) ) {
         wp_remote_post( SLACK_WEBHOOK_URL, [
             'body' => wp_json_encode( [
@@ -107,7 +107,7 @@ add_action( 'ai_valve_request_denied', function ( string $slug, string $context,
 Write denials to a custom log table:
 
 ```php
-add_action( 'ai_valve_request_denied', function ( string $slug, string $context, string $reason ): void {
+add_action( 'aivalve_request_denied', function ( string $slug, string $context, string $reason ): void {
     global $wpdb;
     $wpdb->insert(
         $wpdb->prefix . 'my_ai_denials',
@@ -124,7 +124,7 @@ add_action( 'ai_valve_request_denied', function ( string $slug, string $context,
 
 ---
 
-### `ai_valve_request_completed`
+### `aivalve_request_completed`
 
 Fires after every successful AI request, once the token usage has been recorded.
 
@@ -134,7 +134,7 @@ Use this to push token data to analytics, enforce additional post-request logic,
 
 ```php
 do_action(
-    'ai_valve_request_completed',
+    'aivalve_request_completed',
     string $plugin_slug,
     string $provider_id,
     string $model_id,
@@ -163,7 +163,7 @@ Push token usage to a monitoring endpoint:
 
 ```php
 add_action(
-    'ai_valve_request_completed',
+    'aivalve_request_completed',
     function (
         string $slug,
         string $provider,
@@ -187,7 +187,7 @@ Emit a warning if a single request is unusually expensive:
 
 ```php
 add_action(
-    'ai_valve_request_completed',
+    'aivalve_request_completed',
     function ( string $slug, string $provider, string $model, string $capability, int $prompt, int $completion, int $total ): void {
         if ( $total > 10000 ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log

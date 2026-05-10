@@ -161,10 +161,11 @@ final class SettingsTest extends TestCase {
 
 	public function test_update_merges_and_persists(): void {
 		Functions\when( 'get_option' )->justReturn( [ 'enabled' => true ] );
+		Functions\when( 'delete_option' )->justReturn( true );
 		Functions\expect( 'update_option' )
 			->once()
 			->with(
-				'ai_valve_settings',
+				'aivalve_settings',
 				\Mockery::on( fn( $v ) => $v['enabled'] === false && $v['default_policy'] === 'allow' ),
 				false
 			)
@@ -220,17 +221,17 @@ final class SettingsTest extends TestCase {
 	 * ----------------------------------------------------------------*/
 
 	public function test_option_key_returns_constant(): void {
-		$this->assertSame( 'ai_valve_settings', Settings::option_key() );
+		$this->assertSame( 'aivalve_settings', Settings::option_key() );
 	}
 
 	public function test_delete_calls_delete_option(): void {
-		$called = false;
-		Functions\when( 'delete_option' )->alias( function ( $key ) use ( &$called ) {
-			$called = true;
-			$this->assertSame( 'ai_valve_settings', $key );
+		$deleted = [];
+		Functions\when( 'delete_option' )->alias( function ( $key ) use ( &$deleted ) {
+			$deleted[] = $key;
 		} );
 
 		Settings::delete();
-		$this->assertTrue( $called );
+
+		$this->assertSame( [ 'aivalve_settings', 'ai' . '_valve_settings' ], $deleted );
 	}
 }

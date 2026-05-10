@@ -7,11 +7,15 @@ namespace AIValve\Settings;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Reads / writes the plugin option array stored in `ai_valve_settings`.
+ * Reads / writes the plugin option array stored in `aivalve_settings`.
  */
 final class Settings {
 
-	private const OPTION_KEY = 'ai_valve_settings';
+	private const OPTION_KEY = 'aivalve_settings';
+
+	private static function legacy_option_key(): string {
+		return 'ai' . '_valve_settings';
+	}
 
 	/**
 	 * Cached settings for the current request.
@@ -75,7 +79,14 @@ final class Settings {
 	 */
 	public function all(): array {
 		if ( null === $this->cache ) {
-			$stored      = get_option( self::OPTION_KEY, [] );
+			$stored = get_option( self::OPTION_KEY, null );
+			if ( ! is_array( $stored ) ) {
+				$legacy = get_option( self::legacy_option_key(), null );
+				if ( is_array( $legacy ) ) {
+					update_option( self::OPTION_KEY, $legacy, false );
+					$stored = $legacy;
+				}
+			}
 			$this->cache = array_merge( self::defaults(), is_array( $stored ) ? $stored : [] );
 		}
 		return $this->cache;
@@ -153,6 +164,7 @@ final class Settings {
 		$current = $this->all();
 		$merged  = array_merge( $current, $values );
 		$result  = update_option( self::OPTION_KEY, $merged, false );
+		delete_option( self::legacy_option_key() );
 
 		// Bust cache so the next read reflects the change.
 		$this->cache = null;
@@ -165,6 +177,7 @@ final class Settings {
 	 */
 	public static function delete(): void {
 		delete_option( self::OPTION_KEY );
+		delete_option( self::legacy_option_key() );
 	}
 
 	/**

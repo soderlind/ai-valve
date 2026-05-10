@@ -2,18 +2,18 @@
  * AI Valve Admin API client.
  *
  * Provides typed wrappers around the AI Valve REST API endpoints.
- * Expects `window.aiValve.restUrl` and `window.aiValve.nonce` to be
+ * Expects REST URL and nonce values to be
  * localized via `wp_localize_script()`.
  */
 
 /**
- * @typedef {Object} AIValveConfig
+ * @typedef {Object} AivalveConfig
  * @property {string} restUrl  - Base REST URL (e.g. "/wp-json/ai-valve/v1").
  * @property {string} nonce    - WP REST nonce.
  */
 
 /**
- * @param {AIValveConfig} config
+ * @param {AivalveConfig} config
  * @returns {Object} API client methods.
  */
 export function createApiClient(config) {

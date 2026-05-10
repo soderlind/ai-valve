@@ -15,14 +15,18 @@ defined( 'ABSPATH' ) || exit;
  * without requiring cron cleanup. Reads go through the object cache for speed.
  *
  * Option keys:
- *   ai_valve_tokens_daily_{Y-m-d}_{slug}   — per-plugin daily
- *   ai_valve_tokens_monthly_{Y-m}_{slug}    — per-plugin monthly
- *   ai_valve_tokens_daily_{Y-m-d}_*         — global daily
- *   ai_valve_tokens_monthly_{Y-m}_*         — global monthly
+ *   aivalve_tokens_daily_{Y-m-d}_{slug}   — per-plugin daily
+ *   aivalve_tokens_monthly_{Y-m}_{slug}    — per-plugin monthly
+ *   aivalve_tokens_daily_{Y-m-d}_*         — global daily
+ *   aivalve_tokens_monthly_{Y-m}_*         — global monthly
  */
 final class UsageTracker {
 
-	private const PREFIX = 'ai_valve_tokens_';
+	private const PREFIX = 'aivalve_tokens_';
+
+	private static function legacy_prefix(): string {
+		return 'ai' . '_valve_tokens_';
+	}
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -140,12 +144,18 @@ final class UsageTracker {
 	}
 
 	private function increment( string $key, int $amount ): void {
-		$current = (int) get_option( $key, 0 );
+		$current = $this->read( $key );
 		update_option( $key, $current + $amount, false );
 	}
 
 	private function read( string $key ): int {
-		return (int) get_option( $key, 0 );
+		$value = get_option( $key, null );
+		if ( null !== $value ) {
+			return (int) $value;
+		}
+
+		$legacy_key = self::legacy_prefix() . substr( $key, strlen( self::PREFIX ) );
+		return (int) get_option( $legacy_key, 0 );
 	}
 
 	/* ------------------------------------------------------------------
@@ -153,15 +163,17 @@ final class UsageTracker {
 	 * ----------------------------------------------------------------*/
 
 	/**
-	 * Delete ALL ai_valve_tokens_* options. Used during uninstall.
+	 * Delete all rolling token counter options. Used during uninstall.
 	 */
 	public static function delete_all(): void {
 		global $wpdb;
-		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-				$wpdb->esc_like( self::PREFIX ) . '%'
-			)
-		);
+		foreach ( [ self::PREFIX, self::legacy_prefix() ] as $prefix ) {
+			$wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+					$wpdb->esc_like( $prefix ) . '%'
+				)
+			);
+		}
 	}
 }

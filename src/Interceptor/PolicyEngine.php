@@ -36,14 +36,14 @@ final class PolicyEngine {
 
 		// 1. Master switch.
 		if ( ! $this->settings->is_enabled() ) {
-			$this->denial_reason = 'ai_valve_disabled';
+			$this->denial_reason = 'aivalve_disabled';
 			return false;
 		}
 
 		// 2. Per-plugin policy.
 		// Filterable so external code can override the stored policy for a slug.
 		$policy = (string) apply_filters(
-			'ai_valve_plugin_policy',
+			'aivalve_plugin_policy',
 			$this->settings->plugin_policy( $plugin_slug ),
 			$plugin_slug,
 			$context

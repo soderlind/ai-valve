@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Walks the call stack to identify which plugin triggered the AI request.
  *
- * Uses `debug_backtrace()` to find the first file path under `WP_PLUGIN_DIR`
+ * Uses `debug_backtrace()` to find the first file path under the plugins directory
  * that does NOT belong to ai-valve itself, then resolves the plugin slug.
  */
 final class CallerDetector {
@@ -37,8 +37,8 @@ final class CallerDetector {
 			return self::$cached_slug;
 		}
 
-		$plugin_dir = wp_normalize_path( WP_PLUGIN_DIR );
-		$own_dir    = wp_normalize_path( AI_VALVE_DIR );
+		$own_dir    = wp_normalize_path( rtrim( AIVALVE_PLUGIN_DIR, '/\\' ) );
+		$plugin_dir = wp_normalize_path( dirname( $own_dir ) );
 
 		// Walk the backtrace looking for the first frame in a different plugin.
 		$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 30 );
@@ -50,7 +50,7 @@ final class CallerDetector {
 
 			$file = wp_normalize_path( $frame[ 'file' ] );
 
-			// Must be under wp-content/plugins/.
+			// Must be under the plugins directory.
 			if ( ! str_starts_with( $file, $plugin_dir . '/' ) ) {
 				continue;
 			}

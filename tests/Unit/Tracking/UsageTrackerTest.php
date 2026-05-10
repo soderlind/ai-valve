@@ -33,7 +33,7 @@ final class UsageTrackerTest extends TestCase {
 		$updated = [];
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			return 100; // Existing counter value.
@@ -49,10 +49,10 @@ final class UsageTrackerTest extends TestCase {
 		$tracker->record( 'test-plugin', 500 );
 
 		// Should increment 4 keys: per-plugin daily, per-plugin monthly, global daily, global monthly.
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_test-plugin' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_test-plugin' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_*' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_*' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_daily_' . $today . '_test-plugin' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_monthly_' . $month . '_test-plugin' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_daily_' . $today . '_*' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_monthly_' . $month . '_*' ] );
 	}
 
 	public function test_record_ignores_zero_tokens(): void {
@@ -83,7 +83,7 @@ final class UsageTrackerTest extends TestCase {
 		$updated = [];
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			return 100;
@@ -99,12 +99,12 @@ final class UsageTrackerTest extends TestCase {
 		$tracker->record( 'test-plugin', 500, 'openai' );
 
 		// Should increment 6 keys: 4 standard + 2 provider.
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_test-plugin' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_test-plugin' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_*' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_*' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_daily_' . $today . '_provider:openai' ] );
-		$this->assertSame( 600, $updated[ 'ai_valve_tokens_monthly_' . $month . '_provider:openai' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_daily_' . $today . '_test-plugin' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_monthly_' . $month . '_test-plugin' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_daily_' . $today . '_*' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_monthly_' . $month . '_*' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_daily_' . $today . '_provider:openai' ] );
+		$this->assertSame( 600, $updated[ 'aivalve_tokens_monthly_' . $month . '_provider:openai' ] );
 	}
 
 	public function test_record_skips_provider_counters_when_empty(): void {
@@ -114,7 +114,7 @@ final class UsageTrackerTest extends TestCase {
 		$updated = [];
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			return 0;
@@ -131,7 +131,7 @@ final class UsageTrackerTest extends TestCase {
 
 		// Only 4 standard keys — no provider keys.
 		$this->assertCount( 4, $updated );
-		$this->assertArrayNotHasKey( 'ai_valve_tokens_daily_' . $today . '_provider:', $updated );
+		$this->assertArrayNotHasKey( 'aivalve_tokens_daily_' . $today . '_provider:', $updated );
 	}
 
 	/* ------------------------------------------------------------------
@@ -140,10 +140,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_plugin_tokens_today_reads_correct_key(): void {
 		$today = gmdate( 'Y-m-d' );
-		$expected_key = 'ai_valve_tokens_daily_' . $today . '_my-plugin';
+		$expected_key = 'aivalve_tokens_daily_' . $today . '_my-plugin';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			if ( $key === $expected_key ) {
@@ -160,10 +160,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_plugin_tokens_this_month_reads_correct_key(): void {
 		$month = gmdate( 'Y-m' );
-		$expected_key = 'ai_valve_tokens_monthly_' . $month . '_my-plugin';
+		$expected_key = 'aivalve_tokens_monthly_' . $month . '_my-plugin';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			if ( $key === $expected_key ) {
@@ -180,10 +180,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_global_tokens_today(): void {
 		$today = gmdate( 'Y-m-d' );
-		$expected_key = 'ai_valve_tokens_daily_' . $today . '_*';
+		$expected_key = 'aivalve_tokens_daily_' . $today . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			if ( $key === $expected_key ) {
@@ -200,10 +200,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_global_tokens_this_month(): void {
 		$month = gmdate( 'Y-m' );
-		$expected_key = 'ai_valve_tokens_monthly_' . $month . '_*';
+		$expected_key = 'aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			if ( $key === $expected_key ) {
@@ -220,10 +220,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_provider_tokens_today_reads_correct_key(): void {
 		$today = gmdate( 'Y-m-d' );
-		$expected_key = 'ai_valve_tokens_daily_' . $today . '_provider:openai';
+		$expected_key = 'aivalve_tokens_daily_' . $today . '_provider:openai';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			if ( $key === $expected_key ) {
@@ -240,10 +240,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_provider_tokens_this_month_reads_correct_key(): void {
 		$month = gmdate( 'Y-m' );
-		$expected_key = 'ai_valve_tokens_monthly_' . $month . '_provider:anthropic';
+		$expected_key = 'aivalve_tokens_monthly_' . $month . '_provider:anthropic';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $expected_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [];
 			}
 			if ( $key === $expected_key ) {
@@ -264,10 +264,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_global_daily_pct_with_limit(): void {
 		$today = gmdate( 'Y-m-d' );
-		$global_key = 'ai_valve_tokens_daily_' . $today . '_*';
+		$global_key = 'aivalve_tokens_daily_' . $today . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $global_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [ 'global_daily_limit' => 10000 ];
 			}
 			if ( $key === $global_key ) {
@@ -284,7 +284,7 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_global_daily_pct_returns_zero_when_no_limit(): void {
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [ 'global_daily_limit' => 0 ];
 			}
 			return $default;
@@ -298,10 +298,10 @@ final class UsageTrackerTest extends TestCase {
 
 	public function test_global_monthly_pct_with_limit(): void {
 		$month = gmdate( 'Y-m' );
-		$monthly_key = 'ai_valve_tokens_monthly_' . $month . '_*';
+		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $monthly_key ) {
-			if ( $key === 'ai_valve_settings' ) {
+			if ( $key === 'aivalve_settings' ) {
 				return [ 'global_monthly_limit' => 100000 ];
 			}
 			if ( $key === $monthly_key ) {

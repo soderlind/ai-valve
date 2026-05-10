@@ -120,8 +120,8 @@ export default function Logs( { setNotice } ) {
 
 	// Build CSV export URL (admin-post action).
 	const csvParams = new URLSearchParams( {
-		action: 'ai_valve_export_csv',
-		_wpnonce: window.aiValve?.csvNonce || '',
+		action: 'aivalve_export_csv',
+		_wpnonce: window.aivalveAdmin?.csvNonce || '',
 		filter_plugin: filters.plugin_slug,
 		filter_provider: filters.provider_id,
 		filter_model: filters.model_id,
@@ -137,11 +137,11 @@ export default function Logs( { setNotice } ) {
 		}
 	}
 	// Keep action and nonce always.
-	csvParams.set( 'action', 'ai_valve_export_csv' );
-	if ( window.aiValve?.csvNonce ) {
-		csvParams.set( '_wpnonce', window.aiValve.csvNonce );
+	csvParams.set( 'action', 'aivalve_export_csv' );
+	if ( window.aivalveAdmin?.csvNonce ) {
+		csvParams.set( '_wpnonce', window.aivalveAdmin.csvNonce );
 	}
-	const csvUrl = `${ window.aiValve?.adminPostUrl || '/wp-admin/admin-post.php' }?${ csvParams.toString() }`;
+	const csvUrl = `${ window.aivalveAdmin?.adminPostUrl || '/wp-admin/admin-post.php' }?${ csvParams.toString() }`;
 
 	return (
 		<div style={ { marginTop: '1em' } }>

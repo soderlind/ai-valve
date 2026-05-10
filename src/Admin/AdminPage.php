@@ -29,7 +29,7 @@ final class AdminPage {
 	public function register(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu_page' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
-		add_action( 'admin_post_ai_valve_export_csv', [ $this, 'handle_csv_export' ] );
+		add_action( 'admin_post_aivalve_export_csv', [ $this, 'handle_csv_export' ] );
 	}
 
 	/* ------------------------------------------------------------------
@@ -55,30 +55,30 @@ final class AdminPage {
 			return;
 		}
 
-		$asset_file = AI_VALVE_DIR . '/build/index.asset.php';
+		$asset_file = AIVALVE_PLUGIN_DIR . 'build/index.asset.php';
 		if ( ! file_exists( $asset_file ) ) {
 			return;
 		}
 		$asset = require $asset_file;
 
 		wp_enqueue_script(
-			'ai-valve-admin',
-			plugins_url( 'build/index.js', AI_VALVE_FILE ),
+			'aivalve-admin',
+			plugins_url( 'build/index.js', AIVALVE_PLUGIN_FILE ),
 			$asset[ 'dependencies' ],
 			$asset[ 'version' ],
 			true
 		);
 
 		wp_enqueue_style(
-			'ai-valve-admin',
-			plugins_url( 'build/index.css', AI_VALVE_FILE ),
+			'aivalve-admin',
+			plugins_url( 'build/index.css', AIVALVE_PLUGIN_FILE ),
 			[ 'wp-components' ],
 			$asset[ 'version' ]
 		);
 
-		wp_localize_script( 'ai-valve-admin', 'aiValve', [
+		wp_localize_script( 'aivalve-admin', 'aivalveAdmin', [
 			'adminEmail'   => get_option( 'admin_email' ),
-			'csvNonce'     => wp_create_nonce( 'ai_valve_export_csv' ),
+			'csvNonce'     => wp_create_nonce( 'aivalve_export_csv' ),
 			'adminPostUrl' => admin_url( 'admin-post.php' ),
 		] );
 	}
@@ -105,7 +105,7 @@ final class AdminPage {
 			wp_die( esc_html__( 'Unauthorized.', 'ai-valve' ), 403 );
 		}
 
-		check_admin_referer( 'ai_valve_export_csv' );
+		check_admin_referer( 'aivalve_export_csv' );
 
 		$repo    = new LogRepository();
 		$filters = [

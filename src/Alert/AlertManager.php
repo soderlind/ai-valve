@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class AlertManager {
 
-	private const EMAIL_TRANSIENT_PREFIX = 'ai_valve_alert_sent_';
+	private const EMAIL_TRANSIENT_PREFIX = 'aivalve_alert_sent_';
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -136,7 +136,7 @@ final class AlertManager {
 		}
 
 		wp_add_dashboard_widget(
-			'ai_valve_usage_widget',
+			'aivalve_usage_widget',
 			__( 'AI Valve — AI Token Usage', 'ai-valve' ),
 			[ $this, 'render_dashboard_widget' ],
 		);
