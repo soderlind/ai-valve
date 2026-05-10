@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Corrected the AI Provider link from Azure OpenAI to Azure AI Foundry.
+- Improved compatibility with custom plugin directory layouts.
+- Renamed plugin-owned hooks, options, cron events, and globals to use the unique `aivalve` prefix.
 - Resolved npm dependency security advisories.
 
 ## [1.1.2] - 2026-05-08
@@ -74,9 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `ai_valve_plugin_policy` filter — override the allow/deny policy for any plugin programmatically.
-- `ai_valve_request_denied` action — fires when a request is blocked, with plugin slug, context, and reason code.
-- `ai_valve_request_completed` action — fires after every successful request with full token and timing data.
+- `aivalve_plugin_policy` filter — override the allow/deny policy for any plugin programmatically.
+- `aivalve_request_denied` action — fires when a request is blocked, with plugin slug, context, and reason code.
+- `aivalve_request_completed` action — fires after every successful request with full token and timing data.
 - Developer hooks documentation (`docs/hooks.md`) with signatures, parameter tables, and examples.
 - Documentation index (`docs/README.md`).
 

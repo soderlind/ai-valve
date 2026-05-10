@@ -324,7 +324,7 @@ export default function Settings( { setNotice } ) {
 									update( 'alert_email', val )
 								}
 								placeholder={
-									window.aiValve?.adminEmail || ''
+									window.aivalveAdmin?.adminEmail || ''
 								}
 								__nextHasNoMarginBottom
 							/>

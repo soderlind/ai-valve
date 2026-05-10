@@ -37,17 +37,17 @@ foreach ( $hooks as $hook ) {
 
 echo "\n--- Log table row count ---\n";
 global $wpdb;
-$table = $wpdb->prefix . 'ai_valve_log';
+$table = $wpdb->prefix . 'aivalve_log';
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 echo "Rows in {$table}: {$count}\n";
 
 echo "\n--- AIValve settings ---\n";
-$settings = get_option( 'ai_valve_settings', [] );
+$settings = get_option( 'aivalve_settings', [] );
 echo print_r( $settings, true ) . "\n";
 
 echo "\n--- Token counter options ---\n";
 $counters = $wpdb->get_results(
-	"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'ai_valve_tokens_%' ORDER BY option_name",
+	"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'aivalve_tokens_%' ORDER BY option_name",
 	ARRAY_A
 );
 if ( $counters ) {

@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 final class Plugin {
 
 	public function register(): void {
+		// Run lightweight migrations before feature bails so in-place updates
+		// still move legacy storage keys forward.
+		LogRepository::maybe_upgrade();
+
+		$settings = new Settings();
+		$settings->all();
+
 		// Bail early if AI support is absent (pre-WP 7) or disabled.
 		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
 			return;
@@ -28,11 +35,6 @@ final class Plugin {
 			return;
 		}
 
-		// Run schema migrations on version bump (activation hook only
-		// fires on activate, not on in-place file updates).
-		LogRepository::maybe_upgrade();
-
-		$settings      = new Settings();
 		$usage_tracker = new UsageTracker( $settings );
 		$interceptor   = new RequestInterceptor( $settings, $usage_tracker );
 		$alert_manager = new AlertManager( $settings, $usage_tracker );
@@ -52,15 +54,17 @@ final class Plugin {
 		} );
 
 		// Log retention cron.
-		add_action( 'ai_valve_log_retention', static function () use ($settings): void {
+		add_action( 'aivalve_log_retention', static function () use ($settings): void {
 			$days = (int) $settings->get( 'log_retention_days', 0 );
 			if ( $days > 0 ) {
 				( new LogRepository() )->delete_older_than( $days );
 			}
 		} );
 
-		if ( ! wp_next_scheduled( 'ai_valve_log_retention' ) ) {
-			wp_schedule_event( time(), 'daily', 'ai_valve_log_retention' );
+		if ( ! wp_next_scheduled( 'aivalve_log_retention' ) ) {
+			wp_schedule_event( time(), 'daily', 'aivalve_log_retention' );
 		}
+
+		wp_clear_scheduled_hook( 'ai' . '_valve_log_retention' );
 	}
 }

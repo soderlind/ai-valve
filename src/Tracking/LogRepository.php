@@ -7,13 +7,21 @@ namespace AIValve\Tracking;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Manages the custom `{prefix}ai_valve_log` database table.
+ * Manages the custom `{prefix}aivalve_log` database table.
  */
 final class LogRepository {
 
-	private const TABLE_SUFFIX   = 'ai_valve_log';
+	private const TABLE_SUFFIX   = 'aivalve_log';
 	private const SCHEMA_VERSION = 3;
-	private const VERSION_KEY    = 'ai_valve_db_version';
+	private const VERSION_KEY    = 'aivalve_db_version';
+
+	private static function legacy_table_suffix(): string {
+		return 'ai' . '_valve_log';
+	}
+
+	private static function legacy_version_key(): string {
+		return 'ai' . '_valve_db_version';
+	}
 
 	/* ------------------------------------------------------------------
 	 * Table name helper
@@ -22,6 +30,11 @@ final class LogRepository {
 	public static function table_name(): string {
 		global $wpdb;
 		return $wpdb->prefix . self::TABLE_SUFFIX;
+	}
+
+	private static function legacy_table_name(): string {
+		global $wpdb;
+		return $wpdb->prefix . self::legacy_table_suffix();
 	}
 
 	/* ------------------------------------------------------------------
@@ -40,15 +53,21 @@ final class LogRepository {
 	 * The version check makes this a no-op on most requests.
 	 */
 	public static function maybe_upgrade(): void {
-		$current_version = (int) get_option( self::VERSION_KEY, 0 );
+		$current_version = get_option( self::VERSION_KEY, false );
+		if ( false === $current_version ) {
+			self::run_migrations();
+			return;
+		}
 
-		if ( $current_version < self::SCHEMA_VERSION ) {
+		if ( (int) $current_version < self::SCHEMA_VERSION ) {
 			self::run_migrations();
 		}
 	}
 
 	private static function run_migrations(): void {
 		global $wpdb;
+
+		self::maybe_rename_legacy_table();
 
 		$table   = self::table_name();
 		$charset = $wpdb->get_charset_collate();
@@ -76,7 +95,11 @@ final class LogRepository {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
-		$current_version = (int) get_option( self::VERSION_KEY, 0 );
+		$current_version = get_option( self::VERSION_KEY, false );
+		if ( false === $current_version ) {
+			$current_version = get_option( self::legacy_version_key(), 0 );
+		}
+		$current_version = (int) $current_version;
 
 		// v1 → v2: widen status column.
 		if ( $current_version < 2 ) {
@@ -97,6 +120,25 @@ final class LogRepository {
 		}
 
 		update_option( self::VERSION_KEY, self::SCHEMA_VERSION, true );
+		delete_option( self::legacy_version_key() );
+	}
+
+	private static function maybe_rename_legacy_table(): void {
+		global $wpdb;
+
+		$table        = self::table_name();
+		$legacy_table = self::legacy_table_name();
+
+		if ( $table === $legacy_table ) {
+			return;
+		}
+
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+		$legacy_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $legacy_table ) );
+
+		if ( ! $table_exists && $legacy_exists ) {
+			$wpdb->query( "RENAME TABLE {$legacy_table} TO {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		}
 	}
 
 	/* ------------------------------------------------------------------
@@ -501,8 +543,10 @@ final class LogRepository {
 	 */
 	public static function uninstall(): void {
 		global $wpdb;
-		$table = self::table_name();
-		$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		foreach ( [ self::table_name(), self::legacy_table_name() ] as $table ) {
+			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		}
 		delete_option( self::VERSION_KEY );
+		delete_option( self::legacy_version_key() );
 	}
 }
