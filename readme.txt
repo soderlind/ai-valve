@@ -4,7 +4,7 @@ Tags: ai, tokens, metering, permissions, usage
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,12 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 1. Dashboard with usage summary cards and per-plugin breakdown.
 
 == Changelog ==
+
+= 1.1.3 =
+* Added: GitHub workflows for automated deployment to WordPress.org.
+* Changed: Updated SVG assets for AI Valve plugin with new icons and banner.
+* Fixed: Corrected the AI Provider link from Azure OpenAI to Azure AI Foundry.
+* Fixed: Resolved npm dependency security advisories.
 
 = 1.1.2 =
 * Added: Developer hooks section to README.md with link to documentation.
