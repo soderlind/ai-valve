@@ -81,26 +81,20 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 == Changelog ==
 
 = 1.1.3 =
-* Added: GitHub workflows for automated deployment to WordPress.org.
-* Changed: Updated SVG assets for AI Valve plugin with new icons and banner.
-* Fixed: Corrected the AI Provider link from Azure OpenAI to Azure AI Foundry.
+* Changed: Updated WordPress.org icons and banner.
 * Fixed: Resolved npm dependency security advisories.
 
 = 1.1.2 =
-* Added: Developer hooks section to README.md with link to documentation.
-* Fixed: Updated image source in README.md to correct path for AI Valve dashboard.
 * Changed: Refactored code structure for improved readability and maintainability.
 
 = 1.1.1 =
 * Fixed: Dashboard usage date buckets now keep Today, plugin totals, and Recent Requests aligned around database/PHP day boundaries.
 * Fixed: WordPress 6.8 SelectControl deprecation warnings in the admin UI.
 * Added: WordPress.org icon and banner assets.
-* Changed: Clarified installation instructions in README.
 
 = 1.1.0 =
 * Removed: GitHub release updater for WordPress.org distribution.
 * Removed: plugin-update-checker dependency and bundled updater files.
-* Changed: Release zip workflows now package WordPress.org-style builds.
 * Fixed: Added direct-access guards and Plugin Check cleanup for production files.
 
 = 1.0.4 =
@@ -110,16 +104,11 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 * Added: `ai_valve_plugin_policy` filter to override allow/deny policy programmatically.
 * Added: `ai_valve_request_denied` action, fired when a request is blocked.
 * Added: `ai_valve_request_completed` action, fired after every successful request.
-* Added: Developer hooks documentation (`docs/hooks.md`).
-* Changed: README rewritten with Developer Hooks section.
 
 = 1.0.2 =
 * Fixed: Resolve multiple security vulnerabilities in transitive dependencies.
-* Changed: Update README — add inspiration note and remove duplicate credit section.
 
 = 1.0.1 =
-* Fixed: Removed stale beta6 dispatcher workaround note from README.
-* Updated: Hook table and project structure descriptions reflect pending-row pattern.
 * Added: FAQ entry on deny-by-default allowlist setup.
 
 = 1.0.0 =
@@ -142,7 +131,6 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 = 0.5.0 =
 * Removed: Reflection-based event dispatcher injection workaround (fixed in WP 7 RC1).
 * Changed: Tested up to WP 7.0-RC1.
-* Changed: Updated howto documentation to mark the core bug as resolved.
 
 = 0.4.0 =
 * Changed: Admin UI rebuilt as a React single-page application.
@@ -151,15 +139,12 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 * Added: `by_context`, `recent`, and `known_slugs` fields in the `GET /usage` response.
 * Added: `date_from` and `date_to` filter parameters on the `GET /logs` endpoint.
 * Added: Dedicated CSS file for admin styles (replaces inline styles).
-* Changed: AdminPage.php reduced from 850+ lines to a thin shell (~160 lines).
-* Changed: Build pipeline uses `@wordpress/scripts` with dependency extraction.
 
 = 0.3.0 =
 * Added: Model filter on the Logs tab and CSV export.
 * Added: Provider & Model breakdown table on the Dashboard.
 * Added: Per-plugin token bar chart on the Dashboard.
 * Added: Per-provider token counters.
-* Added: How-blocking-works documentation.
 * Changed: Providers & Contexts tables displayed side by side.
 * Changed: Plugin list only shows plugins that used the AI connector.
 
