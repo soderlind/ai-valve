@@ -1,6 +1,6 @@
 === AI Valve ===
 Contributors: PerS
-Tags: ai, tokens, metering, permissions, usage
+Tags: ai, governance, tokens, cost-control, connector
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
