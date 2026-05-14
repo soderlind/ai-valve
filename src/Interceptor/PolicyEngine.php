@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Interceptor;
+namespace Soderlind\AiValve\Interceptor;
 
-use AIValve\Settings\Settings;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\UsageTracker;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,14 +36,14 @@ final class PolicyEngine {
 
 		// 1. Master switch.
 		if ( ! $this->settings->is_enabled() ) {
-			$this->denial_reason = 'aivalve_disabled';
+			$this->denial_reason = 'soderlind_aivalve_disabled';
 			return false;
 		}
 
 		// 2. Per-plugin policy.
 		// Filterable so external code can override the stored policy for a slug.
 		$policy = (string) apply_filters(
-			'aivalve_plugin_policy',
+			'soderlind_aivalve_plugin_policy',
 			$this->settings->plugin_policy( $plugin_slug ),
 			$plugin_slug,
 			$context

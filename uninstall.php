@@ -1,11 +1,11 @@
 <?php
 /**
- * AIValve — Uninstall handler.
+ * AI Valve uninstall handler.
  *
  * Runs when the plugin is deleted via the WordPress admin.
  * Removes: custom DB table, plugin options, and alert transients.
  *
- * @package AIValve
+ * @package SoderlindAiValve
  */
 
 declare(strict_types=1);
@@ -17,9 +17,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // Autoloader may not be loaded during uninstall, so require manually.
 require_once __DIR__ . '/vendor/autoload.php';
 
-use AIValve\Settings\Settings;
-use AIValve\Tracking\LogRepository;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\LogRepository;
+use Soderlind\AiValve\Tracking\UsageTracker;
 
 // Drop the log table.
 LogRepository::uninstall();
@@ -35,13 +35,13 @@ global $wpdb;
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_transient_aivalve_alert_sent_' ) . '%'
+		$wpdb->esc_like( '_transient_soderlind_aivalve_alert_sent_' ) . '%'
 	)
 );
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_transient_timeout_aivalve_alert_sent_' ) . '%'
+		$wpdb->esc_like( '_transient_timeout_soderlind_aivalve_alert_sent_' ) . '%'
 	)
 );
 $wpdb->query(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tracking;
+namespace Soderlind\AiValve\Tracking;
 
 defined( 'ABSPATH' ) || exit;
 

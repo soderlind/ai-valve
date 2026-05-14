@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tests\Unit\Interceptor;
+namespace Soderlind\AiValve\Tests\Unit\Interceptor;
 
-use AIValve\Interceptor\PolicyEngine;
-use AIValve\Settings\Settings;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Interceptor\PolicyEngine;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\UsageTracker;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Brain\Monkey\Filters;
@@ -45,7 +45,7 @@ final class PolicyEngineTest extends TestCase {
 		$engine = new PolicyEngine( $settings, $tracker );
 
 		$this->assertFalse( $engine->evaluate( 'any-plugin', 'admin' ) );
-		$this->assertSame( 'aivalve_disabled', $engine->denial_reason() );
+		$this->assertSame( 'soderlind_aivalve_disabled', $engine->denial_reason() );
 	}
 
 	/* ------------------------------------------------------------------
@@ -108,10 +108,10 @@ final class PolicyEngineTest extends TestCase {
 
 	public function test_denies_when_plugin_daily_budget_exceeded(): void {
 		$today = gmdate( 'Y-m-d' );
-		$key   = 'aivalve_tokens_daily_' . $today . '_my-plugin';
+		$key   = 'soderlind_aivalve_tokens_daily_' . $today . '_my-plugin';
 
 		Functions\when( 'get_option' )->alias( function ( $name, $default = false ) use ( $key ) {
-			if ( $name === 'aivalve_settings' ) {
+			if ( $name === 'soderlind_aivalve_settings' ) {
 				return [
 					'plugin_budgets' => [
 						'my-plugin' => [ 'daily' => 1000, 'monthly' => 0 ],
@@ -139,11 +139,11 @@ final class PolicyEngineTest extends TestCase {
 	public function test_denies_when_plugin_monthly_budget_exceeded(): void {
 		$today = gmdate( 'Y-m-d' );
 		$month = gmdate( 'Y-m' );
-		$daily_key   = 'aivalve_tokens_daily_' . $today . '_my-plugin';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_my-plugin';
+		$daily_key   = 'soderlind_aivalve_tokens_daily_' . $today . '_my-plugin';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_my-plugin';
 
 		Functions\when( 'get_option' )->alias( function ( $name, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $name === 'aivalve_settings' ) {
+			if ( $name === 'soderlind_aivalve_settings' ) {
 				return [
 					'plugin_budgets' => [
 						'my-plugin' => [ 'daily' => 0, 'monthly' => 5000 ],
@@ -173,10 +173,10 @@ final class PolicyEngineTest extends TestCase {
 
 	public function test_denies_when_global_daily_budget_exceeded(): void {
 		$today = gmdate( 'Y-m-d' );
-		$global_key = 'aivalve_tokens_daily_' . $today . '_*';
+		$global_key = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( $name, $default = false ) use ( $global_key ) {
-			if ( $name === 'aivalve_settings' ) {
+			if ( $name === 'soderlind_aivalve_settings' ) {
 				return [ 'global_daily_limit' => 10000 ];
 			}
 			if ( $name === $global_key ) {
@@ -200,11 +200,11 @@ final class PolicyEngineTest extends TestCase {
 	public function test_denies_when_global_monthly_budget_exceeded(): void {
 		$today      = gmdate( 'Y-m-d' );
 		$month      = gmdate( 'Y-m' );
-		$daily_key  = 'aivalve_tokens_daily_' . $today . '_*';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
+		$daily_key  = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( $name, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $name === 'aivalve_settings' ) {
+			if ( $name === 'soderlind_aivalve_settings' ) {
 				return [ 'global_monthly_limit' => 50000 ];
 			}
 			if ( $name === $daily_key ) {
@@ -249,11 +249,11 @@ final class PolicyEngineTest extends TestCase {
 		$engine   = new PolicyEngine( $settings, $tracker );
 
 		$this->assertFalse( $engine->evaluate( 'my-plugin', 'admin' ) );
-		$this->assertSame( 'aivalve_disabled', $engine->denial_reason() );
+		$this->assertSame( 'soderlind_aivalve_disabled', $engine->denial_reason() );
 	}
 
 	/* ------------------------------------------------------------------
-	 * aivalve_plugin_policy filter
+	 * soderlind_aivalve_plugin_policy filter
 	 * ----------------------------------------------------------------*/
 
 	public function test_filter_can_deny_an_allowed_plugin(): void {
@@ -265,7 +265,7 @@ final class PolicyEngineTest extends TestCase {
 		$tracker  = new UsageTracker( $settings );
 		$engine   = new PolicyEngine( $settings, $tracker );
 
-		Filters\expectApplied( 'aivalve_plugin_policy' )
+		Filters\expectApplied( 'soderlind_aivalve_plugin_policy' )
 			->once()
 			->with( 'allow', 'trusted-plugin', 'admin' )
 			->andReturn( 'deny' );
@@ -283,7 +283,7 @@ final class PolicyEngineTest extends TestCase {
 		$tracker  = new UsageTracker( $settings );
 		$engine   = new PolicyEngine( $settings, $tracker );
 
-		Filters\expectApplied( 'aivalve_plugin_policy' )
+		Filters\expectApplied( 'soderlind_aivalve_plugin_policy' )
 			->once()
 			->with( 'deny', 'bad-plugin', 'admin' )
 			->andReturn( 'allow' );
@@ -295,7 +295,7 @@ final class PolicyEngineTest extends TestCase {
 	public function test_filter_receives_plugin_slug_and_context(): void {
 		$engine = new PolicyEngine( $this->settings, $this->usage_tracker );
 
-		Filters\expectApplied( 'aivalve_plugin_policy' )
+		Filters\expectApplied( 'soderlind_aivalve_plugin_policy' )
 			->once()
 			->with( 'allow', 'my-plugin', 'cron' )
 			->andReturnFirstArg();

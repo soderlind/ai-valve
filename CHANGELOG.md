@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2026-05-14
+
+### Fixed
+
+- WordPress.org plugin review prefix compliance by renaming plugin-owned namespaces, constants, hooks, options, cron events, database keys, and admin script globals to the unique `soderlind_aivalve` prefix.
+- Migration and cleanup paths for existing `aivalve`/`ai_valve` installs while keeping active identifiers uniquely prefixed.
+
+### Changed
+
+- Readme tags for improved clarity and relevance.
+
 ## [1.1.3] - 2026-05-10
 
 ### Added
@@ -19,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Corrected the AI Provider link from Azure OpenAI to Azure AI Foundry.
 - Improved compatibility with custom plugin directory layouts.
-- Renamed plugin-owned hooks, options, cron events, and globals to use the unique `aivalve` prefix.
+- Renamed plugin-owned hooks, options, cron events, and globals to use the unique `soderlind_aivalve` prefix.
 - Resolved npm dependency security advisories.
 
 ## [1.1.2] - 2026-05-08
@@ -76,9 +87,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `aivalve_plugin_policy` filter — override the allow/deny policy for any plugin programmatically.
-- `aivalve_request_denied` action — fires when a request is blocked, with plugin slug, context, and reason code.
-- `aivalve_request_completed` action — fires after every successful request with full token and timing data.
+- `soderlind_aivalve_plugin_policy` filter — override the allow/deny policy for any plugin programmatically.
+- `soderlind_aivalve_request_denied` action — fires when a request is blocked, with plugin slug, context, and reason code.
+- `soderlind_aivalve_request_completed` action — fires after every successful request with full token and timing data.
 - Developer hooks documentation (`docs/hooks.md`) with signatures, parameter tables, and examples.
 - Documentation index (`docs/README.md`).
 

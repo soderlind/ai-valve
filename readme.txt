@@ -4,7 +4,7 @@ Tags: ai, governance, tokens, cost-control, connector
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,11 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 
 == Changelog ==
 
+= 1.1.4 =
+* Fixed: WordPress.org plugin review prefix compliance by renaming plugin-owned namespaces, constants, hooks, options, cron events, database keys, and admin script globals to the unique `soderlind_aivalve` prefix.
+* Fixed: Migration and cleanup paths for existing `aivalve`/`ai_valve` installs while keeping active identifiers uniquely prefixed.
+* Changed: Readme tags for improved clarity and relevance.
+
 = 1.1.3 =
 * Changed: Updated WordPress.org icons and banner.
 * Fixed: Improved compatibility with custom plugin directory layouts and unique plugin-owned identifiers.
@@ -102,9 +107,9 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 * Changed: Update npm dependencies to latest versions.
 
 = 1.0.3 =
-* Added: `aivalve_plugin_policy` filter to override allow/deny policy programmatically.
-* Added: `aivalve_request_denied` action, fired when a request is blocked.
-* Added: `aivalve_request_completed` action, fired after every successful request.
+* Added: `soderlind_aivalve_plugin_policy` filter to override allow/deny policy programmatically.
+* Added: `soderlind_aivalve_request_denied` action, fired when a request is blocked.
+* Added: `soderlind_aivalve_request_completed` action, fired after every successful request.
 
 = 1.0.2 =
 * Fixed: Resolve multiple security vulnerabilities in transitive dependencies.

@@ -17,7 +17,7 @@ Policy checks run in order. The **first** failing check blocks the request:
 
 | # | Reason | Meaning |
 |---|--------|---------|
-| 1 | `aivalve_disabled` | The master switch is off — all AI requests are blocked. |
+| 1 | `soderlind_aivalve_disabled` | The master switch is off — all AI requests are blocked. |
 | 2 | `plugin_denied` | The plugin's per-plugin policy is set to **Deny**. |
 | 3 | `context_denied` | The current execution context (admin, frontend, cron, REST, AJAX, CLI) is not in the allowed list. |
 | 4 | `plugin_daily_budget_exceeded` | The plugin has used all of its per-plugin daily token budget. |

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Interceptor;
+namespace Soderlind\AiValve\Interceptor;
 
-use AIValve\Settings\Settings;
-use AIValve\Tracking\LogRepository;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\LogRepository;
+use Soderlind\AiValve\Tracking\UsageTracker;
 use WordPress\AiClient\Events\AfterGenerateResultEvent;
 use WordPress\AiClient\Events\BeforeGenerateResultEvent;
 use WP_AI_Client_Prompt_Builder;
@@ -93,7 +93,7 @@ final class RequestInterceptor {
 			 * @param string $context    Execution context: admin|frontend|cron|rest|ajax|cli.
 			 * @param string $reason     Denial reason code.
 			 */
-			do_action( 'aivalve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
+			do_action( 'soderlind_aivalve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
 
 			return true; // Prevent the prompt.
 		}
@@ -243,7 +243,7 @@ final class RequestInterceptor {
 		 * @param int    $duration_ms       Request duration in milliseconds.
 		 */
 		do_action(
-			'aivalve_request_completed',
+			'soderlind_aivalve_request_completed',
 			$plugin_slug,
 			$provider_id,
 			$model_id,

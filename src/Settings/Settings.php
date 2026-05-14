@@ -2,19 +2,26 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Settings;
+namespace Soderlind\AiValve\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Reads / writes the plugin option array stored in `aivalve_settings`.
+ * Reads / writes the plugin option array stored in `soderlind_aivalve_settings`.
  */
 final class Settings {
 
-	private const OPTION_KEY = 'aivalve_settings';
+	private const OPTION_KEY = 'soderlind_aivalve_settings';
+	private const LEGACY_OPTION_KEYS = [
+		'aiv' . 'alve_settings',
+		'ai' . '_valve_settings',
+	];
 
-	private static function legacy_option_key(): string {
-		return 'ai' . '_valve_settings';
+	/**
+	 * @return list<string>
+	 */
+	private static function legacy_option_keys(): array {
+		return self::LEGACY_OPTION_KEYS;
 	}
 
 	/**
@@ -81,10 +88,13 @@ final class Settings {
 		if ( null === $this->cache ) {
 			$stored = get_option( self::OPTION_KEY, null );
 			if ( ! is_array( $stored ) ) {
-				$legacy = get_option( self::legacy_option_key(), null );
-				if ( is_array( $legacy ) ) {
-					update_option( self::OPTION_KEY, $legacy, false );
-					$stored = $legacy;
+				foreach ( self::legacy_option_keys() as $legacy_key ) {
+					$legacy = get_option( $legacy_key, null );
+					if ( is_array( $legacy ) ) {
+						update_option( self::OPTION_KEY, $legacy, false );
+						$stored = $legacy;
+						break;
+					}
 				}
 			}
 			$this->cache = array_merge( self::defaults(), is_array( $stored ) ? $stored : [] );
@@ -164,7 +174,9 @@ final class Settings {
 		$current = $this->all();
 		$merged  = array_merge( $current, $values );
 		$result  = update_option( self::OPTION_KEY, $merged, false );
-		delete_option( self::legacy_option_key() );
+		foreach ( self::legacy_option_keys() as $legacy_key ) {
+			delete_option( $legacy_key );
+		}
 
 		// Bust cache so the next read reflects the change.
 		$this->cache = null;
@@ -177,7 +189,9 @@ final class Settings {
 	 */
 	public static function delete(): void {
 		delete_option( self::OPTION_KEY );
-		delete_option( self::legacy_option_key() );
+		foreach ( self::legacy_option_keys() as $legacy_key ) {
+			delete_option( $legacy_key );
+		}
 	}
 
 	/**

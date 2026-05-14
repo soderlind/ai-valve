@@ -67,7 +67,7 @@ if ( is_wp_error( $result ) ) {
 
 // Show log.
 global $wpdb;
-$table = $wpdb->prefix . 'aivalve_log';
+$table = $wpdb->prefix . 'soderlind_aivalve_log';
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 echo "Log rows: {$count}\n\n";
 

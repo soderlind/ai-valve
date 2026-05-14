@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tests\Unit\Interceptor;
+namespace Soderlind\AiValve\Tests\Unit\Interceptor;
 
-use AIValve\Interceptor\CallerDetector;
-use AIValve\Interceptor\RequestInterceptor;
-use AIValve\Settings\Settings;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Interceptor\CallerDetector;
+use Soderlind\AiValve\Interceptor\RequestInterceptor;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\UsageTracker;
 use Brain\Monkey;
 use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;

@@ -51,7 +51,7 @@ file_put_contents( $log_file, "=== End debug session ===\n\n", FILE_APPEND );
 
 // Also show if our plugin hooks fired.
 global $wpdb;
-$table = $wpdb->prefix . 'aivalve_log';
+$table = $wpdb->prefix . 'soderlind_aivalve_log';
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 echo "Rows in {$table}: {$count}\n";
 

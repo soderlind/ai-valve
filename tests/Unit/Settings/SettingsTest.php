@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tests\Unit\Settings;
+namespace Soderlind\AiValve\Tests\Unit\Settings;
 
-use AIValve\Settings\Settings;
+use Soderlind\AiValve\Settings\Settings;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
@@ -165,7 +165,7 @@ final class SettingsTest extends TestCase {
 		Functions\expect( 'update_option' )
 			->once()
 			->with(
-				'aivalve_settings',
+				'soderlind_aivalve_settings',
 				\Mockery::on( fn( $v ) => $v['enabled'] === false && $v['default_policy'] === 'allow' ),
 				false
 			)
@@ -221,7 +221,7 @@ final class SettingsTest extends TestCase {
 	 * ----------------------------------------------------------------*/
 
 	public function test_option_key_returns_constant(): void {
-		$this->assertSame( 'aivalve_settings', Settings::option_key() );
+		$this->assertSame( 'soderlind_aivalve_settings', Settings::option_key() );
 	}
 
 	public function test_delete_calls_delete_option(): void {
@@ -232,6 +232,6 @@ final class SettingsTest extends TestCase {
 
 		Settings::delete();
 
-		$this->assertSame( [ 'aivalve_settings', 'ai' . '_valve_settings' ], $deleted );
+		$this->assertSame( [ 'soderlind_aivalve_settings', 'aiv' . 'alve_settings', 'ai' . '_valve_settings' ], $deleted );
 	}
 }

@@ -12,17 +12,17 @@ require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', '/tmp/wp/' );
 }
-if ( ! defined( 'AIVALVE_VERSION' ) ) {
-	define( 'AIVALVE_VERSION', '0.1.0-test' );
+if ( ! defined( 'SODERLIND_AIVALVE_VERSION' ) ) {
+	define( 'SODERLIND_AIVALVE_VERSION', '0.1.0-test' );
 }
-if ( ! defined( 'AIVALVE_PLUGIN_FILE' ) ) {
-	define( 'AIVALVE_PLUGIN_FILE', dirname( __DIR__ ) . '/ai-valve.php' );
+if ( ! defined( 'SODERLIND_AIVALVE_PLUGIN_FILE' ) ) {
+	define( 'SODERLIND_AIVALVE_PLUGIN_FILE', dirname( __DIR__ ) . '/ai-valve.php' );
 }
-if ( ! defined( 'AIVALVE_PLUGIN_DIR' ) ) {
-	define( 'AIVALVE_PLUGIN_DIR', dirname( __DIR__ ) . '/' );
+if ( ! defined( 'SODERLIND_AIVALVE_PLUGIN_DIR' ) ) {
+	define( 'SODERLIND_AIVALVE_PLUGIN_DIR', dirname( __DIR__ ) . '/' );
 }
-if ( ! defined( 'AIVALVE_PLUGIN_BASENAME' ) ) {
-	define( 'AIVALVE_PLUGIN_BASENAME', 'ai-valve/ai-valve.php' );
+if ( ! defined( 'SODERLIND_AIVALVE_PLUGIN_BASENAME' ) ) {
+	define( 'SODERLIND_AIVALVE_PLUGIN_BASENAME', 'ai-valve/ai-valve.php' );
 }
 if ( ! defined( 'WPMU_PLUGIN_DIR' ) ) {
 	define( 'WPMU_PLUGIN_DIR', '/tmp/wp/wp-content/mu-plugins' );
