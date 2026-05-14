@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace AIValve;
+namespace Soderlind\AiValve;
 
-use AIValve\Admin\AdminPage;
-use AIValve\Alert\AlertManager;
-use AIValve\Interceptor\RequestInterceptor;
-use AIValve\REST\UsageController;
-use AIValve\Settings\Settings;
-use AIValve\Tracking\LogRepository;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Admin\AdminPage;
+use Soderlind\AiValve\Alert\AlertManager;
+use Soderlind\AiValve\Interceptor\RequestInterceptor;
+use Soderlind\AiValve\REST\UsageController;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\LogRepository;
+use Soderlind\AiValve\Tracking\UsageTracker;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -54,17 +54,18 @@ final class Plugin {
 		} );
 
 		// Log retention cron.
-		add_action( 'aivalve_log_retention', static function () use ($settings): void {
+		add_action( 'soderlind_aivalve_log_retention', static function () use ($settings): void {
 			$days = (int) $settings->get( 'log_retention_days', 0 );
 			if ( $days > 0 ) {
 				( new LogRepository() )->delete_older_than( $days );
 			}
 		} );
 
-		if ( ! wp_next_scheduled( 'aivalve_log_retention' ) ) {
-			wp_schedule_event( time(), 'daily', 'aivalve_log_retention' );
+		if ( ! wp_next_scheduled( 'soderlind_aivalve_log_retention' ) ) {
+			wp_schedule_event( time(), 'daily', 'soderlind_aivalve_log_retention' );
 		}
 
+		wp_clear_scheduled_hook( 'aiv' . 'alve_log_retention' );
 		wp_clear_scheduled_hook( 'ai' . '_valve_log_retention' );
 	}
 }

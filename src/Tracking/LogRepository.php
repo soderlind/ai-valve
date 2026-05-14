@@ -2,25 +2,37 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tracking;
+namespace Soderlind\AiValve\Tracking;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Manages the custom `{prefix}aivalve_log` database table.
+ * Manages the custom `{prefix}soderlind_aivalve_log` database table.
  */
 final class LogRepository {
 
-	private const TABLE_SUFFIX   = 'aivalve_log';
+	private const TABLE_SUFFIX   = 'soderlind_aivalve_log';
 	private const SCHEMA_VERSION = 3;
-	private const VERSION_KEY    = 'aivalve_db_version';
+	private const VERSION_KEY    = 'soderlind_aivalve_db_version';
 
-	private static function legacy_table_suffix(): string {
-		return 'ai' . '_valve_log';
+	/**
+	 * @return list<string>
+	 */
+	private static function legacy_table_suffixes(): array {
+		return [
+			'aiv' . 'alve_log',
+			'ai' . '_valve_log',
+		];
 	}
 
-	private static function legacy_version_key(): string {
-		return 'ai' . '_valve_db_version';
+	/**
+	 * @return list<string>
+	 */
+	private static function legacy_version_keys(): array {
+		return [
+			'aiv' . 'alve_db_version',
+			'ai' . '_valve_db_version',
+		];
 	}
 
 	/* ------------------------------------------------------------------
@@ -32,9 +44,16 @@ final class LogRepository {
 		return $wpdb->prefix . self::TABLE_SUFFIX;
 	}
 
-	private static function legacy_table_name(): string {
+	/**
+	 * @return list<string>
+	 */
+	private static function legacy_table_names(): array {
 		global $wpdb;
-		return $wpdb->prefix . self::legacy_table_suffix();
+
+		return array_map(
+			static fn( string $suffix ): string => $wpdb->prefix . $suffix,
+			self::legacy_table_suffixes()
+		);
 	}
 
 	/* ------------------------------------------------------------------
@@ -97,7 +116,12 @@ final class LogRepository {
 
 		$current_version = get_option( self::VERSION_KEY, false );
 		if ( false === $current_version ) {
-			$current_version = get_option( self::legacy_version_key(), 0 );
+			foreach ( self::legacy_version_keys() as $legacy_version_key ) {
+				$current_version = get_option( $legacy_version_key, false );
+				if ( false !== $current_version ) {
+					break;
+				}
+			}
 		}
 		$current_version = (int) $current_version;
 
@@ -120,24 +144,28 @@ final class LogRepository {
 		}
 
 		update_option( self::VERSION_KEY, self::SCHEMA_VERSION, true );
-		delete_option( self::legacy_version_key() );
+		foreach ( self::legacy_version_keys() as $legacy_version_key ) {
+			delete_option( $legacy_version_key );
+		}
 	}
 
 	private static function maybe_rename_legacy_table(): void {
 		global $wpdb;
 
-		$table        = self::table_name();
-		$legacy_table = self::legacy_table_name();
+		$table = self::table_name();
 
-		if ( $table === $legacy_table ) {
-			return;
-		}
+		foreach ( self::legacy_table_names() as $legacy_table ) {
+			if ( $table === $legacy_table ) {
+				continue;
+			}
 
-		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
-		$legacy_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $legacy_table ) );
+			$table_exists  = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+			$legacy_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $legacy_table ) );
 
-		if ( ! $table_exists && $legacy_exists ) {
-			$wpdb->query( "RENAME TABLE {$legacy_table} TO {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			if ( ! $table_exists && $legacy_exists ) {
+				$wpdb->query( "RENAME TABLE {$legacy_table} TO {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				break;
+			}
 		}
 	}
 
@@ -543,10 +571,12 @@ final class LogRepository {
 	 */
 	public static function uninstall(): void {
 		global $wpdb;
-		foreach ( [ self::table_name(), self::legacy_table_name() ] as $table ) {
+		foreach ( array_merge( [ self::table_name() ], self::legacy_table_names() ) as $table ) {
 			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 		delete_option( self::VERSION_KEY );
-		delete_option( self::legacy_version_key() );
+		foreach ( self::legacy_version_keys() as $legacy_version_key ) {
+			delete_option( $legacy_version_key );
+		}
 	}
 }

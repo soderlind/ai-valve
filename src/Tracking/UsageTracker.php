@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tracking;
+namespace Soderlind\AiValve\Tracking;
 
-use AIValve\Settings\Settings;
+use Soderlind\AiValve\Settings\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,17 +15,23 @@ defined( 'ABSPATH' ) || exit;
  * without requiring cron cleanup. Reads go through the object cache for speed.
  *
  * Option keys:
- *   aivalve_tokens_daily_{Y-m-d}_{slug}   — per-plugin daily
- *   aivalve_tokens_monthly_{Y-m}_{slug}    — per-plugin monthly
- *   aivalve_tokens_daily_{Y-m-d}_*         — global daily
- *   aivalve_tokens_monthly_{Y-m}_*         — global monthly
+ *   soderlind_aivalve_tokens_daily_{Y-m-d}_{slug}   — per-plugin daily
+ *   soderlind_aivalve_tokens_monthly_{Y-m}_{slug}    — per-plugin monthly
+ *   soderlind_aivalve_tokens_daily_{Y-m-d}_*         — global daily
+ *   soderlind_aivalve_tokens_monthly_{Y-m}_*         — global monthly
  */
 final class UsageTracker {
 
-	private const PREFIX = 'aivalve_tokens_';
+	private const PREFIX = 'soderlind_aivalve_tokens_';
 
-	private static function legacy_prefix(): string {
-		return 'ai' . '_valve_tokens_';
+	/**
+	 * @return list<string>
+	 */
+	private static function legacy_prefixes(): array {
+		return [
+			'aiv' . 'alve_tokens_',
+			'ai' . '_valve_tokens_',
+		];
 	}
 
 	public function __construct(
@@ -154,8 +160,15 @@ final class UsageTracker {
 			return (int) $value;
 		}
 
-		$legacy_key = self::legacy_prefix() . substr( $key, strlen( self::PREFIX ) );
-		return (int) get_option( $legacy_key, 0 );
+		$suffix = substr( $key, strlen( self::PREFIX ) );
+		foreach ( self::legacy_prefixes() as $legacy_prefix ) {
+			$legacy_value = get_option( $legacy_prefix . $suffix, null );
+			if ( null !== $legacy_value ) {
+				return (int) $legacy_value;
+			}
+		}
+
+		return 0;
 	}
 
 	/* ------------------------------------------------------------------
@@ -167,7 +180,7 @@ final class UsageTracker {
 	 */
 	public static function delete_all(): void {
 		global $wpdb;
-		foreach ( [ self::PREFIX, self::legacy_prefix() ] as $prefix ) {
+		foreach ( array_merge( [ self::PREFIX ], self::legacy_prefixes() ) as $prefix ) {
 			$wpdb->query(
 				$wpdb->prepare(
 					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AIValve\REST;
+namespace Soderlind\AiValve\REST;
 
-use AIValve\Settings\Settings;
-use AIValve\Tracking\LogRepository;
-use AIValve\Tracking\UsageClock;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\LogRepository;
+use Soderlind\AiValve\Tracking\UsageClock;
+use Soderlind\AiValve\Tracking\UsageTracker;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;

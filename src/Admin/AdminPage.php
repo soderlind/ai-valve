@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Admin;
+namespace Soderlind\AiValve\Admin;
 
-use AIValve\Settings\Settings;
-use AIValve\Tracking\LogRepository;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\LogRepository;
+use Soderlind\AiValve\Tracking\UsageTracker;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ final class AdminPage {
 	public function register(): void {
 		add_action( 'admin_menu', [ $this, 'add_menu_page' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
-		add_action( 'admin_post_aivalve_export_csv', [ $this, 'handle_csv_export' ] );
+		add_action( 'admin_post_soderlind_aivalve_export_csv', [ $this, 'handle_csv_export' ] );
 	}
 
 	/* ------------------------------------------------------------------
@@ -55,30 +55,30 @@ final class AdminPage {
 			return;
 		}
 
-		$asset_file = AIVALVE_PLUGIN_DIR . 'build/index.asset.php';
+		$asset_file = SODERLIND_AIVALVE_PLUGIN_DIR . 'build/index.asset.php';
 		if ( ! file_exists( $asset_file ) ) {
 			return;
 		}
 		$asset = require $asset_file;
 
 		wp_enqueue_script(
-			'aivalve-admin',
-			plugins_url( 'build/index.js', AIVALVE_PLUGIN_FILE ),
+			'soderlind-aivalve-admin',
+			plugins_url( 'build/index.js', SODERLIND_AIVALVE_PLUGIN_FILE ),
 			$asset[ 'dependencies' ],
 			$asset[ 'version' ],
 			true
 		);
 
 		wp_enqueue_style(
-			'aivalve-admin',
-			plugins_url( 'build/index.css', AIVALVE_PLUGIN_FILE ),
+			'soderlind-aivalve-admin',
+			plugins_url( 'build/index.css', SODERLIND_AIVALVE_PLUGIN_FILE ),
 			[ 'wp-components' ],
 			$asset[ 'version' ]
 		);
 
-		wp_localize_script( 'aivalve-admin', 'aivalveAdmin', [
+		wp_localize_script( 'soderlind-aivalve-admin', 'soderlindAivalveAdmin', [
 			'adminEmail'   => get_option( 'admin_email' ),
-			'csvNonce'     => wp_create_nonce( 'aivalve_export_csv' ),
+			'csvNonce'     => wp_create_nonce( 'soderlind_aivalve_export_csv' ),
 			'adminPostUrl' => admin_url( 'admin-post.php' ),
 		] );
 	}
@@ -105,7 +105,7 @@ final class AdminPage {
 			wp_die( esc_html__( 'Unauthorized.', 'ai-valve' ), 403 );
 		}
 
-		check_admin_referer( 'aivalve_export_csv' );
+		check_admin_referer( 'soderlind_aivalve_export_csv' );
 
 		$repo    = new LogRepository();
 		$filters = [

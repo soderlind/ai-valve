@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Alert;
+namespace Soderlind\AiValve\Alert;
 
-use AIValve\Settings\Settings;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\UsageTracker;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class AlertManager {
 
-	private const EMAIL_TRANSIENT_PREFIX = 'aivalve_alert_sent_';
+	private const EMAIL_TRANSIENT_PREFIX = 'soderlind_aivalve_alert_sent_';
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -136,7 +136,7 @@ final class AlertManager {
 		}
 
 		wp_add_dashboard_widget(
-			'aivalve_usage_widget',
+			'soderlind_aivalve_usage_widget',
 			__( 'AI Valve — AI Token Usage', 'ai-valve' ),
 			[ $this, 'render_dashboard_widget' ],
 		);

@@ -3,7 +3,7 @@
  * Debug script — run with: wp eval-file wp-content/plugins/ai-valve/tests/debug-hooks.php
  */
 
-echo "=== AIValve Hook Debug ===\n\n";
+echo "=== AI Valve Hook Debug ===\n\n";
 
 echo "wp_ai_client_prompt exists: " . ( function_exists( 'wp_ai_client_prompt' ) ? 'YES' : 'NO' ) . "\n";
 echo "wp_supports_ai exists: " . ( function_exists( 'wp_supports_ai' ) ? 'YES' : 'NO' ) . "\n";
@@ -37,17 +37,17 @@ foreach ( $hooks as $hook ) {
 
 echo "\n--- Log table row count ---\n";
 global $wpdb;
-$table = $wpdb->prefix . 'aivalve_log';
+$table = $wpdb->prefix . 'soderlind_aivalve_log';
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 echo "Rows in {$table}: {$count}\n";
 
-echo "\n--- AIValve settings ---\n";
-$settings = get_option( 'aivalve_settings', [] );
+echo "\n--- AI Valve settings ---\n";
+$settings = get_option( 'soderlind_aivalve_settings', [] );
 echo print_r( $settings, true ) . "\n";
 
 echo "\n--- Token counter options ---\n";
 $counters = $wpdb->get_results(
-	"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'aivalve_tokens_%' ORDER BY option_name",
+	"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'soderlind_aivalve_tokens_%' ORDER BY option_name",
 	ARRAY_A
 );
 if ( $counters ) {

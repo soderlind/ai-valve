@@ -69,9 +69,9 @@ AI Valve exposes hooks so you can extend its behaviour from another plugin or `f
 
 | Hook | Type | Purpose |
 |---|---|---|
-| `aivalve_plugin_policy` | filter | Override the allow/deny decision for any plugin |
-| `aivalve_request_denied` | action | React when a request is blocked |
-| `aivalve_request_completed` | action | React when a request succeeds (token counts available) |
+| `soderlind_aivalve_plugin_policy` | filter | Override the allow/deny decision for any plugin |
+| `soderlind_aivalve_request_denied` | action | React when a request is blocked |
+| `soderlind_aivalve_request_completed` | action | React when a request succeeds (token counts available) |
 
 See **[docs/hooks.md](docs/hooks.md)** for signatures, parameter descriptions, and examples.
 
@@ -88,7 +88,7 @@ Everything not explicitly allowed will be denied.
 
 ### Can I override the policy programmatically?
 
-Yes — use the `aivalve_plugin_policy` filter. See [docs/hooks.md](docs/hooks.md).
+Yes — use the `soderlind_aivalve_plugin_policy` filter. See [docs/hooks.md](docs/hooks.md).
 
 ## Development
 

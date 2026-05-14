@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Interceptor;
+namespace Soderlind\AiValve\Interceptor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,7 +37,7 @@ final class CallerDetector {
 			return self::$cached_slug;
 		}
 
-		$own_dir    = wp_normalize_path( rtrim( AIVALVE_PLUGIN_DIR, '/\\' ) );
+		$own_dir    = wp_normalize_path( rtrim( SODERLIND_AIVALVE_PLUGIN_DIR, '/\\' ) );
 		$plugin_dir = wp_normalize_path( dirname( $own_dir ) );
 
 		// Walk the backtrace looking for the first frame in a different plugin.

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AIValve\Tests\Unit\Alert;
+namespace Soderlind\AiValve\Tests\Unit\Alert;
 
-use AIValve\Alert\AlertManager;
-use AIValve\Settings\Settings;
-use AIValve\Tracking\UsageTracker;
+use Soderlind\AiValve\Alert\AlertManager;
+use Soderlind\AiValve\Settings\Settings;
+use Soderlind\AiValve\Tracking\UsageTracker;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
@@ -50,11 +50,11 @@ final class AlertManagerTest extends TestCase {
 	public function test_no_notice_when_usage_under_threshold(): void {
 		$today      = gmdate( 'Y-m-d' );
 		$month      = gmdate( 'Y-m' );
-		$daily_key  = 'aivalve_tokens_daily_' . $today . '_*';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
+		$daily_key  = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $key === 'aivalve_settings' ) {
+			if ( $key === 'soderlind_aivalve_settings' ) {
 				return [
 					'global_daily_limit'   => 10000,
 					'global_monthly_limit' => 100000,
@@ -91,11 +91,11 @@ final class AlertManagerTest extends TestCase {
 	public function test_warning_notice_at_threshold(): void {
 		$today     = gmdate( 'Y-m-d' );
 		$month     = gmdate( 'Y-m' );
-		$daily_key = 'aivalve_tokens_daily_' . $today . '_*';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
+		$daily_key = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $key === 'aivalve_settings' ) {
+			if ( $key === 'soderlind_aivalve_settings' ) {
 				return [
 					'global_daily_limit'   => 10000,
 					'global_monthly_limit' => 0, // No monthly limit.
@@ -137,11 +137,11 @@ final class AlertManagerTest extends TestCase {
 	public function test_error_notice_when_exceeded(): void {
 		$today      = gmdate( 'Y-m-d' );
 		$month      = gmdate( 'Y-m' );
-		$daily_key  = 'aivalve_tokens_daily_' . $today . '_*';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
+		$daily_key  = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $key === 'aivalve_settings' ) {
+			if ( $key === 'soderlind_aivalve_settings' ) {
 				return [
 					'global_daily_limit'   => 10000,
 					'global_monthly_limit' => 0,
@@ -224,11 +224,11 @@ final class AlertManagerTest extends TestCase {
 	public function test_email_sent_when_budget_exceeded(): void {
 		$today      = gmdate( 'Y-m-d' );
 		$month      = gmdate( 'Y-m' );
-		$daily_key  = 'aivalve_tokens_daily_' . $today . '_*';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
+		$daily_key  = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $key === 'aivalve_settings' ) {
+			if ( $key === 'soderlind_aivalve_settings' ) {
 				return [
 					'global_daily_limit'  => 10000,
 					'global_monthly_limit' => 0,
@@ -277,11 +277,11 @@ final class AlertManagerTest extends TestCase {
 	public function test_email_not_sent_twice_same_day(): void {
 		$today      = gmdate( 'Y-m-d' );
 		$month      = gmdate( 'Y-m' );
-		$daily_key  = 'aivalve_tokens_daily_' . $today . '_*';
-		$monthly_key = 'aivalve_tokens_monthly_' . $month . '_*';
+		$daily_key  = 'soderlind_aivalve_tokens_daily_' . $today . '_*';
+		$monthly_key = 'soderlind_aivalve_tokens_monthly_' . $month . '_*';
 
 		Functions\when( 'get_option' )->alias( function ( string $key, $default = false ) use ( $daily_key, $monthly_key ) {
-			if ( $key === 'aivalve_settings' ) {
+			if ( $key === 'soderlind_aivalve_settings' ) {
 				return [
 					'global_daily_limit'  => 10000,
 					'global_monthly_limit' => 0,
