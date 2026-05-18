@@ -22,7 +22,7 @@ export default function Settings( { setNotice } ) {
 					type: 'error',
 					message: __(
 						'Failed to load settings.',
-						'ai-valve'
+						'soderlind-aivalve'
 					),
 				} )
 			)
@@ -33,7 +33,7 @@ export default function Settings( { setNotice } ) {
 		return <Spinner />;
 	}
 	if ( ! settings ) {
-		return <p>{ __( 'Unable to load settings.', 'ai-valve' ) }</p>;
+		return <p>{ __( 'Unable to load settings.', 'soderlind-aivalve' ) }</p>;
 	}
 
 	function update( key, value ) {
@@ -47,12 +47,12 @@ export default function Settings( { setNotice } ) {
 			setSettings( result.settings );
 			setNotice( {
 				type: 'success',
-				message: __( 'Settings saved.', 'ai-valve' ),
+				message: __( 'Settings saved.', 'soderlind-aivalve' ),
 			} );
 		} catch {
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to save settings.', 'ai-valve' ),
+				message: __( 'Failed to save settings.', 'soderlind-aivalve' ),
 			} );
 		}
 		setSaving( false );
@@ -61,12 +61,12 @@ export default function Settings( { setNotice } ) {
 	return (
 		<div style={ { marginTop: '1em' } }>
 			{ /* --- General --- */ }
-			<h2>{ __( 'General', 'ai-valve' ) }</h2>
+			<h2>{ __( 'General', 'soderlind-aivalve' ) }</h2>
 			<table className="form-table">
 				<tbody>
 					<tr>
 						<th scope="row">
-							{ __( 'Enable AI Valve', 'ai-valve' ) }
+							{ __( 'Enable AI Valve', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<ToggleControl
@@ -76,32 +76,32 @@ export default function Settings( { setNotice } ) {
 								}
 								label={ __(
 									'Intercept and control AI requests',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 								__nextHasNoMarginBottom
 							/>
 							<p className="description">
 								{ __(
 									'When disabled, all AI requests pass through unmonitored.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							{ __( 'Default policy', 'ai-valve' ) }
+							{ __( 'Default policy', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<SelectControl
 								value={ settings.default_policy }
 								options={ [
 									{
-										label: __( 'Allow', 'ai-valve' ),
+										label: __( 'Allow', 'soderlind-aivalve' ),
 										value: 'allow',
 									},
 									{
-										label: __( 'Deny', 'ai-valve' ),
+										label: __( 'Deny', 'soderlind-aivalve' ),
 										value: 'deny',
 									},
 								] }
@@ -114,7 +114,7 @@ export default function Settings( { setNotice } ) {
 							<p className="description">
 								{ __(
 									'Applies to plugins not individually configured on the Dashboard tab.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
@@ -123,11 +123,11 @@ export default function Settings( { setNotice } ) {
 			</table>
 
 			{ /* --- Contexts --- */ }
-			<h2>{ __( 'Allowed Contexts', 'ai-valve' ) }</h2>
+			<h2>{ __( 'Allowed Contexts', 'soderlind-aivalve' ) }</h2>
 			<p className="description" style={ { marginBottom: 12 } }>
 				{ __(
 					'Choose which WordPress execution contexts may trigger AI requests.',
-					'ai-valve'
+					'soderlind-aivalve'
 				) }
 			</p>
 			<table className="form-table">
@@ -135,50 +135,50 @@ export default function Settings( { setNotice } ) {
 					{ [
 						[
 							'allow_admin',
-							__( 'Admin (wp-admin)', 'ai-valve' ),
+							__( 'Admin (wp-admin)', 'soderlind-aivalve' ),
 							__(
 								'Requests originating from the WordPress admin dashboard.',
-								'ai-valve'
+								'soderlind-aivalve'
 							),
 						],
 						[
 							'allow_frontend',
-							__( 'Frontend', 'ai-valve' ),
+							__( 'Frontend', 'soderlind-aivalve' ),
 							__(
 								'Requests from the public-facing site.',
-								'ai-valve'
+								'soderlind-aivalve'
 							),
 						],
 						[
 							'allow_cron',
-							__( 'WP-Cron', 'ai-valve' ),
+							__( 'WP-Cron', 'soderlind-aivalve' ),
 							__(
 								'Scheduled background tasks via wp-cron.php.',
-								'ai-valve'
+								'soderlind-aivalve'
 							),
 						],
 						[
 							'allow_rest',
-							__( 'REST API', 'ai-valve' ),
+							__( 'REST API', 'soderlind-aivalve' ),
 							__(
 								'Requests through the WordPress REST API.',
-								'ai-valve'
+								'soderlind-aivalve'
 							),
 						],
 						[
 							'allow_ajax',
-							__( 'AJAX', 'ai-valve' ),
+							__( 'AJAX', 'soderlind-aivalve' ),
 							__(
 								'Admin-ajax.php requests.',
-								'ai-valve'
+								'soderlind-aivalve'
 							),
 						],
 						[
 							'allow_cli',
-							__( 'WP-CLI', 'ai-valve' ),
+							__( 'WP-CLI', 'soderlind-aivalve' ),
 							__(
 								'Command-line requests via the wp command.',
-								'ai-valve'
+								'soderlind-aivalve'
 							),
 						],
 					].map( ( [ key, label, desc ] ) => (
@@ -192,7 +192,7 @@ export default function Settings( { setNotice } ) {
 									}
 									label={ __(
 										'Allow AI requests',
-										'ai-valve'
+										'soderlind-aivalve'
 									) }
 									__nextHasNoMarginBottom
 								/>
@@ -204,18 +204,18 @@ export default function Settings( { setNotice } ) {
 			</table>
 
 			{ /* --- Budgets --- */ }
-			<h2>{ __( 'Global Token Budgets', 'ai-valve' ) }</h2>
+			<h2>{ __( 'Global Token Budgets', 'soderlind-aivalve' ) }</h2>
 			<p className="description" style={ { marginBottom: 12 } }>
 				{ __(
 					'Set site-wide token limits. 0 = unlimited.',
-					'ai-valve'
+					'soderlind-aivalve'
 				) }
 			</p>
 			<table className="form-table">
 				<tbody>
 					<tr>
 						<th scope="row">
-							{ __( 'Daily token limit', 'ai-valve' ) }
+							{ __( 'Daily token limit', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<TextControl
@@ -236,14 +236,14 @@ export default function Settings( { setNotice } ) {
 							<p className="description">
 								{ __(
 									'Maximum tokens all plugins combined may use per day.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							{ __( 'Monthly token limit', 'ai-valve' ) }
+							{ __( 'Monthly token limit', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<TextControl
@@ -264,7 +264,7 @@ export default function Settings( { setNotice } ) {
 							<p className="description">
 								{ __(
 									'Maximum tokens all plugins combined may use per calendar month.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
@@ -273,12 +273,12 @@ export default function Settings( { setNotice } ) {
 			</table>
 
 			{ /* --- Alerts --- */ }
-			<h2>{ __( 'Alerts', 'ai-valve' ) }</h2>
+			<h2>{ __( 'Alerts', 'soderlind-aivalve' ) }</h2>
 			<table className="form-table">
 				<tbody>
 					<tr>
 						<th scope="row">
-							{ __( 'Warning threshold', 'ai-valve' ) }
+							{ __( 'Warning threshold', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<TextControl
@@ -307,14 +307,14 @@ export default function Settings( { setNotice } ) {
 							<p className="description">
 								{ __(
 									'Show an admin notice when token usage reaches this percentage of any budget.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							{ __( 'Notification email', 'ai-valve' ) }
+							{ __( 'Notification email', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<TextControl
@@ -331,7 +331,7 @@ export default function Settings( { setNotice } ) {
 							<p className="description">
 								{ __(
 									'Receive an email when a budget is exceeded. Leave empty to disable.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
@@ -340,12 +340,12 @@ export default function Settings( { setNotice } ) {
 			</table>
 
 			{ /* --- Log Retention --- */ }
-			<h2>{ __( 'Log Retention', 'ai-valve' ) }</h2>
+			<h2>{ __( 'Log Retention', 'soderlind-aivalve' ) }</h2>
 			<table className="form-table">
 				<tbody>
 					<tr>
 						<th scope="row">
-							{ __( 'Retention period', 'ai-valve' ) }
+							{ __( 'Retention period', 'soderlind-aivalve' ) }
 						</th>
 						<td>
 							<TextControl
@@ -366,7 +366,7 @@ export default function Settings( { setNotice } ) {
 							<p className="description">
 								{ __(
 									'Automatically delete logs older than this many days. 0 = keep forever.',
-									'ai-valve'
+									'soderlind-aivalve'
 								) }
 							</p>
 						</td>
@@ -381,7 +381,7 @@ export default function Settings( { setNotice } ) {
 					disabled={ saving }
 					onClick={ handleSave }
 				>
-					{ __( 'Save Changes', 'ai-valve' ) }
+					{ __( 'Save Changes', 'soderlind-aivalve' ) }
 				</Button>
 			</p>
 		</div>

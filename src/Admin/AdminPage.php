@@ -13,13 +13,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Registers the Settings → AI Valve admin page.
  *
- * The page is a React SPA rendered into #ai-valve-root.
+ * The page is a React SPA rendered into #soderlind-aivalve-root.
  * Data flows via the REST API (UsageController).
  * CSV export remains a server-side admin-post action.
  */
 final class AdminPage {
 
-	private const SLUG = 'ai-valve';
+	private const SLUG = 'soderlind-aivalve';
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -38,8 +38,8 @@ final class AdminPage {
 
 	public function add_menu_page(): void {
 		add_options_page(
-			__( 'AI Valve — AI Usage Control', 'ai-valve' ),
-			__( 'AI Valve', 'ai-valve' ),
+			__( 'AI Valve — AI Usage Control', 'soderlind-aivalve' ),
+			__( 'AI Valve', 'soderlind-aivalve' ),
 			'manage_options',
 			self::SLUG,
 			[ $this, 'render_page' ],
@@ -92,7 +92,7 @@ final class AdminPage {
 			return;
 		}
 		?>
-		<div id="ai-valve-root"></div>
+		<div id="soderlind-aivalve-root"></div>
 		<?php
 	}
 
@@ -102,7 +102,7 @@ final class AdminPage {
 
 	public function handle_csv_export(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Unauthorized.', 'ai-valve' ), 403 );
+			wp_die( esc_html__( 'Unauthorized.', 'soderlind-aivalve' ), 403 );
 		}
 
 		check_admin_referer( 'soderlind_aivalve_export_csv' );
@@ -129,7 +129,7 @@ final class AdminPage {
 
 		$result = $repo->query( $filters );
 
-		$filename = 'ai-valve-logs-' . gmdate( 'Y-m-d' ) . '.csv';
+		$filename = 'soderlind-aivalve-logs-' . gmdate( 'Y-m-d' ) . '.csv';
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 		header( 'Pragma: no-cache' );

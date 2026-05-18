@@ -93,7 +93,7 @@ describe('createApiClient', () => {
 
 	it('creates client with expected methods', () => {
 		const client = createApiClient({
-			restUrl: '/wp-json/ai-valve/v1',
+			restUrl: '/wp-json/soderlind-aivalve/v1',
 			nonce: 'test-nonce',
 		});
 		expect(typeof client.getUsage).toBe('function');
@@ -108,7 +108,7 @@ describe('createApiClient', () => {
 
 describe('createApiClient fetch calls', () => {
 	const config = {
-		restUrl: '/wp-json/ai-valve/v1',
+		restUrl: '/wp-json/soderlind-aivalve/v1',
 		nonce: 'test-nonce-123',
 	};
 
@@ -131,7 +131,7 @@ describe('createApiClient fetch calls', () => {
 		expect(fetch).toHaveBeenCalledOnce();
 
 		const [url, opts] = fetch.mock.calls[0];
-		expect(url).toBe('/wp-json/ai-valve/v1/usage');
+		expect(url).toBe('/wp-json/soderlind-aivalve/v1/usage');
 		expect(opts.headers['X-WP-Nonce']).toBe('test-nonce-123');
 	});
 
@@ -186,7 +186,7 @@ describe('createApiClient fetch calls', () => {
 		await client.updateSettings({ enabled: false });
 
 		const [url, opts] = fetch.mock.calls[0];
-		expect(url).toBe('/wp-json/ai-valve/v1/settings');
+		expect(url).toBe('/wp-json/soderlind-aivalve/v1/settings');
 		expect(opts.method).toBe('POST');
 
 		const body = JSON.parse(opts.body);

@@ -21,22 +21,22 @@ export default function RecentRequests( { items } ) {
 	}
 	return (
 		<>
-			<h2>{ __( 'Recent Requests', 'ai-valve' ) }</h2>
+			<h2>{ __( 'Recent Requests', 'soderlind-aivalve' ) }</h2>
 			<table className="widefat fixed striped">
 				<thead>
 					<tr>
-						<th>{ __( 'Time', 'ai-valve' ) }</th>
-						<th>{ __( 'Plugin', 'ai-valve' ) }</th>
-						<th>{ __( 'Provider / Model', 'ai-valve' ) }</th>
-						<th>{ __( 'Capability', 'ai-valve' ) }</th>
-						<th>{ __( 'Context', 'ai-valve' ) }</th>
+						<th>{ __( 'Time', 'soderlind-aivalve' ) }</th>
+						<th>{ __( 'Plugin', 'soderlind-aivalve' ) }</th>
+						<th>{ __( 'Provider / Model', 'soderlind-aivalve' ) }</th>
+						<th>{ __( 'Capability', 'soderlind-aivalve' ) }</th>
+						<th>{ __( 'Context', 'soderlind-aivalve' ) }</th>
 						<th style={ { textAlign: 'right' } }>
-							{ __( 'Tokens', 'ai-valve' ) }
+							{ __( 'Tokens', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { textAlign: 'right' } }>
-							{ __( 'Duration', 'ai-valve' ) }
+							{ __( 'Duration', 'soderlind-aivalve' ) }
 						</th>
-						<th>{ __( 'Status', 'ai-valve' ) }</th>
+						<th>{ __( 'Status', 'soderlind-aivalve' ) }</th>
 					</tr>
 				</thead>
 				<tbody>

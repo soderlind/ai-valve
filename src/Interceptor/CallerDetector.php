@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * Walks the call stack to identify which plugin triggered the AI request.
  *
  * Uses `debug_backtrace()` to find the first file path under the plugins directory
- * that does NOT belong to ai-valve itself, then resolves the plugin slug.
+ * that does NOT belong to soderlind-aivalve itself, then resolves the plugin slug.
  */
 final class CallerDetector {
 
@@ -55,7 +55,7 @@ final class CallerDetector {
 				continue;
 			}
 
-			// Skip ai-valve's own files.
+			// Skip soderlind-aivalve's own files.
 			if ( str_starts_with( $file, $own_dir . '/' ) ) {
 				continue;
 			}

@@ -16,13 +16,13 @@ if ( ! defined( 'SODERLIND_AIVALVE_VERSION' ) ) {
 	define( 'SODERLIND_AIVALVE_VERSION', '0.1.0-test' );
 }
 if ( ! defined( 'SODERLIND_AIVALVE_PLUGIN_FILE' ) ) {
-	define( 'SODERLIND_AIVALVE_PLUGIN_FILE', dirname( __DIR__ ) . '/ai-valve.php' );
+	define( 'SODERLIND_AIVALVE_PLUGIN_FILE', dirname( __DIR__ ) . '/soderlind-aivalve.php' );
 }
 if ( ! defined( 'SODERLIND_AIVALVE_PLUGIN_DIR' ) ) {
 	define( 'SODERLIND_AIVALVE_PLUGIN_DIR', dirname( __DIR__ ) . '/' );
 }
 if ( ! defined( 'SODERLIND_AIVALVE_PLUGIN_BASENAME' ) ) {
-	define( 'SODERLIND_AIVALVE_PLUGIN_BASENAME', 'ai-valve/ai-valve.php' );
+	define( 'SODERLIND_AIVALVE_PLUGIN_BASENAME', 'soderlind-aivalve/soderlind-aivalve.php' );
 }
 if ( ! defined( 'WPMU_PLUGIN_DIR' ) ) {
 	define( 'WPMU_PLUGIN_DIR', '/tmp/wp/wp-content/mu-plugins' );

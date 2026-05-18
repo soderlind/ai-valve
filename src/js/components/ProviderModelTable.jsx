@@ -17,7 +17,7 @@ export default function ProviderModelTable( { data } ) {
 			} }
 		>
 			<h2 style={ { marginTop: 0 } }>
-				{ __( 'Providers & Models (This Month)', 'ai-valve' ) }
+				{ __( 'Providers & Models (This Month)', 'soderlind-aivalve' ) }
 			</h2>
 			<table
 				className="widefat striped"
@@ -25,13 +25,13 @@ export default function ProviderModelTable( { data } ) {
 			>
 				<thead>
 					<tr>
-						<th>{ __( 'Provider', 'ai-valve' ) }</th>
-						<th>{ __( 'Model', 'ai-valve' ) }</th>
+						<th>{ __( 'Provider', 'soderlind-aivalve' ) }</th>
+						<th>{ __( 'Model', 'soderlind-aivalve' ) }</th>
 						<th style={ { textAlign: 'right' } }>
-							{ __( 'Requests', 'ai-valve' ) }
+							{ __( 'Requests', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { textAlign: 'right' } }>
-							{ __( 'Tokens', 'ai-valve' ) }
+							{ __( 'Tokens', 'soderlind-aivalve' ) }
 						</th>
 					</tr>
 				</thead>

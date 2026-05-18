@@ -6,9 +6,9 @@ import Settings from './components/Settings';
 import Logs from './components/Logs';
 
 const TABS = [
-	{ name: 'dashboard', title: __( 'Dashboard', 'ai-valve' ) },
-	{ name: 'settings', title: __( 'Settings', 'ai-valve' ) },
-	{ name: 'logs', title: __( 'Logs', 'ai-valve' ) },
+	{ name: 'dashboard', title: __( 'Dashboard', 'soderlind-aivalve' ) },
+	{ name: 'settings', title: __( 'Settings', 'soderlind-aivalve' ) },
+	{ name: 'logs', title: __( 'Logs', 'soderlind-aivalve' ) },
 ];
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
 
 	return (
 		<div className="wrap">
-			<h1>{ __( 'AI Valve — AI Usage Control', 'ai-valve' ) }</h1>
+			<h1>{ __( 'AI Valve — AI Usage Control', 'soderlind-aivalve' ) }</h1>
 
 			{ notice && (
 				<div className={ `notice notice-${ notice.type } is-dismissible` }>
@@ -27,7 +27,7 @@ export default function App() {
 						onClick={ () => setNotice( null ) }
 					>
 						<span className="screen-reader-text">
-							{ __( 'Dismiss this notice.', 'ai-valve' ) }
+							{ __( 'Dismiss this notice.', 'soderlind-aivalve' ) }
 						</span>
 					</button>
 				</div>

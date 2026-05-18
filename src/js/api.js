@@ -6,19 +6,19 @@
  */
 import apiFetch from '@wordpress/api-fetch';
 
-const BASE = '/ai-valve/v1';
+const BASE = '/soderlind-aivalve/v1';
 
-/** GET /ai-valve/v1/usage */
+/** GET /soderlind-aivalve/v1/usage */
 export async function fetchUsage() {
 	return apiFetch( { path: `${ BASE }/usage` } );
 }
 
-/** GET /ai-valve/v1/settings */
+/** GET /soderlind-aivalve/v1/settings */
 export async function fetchSettings() {
 	return apiFetch( { path: `${ BASE }/settings` } );
 }
 
-/** POST /ai-valve/v1/settings */
+/** POST /soderlind-aivalve/v1/settings */
 export async function saveSettings( settings ) {
 	return apiFetch( {
 		path: `${ BASE }/settings`,
@@ -28,7 +28,7 @@ export async function saveSettings( settings ) {
 }
 
 /**
- * GET /ai-valve/v1/logs
+ * GET /soderlind-aivalve/v1/logs
  *
  * @param {Object} params Filter/pagination params.
  * @returns {{ items: Array, total: number, totalPages: number }}
@@ -56,12 +56,12 @@ export async function fetchLogs( params = {} ) {
 	} );
 }
 
-/** GET /ai-valve/v1/logs/filters — distinct filter values */
+/** GET /soderlind-aivalve/v1/logs/filters — distinct filter values */
 export async function fetchLogFilterOptions() {
 	return apiFetch( { path: `${ BASE }/logs/filters` } );
 }
 
-/** DELETE /ai-valve/v1/logs */
+/** DELETE /soderlind-aivalve/v1/logs */
 export async function purgeLogs() {
 	return apiFetch( {
 		path: `${ BASE }/logs`,
