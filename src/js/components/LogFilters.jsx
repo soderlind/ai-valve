@@ -28,10 +28,10 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 				} }
 			>
 				<SelectControl
-					label={ __( 'Plugin', 'ai-valve' ) }
+					label={ __( 'Plugin', 'soderlind-aivalve' ) }
 					value={ local.plugin_slug }
 					options={ [
-						{ label: __( 'All', 'ai-valve' ), value: '' },
+						{ label: __( 'All', 'soderlind-aivalve' ), value: '' },
 						...( filterOptions.plugins || [] ).map( ( v ) => ( {
 							label: v,
 							value: v,
@@ -42,10 +42,10 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					__next40pxDefaultSize
 				/>
 				<SelectControl
-					label={ __( 'Provider', 'ai-valve' ) }
+					label={ __( 'Provider', 'soderlind-aivalve' ) }
 					value={ local.provider_id }
 					options={ [
-						{ label: __( 'All', 'ai-valve' ), value: '' },
+						{ label: __( 'All', 'soderlind-aivalve' ), value: '' },
 						...( filterOptions.providers || [] ).map( ( v ) => ( {
 							label: v,
 							value: v,
@@ -56,10 +56,10 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					__next40pxDefaultSize
 				/>
 				<SelectControl
-					label={ __( 'Model', 'ai-valve' ) }
+					label={ __( 'Model', 'soderlind-aivalve' ) }
 					value={ local.model_id }
 					options={ [
-						{ label: __( 'All', 'ai-valve' ), value: '' },
+						{ label: __( 'All', 'soderlind-aivalve' ), value: '' },
 						...( filterOptions.models || [] ).map( ( v ) => ( {
 							label: v,
 							value: v,
@@ -70,10 +70,10 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					__next40pxDefaultSize
 				/>
 				<SelectControl
-					label={ __( 'Context', 'ai-valve' ) }
+					label={ __( 'Context', 'soderlind-aivalve' ) }
 					value={ local.context }
 					options={ [
-						{ label: __( 'All', 'ai-valve' ), value: '' },
+						{ label: __( 'All', 'soderlind-aivalve' ), value: '' },
 						{ label: 'admin', value: 'admin' },
 						{ label: 'frontend', value: 'frontend' },
 						{ label: 'cron', value: 'cron' },
@@ -86,16 +86,16 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					__next40pxDefaultSize
 				/>
 				<SelectControl
-					label={ __( 'Status', 'ai-valve' ) }
+					label={ __( 'Status', 'soderlind-aivalve' ) }
 					value={ local.status }
 					options={ [
-						{ label: __( 'All', 'ai-valve' ), value: '' },
+						{ label: __( 'All', 'soderlind-aivalve' ), value: '' },
 						{
-							label: __( 'Allowed', 'ai-valve' ),
+							label: __( 'Allowed', 'soderlind-aivalve' ),
 							value: 'allowed',
 						},
 						{
-							label: __( 'Denied', 'ai-valve' ),
+							label: __( 'Denied', 'soderlind-aivalve' ),
 							value: 'denied',
 						},
 					] }
@@ -104,21 +104,21 @@ export default function LogFilters( { filters, onChange, filterOptions = {} } ) 
 					__next40pxDefaultSize
 				/>
 				<TextControl
-					label={ __( 'From', 'ai-valve' ) }
+					label={ __( 'From', 'soderlind-aivalve' ) }
 					type="date"
 					value={ local.date_from }
 					onChange={ ( v ) => update( 'date_from', v ) }
 					__nextHasNoMarginBottom
 				/>
 				<TextControl
-					label={ __( 'To', 'ai-valve' ) }
+					label={ __( 'To', 'soderlind-aivalve' ) }
 					type="date"
 					value={ local.date_to }
 					onChange={ ( v ) => update( 'date_to', v ) }
 					__nextHasNoMarginBottom
 				/>
 				<Button variant="secondary" type="submit">
-					{ __( 'Filter', 'ai-valve' ) }
+					{ __( 'Filter', 'soderlind-aivalve' ) }
 				</Button>
 			</div>
 		</form>

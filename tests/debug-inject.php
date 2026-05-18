@@ -7,7 +7,7 @@
 use WordPress\AiClient\AiClient;
 
 $log = fn( $msg ) => file_put_contents(
-	WP_CONTENT_DIR . '/ai-valve-debug.log',
+	WP_CONTENT_DIR . '/soderlind-aivalve-debug.log',
 	$msg . "\n",
 	FILE_APPEND
 );
@@ -71,4 +71,4 @@ $table = $wpdb->prefix . 'soderlind_aivalve_log';
 $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 echo "Log rows: {$count}\n\n";
 
-echo file_get_contents( WP_CONTENT_DIR . '/ai-valve-debug.log' );
+echo file_get_contents( WP_CONTENT_DIR . '/soderlind-aivalve-debug.log' );

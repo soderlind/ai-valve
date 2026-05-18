@@ -8,7 +8,7 @@
 
 /**
  * @typedef {Object} AivalveConfig
- * @property {string} restUrl  - Base REST URL (e.g. "/wp-json/ai-valve/v1").
+ * @property {string} restUrl  - Base REST URL (e.g. "/wp-json/soderlind-aivalve/v1").
  * @property {string} nonce    - WP REST nonce.
  */
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * Diagnostic: direct hooks to confirm events fire during a live AI request.
- * Run with: wp eval-file wp-content/plugins/ai-valve/tests/debug-live.php
+ * Run with: wp eval-file wp-content/plugins/soderlind-aivalve/tests/debug-live.php
  */
 
-$log_file = WP_CONTENT_DIR . '/ai-valve-debug.log';
+$log_file = WP_CONTENT_DIR . '/soderlind-aivalve-debug.log';
 file_put_contents( $log_file, "=== Debug session " . gmdate( 'Y-m-d H:i:s' ) . " ===\n", FILE_APPEND );
 
 // Hook prevent_prompt directly (bypass our plugin's callback).

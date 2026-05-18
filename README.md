@@ -25,7 +25,7 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 ## Installation
 
 
-1. Download [`ai-valve.zip`](https://github.com/soderlind/ai-valve/releases/latest/download/ai-valve.zip)
+1. Download [`soderlind-aivalve.zip`](https://github.com/soderlind/soderlind-aivalve/releases/latest/download/soderlind-aivalve.zip)
 2. Upload via  `Plugins → Add New → Upload Plugin`
 3. Activate via `WordPress Admin → Plugins`
 4. Configure settings via `Settings → AI Valve`
@@ -33,8 +33,8 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 ### From source
 
 ```bash
-git clone https://github.com/soderlind/ai-valve.git
-cd ai-valve
+git clone https://github.com/soderlind/soderlind-aivalve.git
+cd soderlind-aivalve
 composer install
 npm install && npm run build
 ```
@@ -107,7 +107,7 @@ npx vitest run
 ### Project structure
 
 ```
-ai-valve.php                    Plugin bootstrap and metadata
+soderlind-aivalve.php                    Plugin bootstrap and metadata
 uninstall.php                   Cleanup on uninstall
 readme.txt                      WordPress.org readme
 README.md                       GitHub documentation

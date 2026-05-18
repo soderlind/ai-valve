@@ -1,5 +1,5 @@
 {
-	"name": "persoderlind/ai-valve",
+	"name": "persoderlind/soderlind-aivalve",
 	"description": "AI Valve — Control, meter, and permission-gate AI usage from WordPress plugins connecting through the WP 7 AI connector.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",

@@ -24,7 +24,7 @@ export default function Dashboard( { setNotice } ) {
 		} catch {
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to load dashboard data.', 'ai-valve' ),
+				message: __( 'Failed to load dashboard data.', 'soderlind-aivalve' ),
 			} );
 		}
 		setLoading( false );
@@ -42,7 +42,7 @@ export default function Dashboard( { setNotice } ) {
 			<p>
 				{ __(
 					'Unable to load dashboard data. Please try refreshing the page.',
-					'ai-valve'
+					'soderlind-aivalve'
 				) }
 			</p>
 		);

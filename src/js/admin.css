@@ -1,14 +1,14 @@
 /* AI Valve admin styles */
 
 /* Summary cards */
-.ai-valve-cards {
+.soderlind-aivalve-cards {
 	display: flex;
 	gap: 16px;
 	flex-wrap: wrap;
 	margin-bottom: 24px;
 }
 
-.ai-valve-card {
+.soderlind-aivalve-card {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
@@ -17,27 +17,27 @@
 	flex: 1;
 }
 
-.ai-valve-card h3 {
+.soderlind-aivalve-card h3 {
 	margin: 0 0 12px;
 	font-size: 14px;
 	color: #1d2327;
 }
 
-.ai-valve-card .ai-valve-big {
+.soderlind-aivalve-card .soderlind-aivalve-big {
 	font-size: 28px;
 	font-weight: 600;
 	line-height: 1.2;
 	color: #1d2327;
 }
 
-.ai-valve-card .ai-valve-sub {
+.soderlind-aivalve-card .soderlind-aivalve-sub {
 	font-size: 13px;
 	color: #646970;
 	margin-top: 4px;
 }
 
 /* Budget bars */
-.ai-valve-bar-wrap {
+.soderlind-aivalve-bar-wrap {
 	background: #f0f0f1;
 	border-radius: 3px;
 	height: 8px;
@@ -45,26 +45,26 @@
 	overflow: hidden;
 }
 
-.ai-valve-bar {
+.soderlind-aivalve-bar {
 	height: 100%;
 	border-radius: 3px;
 	transition: width 0.3s;
 }
 
-.ai-valve-bar--ok {
+.soderlind-aivalve-bar--ok {
 	background: #00a32a;
 }
 
-.ai-valve-bar--warn {
+.soderlind-aivalve-bar--warn {
 	background: #dba617;
 }
 
-.ai-valve-bar--over {
+.soderlind-aivalve-bar--over {
 	background: #d63638;
 }
 
 /* Status dots */
-.ai-valve-status {
+.soderlind-aivalve-status {
 	display: inline-block;
 	width: 8px;
 	height: 8px;
@@ -72,68 +72,68 @@
 	margin-right: 6px;
 }
 
-.ai-valve-status--ok {
+.soderlind-aivalve-status--ok {
 	background: #00a32a;
 }
 
-.ai-valve-status--blocked {
+.soderlind-aivalve-status--blocked {
 	background: #d63638;
 }
 
-.ai-valve-status--error {
+.soderlind-aivalve-status--error {
 	background: #dba617;
 }
 
 /* Dashboard flex layout */
-.ai-valve-flex-row {
+.soderlind-aivalve-flex-row {
 	display: flex;
 	gap: 24px;
 	flex-wrap: wrap;
 	margin-bottom: 24px;
 }
 
-.ai-valve-flex-row > * {
+.soderlind-aivalve-flex-row > * {
 	flex: 1;
 	min-width: 300px;
 }
 
 /* Tables */
-.ai-valve-table {
+.soderlind-aivalve-table {
 	width: 100%;
 	border-collapse: collapse;
 }
 
-.ai-valve-table th,
-.ai-valve-table td {
+.soderlind-aivalve-table th,
+.soderlind-aivalve-table td {
 	padding: 8px 12px;
 	text-align: left;
 	border-bottom: 1px solid #f0f0f1;
 }
 
-.ai-valve-table th {
+.soderlind-aivalve-table th {
 	font-weight: 600;
 	color: #1d2327;
 }
 
 /* Pagination */
-.ai-valve-pagination {
+.soderlind-aivalve-pagination {
 	display: flex;
 	gap: 4px;
 	margin-top: 16px;
 	align-items: center;
 }
 
-.ai-valve-pagination button {
+.soderlind-aivalve-pagination button {
 	min-width: 32px;
 	height: 32px;
 }
 
 /* Settings form */
-.ai-valve-settings-section {
+.soderlind-aivalve-settings-section {
 	margin-bottom: 32px;
 }
 
-.ai-valve-settings-section h3 {
+.soderlind-aivalve-settings-section h3 {
 	margin: 0 0 16px;
 	padding-bottom: 8px;
 	border-bottom: 1px solid #c3c4c7;

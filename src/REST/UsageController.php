@@ -19,13 +19,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * REST API endpoints for the AI Valve dashboard.
  *
- *   GET  /ai-valve/v1/usage    — usage summary
- *   GET  /ai-valve/v1/logs     — paginated log entries
- *   POST /ai-valve/v1/settings — update settings
+ *   GET  /soderlind-aivalve/v1/usage    — usage summary
+ *   GET  /soderlind-aivalve/v1/logs     — paginated log entries
+ *   POST /soderlind-aivalve/v1/settings — update settings
  */
 final class UsageController extends WP_REST_Controller {
 
-	protected $namespace = 'ai-valve/v1';
+	protected $namespace = 'soderlind-aivalve/v1';
 
 	public function __construct(
 		private readonly Settings $settings,
@@ -135,7 +135,7 @@ final class UsageController extends WP_REST_Controller {
 		}
 		return new WP_Error(
 			'rest_forbidden',
-			__( 'You do not have permission to access AI Valve data.', 'ai-valve' ),
+			__( 'You do not have permission to access AI Valve data.', 'soderlind-aivalve' ),
 			[ 'status' => 403 ]
 		);
 	}

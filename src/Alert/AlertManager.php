@@ -48,14 +48,14 @@ final class AlertManager {
 		if ( $daily_pct >= 100 ) {
 			$messages[] = sprintf(
 				/* translators: %s: percentage */
-				__( 'AI Valve: Global daily token budget exceeded (%s%% used). New AI requests are being blocked.', 'ai-valve' ),
+				__( 'AI Valve: Global daily token budget exceeded (%s%% used). New AI requests are being blocked.', 'soderlind-aivalve' ),
 				number_format_i18n( (int) $daily_pct )
 			);
 			$this->maybe_send_email( 'daily', $daily_pct );
 		} elseif ( $daily_pct >= $threshold ) {
 			$messages[] = sprintf(
 				/* translators: %s: percentage */
-				__( 'AI Valve: Global daily token usage at %s%% of budget.', 'ai-valve' ),
+				__( 'AI Valve: Global daily token usage at %s%% of budget.', 'soderlind-aivalve' ),
 				number_format_i18n( (int) $daily_pct )
 			);
 		}
@@ -65,14 +65,14 @@ final class AlertManager {
 		if ( $monthly_pct >= 100 ) {
 			$messages[] = sprintf(
 				/* translators: %s: percentage */
-				__( 'AI Valve: Global monthly token budget exceeded (%s%% used). New AI requests are being blocked.', 'ai-valve' ),
+				__( 'AI Valve: Global monthly token budget exceeded (%s%% used). New AI requests are being blocked.', 'soderlind-aivalve' ),
 				number_format_i18n( (int) $monthly_pct )
 			);
 			$this->maybe_send_email( 'monthly', $monthly_pct );
 		} elseif ( $monthly_pct >= $threshold ) {
 			$messages[] = sprintf(
 				/* translators: %s: percentage */
-				__( 'AI Valve: Global monthly token usage at %s%% of budget.', 'ai-valve' ),
+				__( 'AI Valve: Global monthly token usage at %s%% of budget.', 'soderlind-aivalve' ),
 				number_format_i18n( (int) $monthly_pct )
 			);
 		}
@@ -85,14 +85,14 @@ final class AlertManager {
 			if ( $p_daily_pct >= 100 ) {
 				$messages[] = sprintf(
 					/* translators: 1: plugin slug 2: percentage */
-					__( 'AI Valve: %1$s daily token budget exceeded (%2$s%% used).', 'ai-valve' ),
+					__( 'AI Valve: %1$s daily token budget exceeded (%2$s%% used).', 'soderlind-aivalve' ),
 					'<strong>' . esc_html( $slug ) . '</strong>',
 					number_format_i18n( (int) $p_daily_pct )
 				);
 			} elseif ( $p_daily_pct >= $threshold ) {
 				$messages[] = sprintf(
 					/* translators: 1: plugin slug 2: percentage */
-					__( 'AI Valve: %1$s daily token usage at %2$s%% of budget.', 'ai-valve' ),
+					__( 'AI Valve: %1$s daily token usage at %2$s%% of budget.', 'soderlind-aivalve' ),
 					'<strong>' . esc_html( $slug ) . '</strong>',
 					number_format_i18n( (int) $p_daily_pct )
 				);
@@ -102,14 +102,14 @@ final class AlertManager {
 			if ( $p_monthly_pct >= 100 ) {
 				$messages[] = sprintf(
 					/* translators: 1: plugin slug 2: percentage */
-					__( 'AI Valve: %1$s monthly token budget exceeded (%2$s%% used).', 'ai-valve' ),
+					__( 'AI Valve: %1$s monthly token budget exceeded (%2$s%% used).', 'soderlind-aivalve' ),
 					'<strong>' . esc_html( $slug ) . '</strong>',
 					number_format_i18n( (int) $p_monthly_pct )
 				);
 			} elseif ( $p_monthly_pct >= $threshold ) {
 				$messages[] = sprintf(
 					/* translators: 1: plugin slug 2: percentage */
-					__( 'AI Valve: %1$s monthly token usage at %2$s%% of budget.', 'ai-valve' ),
+					__( 'AI Valve: %1$s monthly token usage at %2$s%% of budget.', 'soderlind-aivalve' ),
 					'<strong>' . esc_html( $slug ) . '</strong>',
 					number_format_i18n( (int) $p_monthly_pct )
 				);
@@ -137,7 +137,7 @@ final class AlertManager {
 
 		wp_add_dashboard_widget(
 			'soderlind_aivalve_usage_widget',
-			__( 'AI Valve — AI Token Usage', 'ai-valve' ),
+			__( 'AI Valve — AI Token Usage', 'soderlind-aivalve' ),
 			[ $this, 'render_dashboard_widget' ],
 		);
 	}
@@ -152,7 +152,7 @@ final class AlertManager {
 		echo '<table class="widefat" style="border:0;">';
 
 		// Daily row.
-		echo '<tr><th>' . esc_html__( 'Today', 'ai-valve' ) . '</th><td>';
+		echo '<tr><th>' . esc_html__( 'Today', 'soderlind-aivalve' ) . '</th><td>';
 		echo esc_html( number_format_i18n( $daily ) );
 		if ( $daily_limit > 0 ) {
 			echo ' / ' . esc_html( number_format_i18n( $daily_limit ) );
@@ -161,7 +161,7 @@ final class AlertManager {
 		echo '</td></tr>';
 
 		// Monthly row.
-		echo '<tr><th>' . esc_html__( 'This month', 'ai-valve' ) . '</th><td>';
+		echo '<tr><th>' . esc_html__( 'This month', 'soderlind-aivalve' ) . '</th><td>';
 		echo esc_html( number_format_i18n( $monthly ) );
 		if ( $monthly_limit > 0 ) {
 			echo ' / ' . esc_html( number_format_i18n( $monthly_limit ) );
@@ -173,8 +173,8 @@ final class AlertManager {
 
 		printf(
 			'<p><a href="%s">%s</a></p>',
-			esc_url( admin_url( 'options-general.php?page=ai-valve' ) ),
-			esc_html__( 'View full dashboard →', 'ai-valve' )
+			esc_url( admin_url( 'options-general.php?page=soderlind-aivalve' ) ),
+			esc_html__( 'View full dashboard →', 'soderlind-aivalve' )
 		);
 	}
 
@@ -215,18 +215,18 @@ final class AlertManager {
 
 		$subject = sprintf(
 			/* translators: 1: period (daily/monthly), 2: percentage */
-			__( '[AI Valve] %1$s token budget exceeded (%2$s%%)', 'ai-valve' ),
+			__( '[AI Valve] %1$s token budget exceeded (%2$s%%)', 'soderlind-aivalve' ),
 			ucfirst( $period ),
 			number_format_i18n( (int) $pct )
 		);
 
 		$body = sprintf(
 			/* translators: 1: site name, 2: period, 3: percentage, 4: dashboard URL */
-			__( "Site: %1\$s\nPeriod: %2\$s\nUsage: %3\$s%% of budget\n\nView dashboard: %4\$s", 'ai-valve' ),
+			__( "Site: %1\$s\nPeriod: %2\$s\nUsage: %3\$s%% of budget\n\nView dashboard: %4\$s", 'soderlind-aivalve' ),
 			get_bloginfo( 'name' ),
 			$period,
 			number_format_i18n( (int) $pct ),
-			admin_url( 'options-general.php?page=ai-valve' )
+			admin_url( 'options-general.php?page=soderlind-aivalve' )
 		);
 
 		wp_mail( $email, $subject, $body );

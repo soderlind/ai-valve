@@ -1,16 +1,16 @@
 <?php
 /**
  * Plugin Name: AI Valve
- * Plugin URI:  https://github.com/soderlind/ai-valve
+ * Plugin URI:  https://github.com/soderlind/soderlind-aivalve
  * Description: Control, meter, and permission-gate AI usage from plugins that connect through the WordPress 7 AI connector.
- * Version:     1.1.4
+ * Version:     1.1.5
  * Requires at least: 7.0
  * Requires PHP: 8.3
  * Author:      Per Søderlind
  * Author URI:  https://soderlind.no
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: ai-valve
+ * Text Domain: soderlind-aivalve
  */
 
 declare(strict_types=1);
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
-define( 'SODERLIND_AIVALVE_VERSION', '1.1.4' );
+define( 'SODERLIND_AIVALVE_VERSION', '1.1.5' );
 define( 'SODERLIND_AIVALVE_PLUGIN_FILE', __FILE__ );
 define( 'SODERLIND_AIVALVE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SODERLIND_AIVALVE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

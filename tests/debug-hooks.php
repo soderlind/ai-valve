@@ -1,6 +1,6 @@
 <?php
 /**
- * Debug script — run with: wp eval-file wp-content/plugins/ai-valve/tests/debug-hooks.php
+ * Debug script — run with: wp eval-file wp-content/plugins/soderlind-aivalve/tests/debug-hooks.php
  */
 
 echo "=== AI Valve Hook Debug ===\n\n";

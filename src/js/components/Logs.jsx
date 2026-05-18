@@ -95,7 +95,7 @@ export default function Logs( { setNotice } ) {
 			! window.confirm(
 				__(
 					'Permanently delete ALL logged requests? This cannot be undone.',
-					'ai-valve'
+					'soderlind-aivalve'
 				)
 			)
 		) {
@@ -106,13 +106,13 @@ export default function Logs( { setNotice } ) {
 			await purgeLogs();
 			setNotice( {
 				type: 'success',
-				message: __( 'All logs purged.', 'ai-valve' ),
+				message: __( 'All logs purged.', 'soderlind-aivalve' ),
 			} );
 			load();
 		} catch {
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to purge logs.', 'ai-valve' ),
+				message: __( 'Failed to purge logs.', 'soderlind-aivalve' ),
 			} );
 		}
 		setPurging( false );
@@ -147,14 +147,14 @@ export default function Logs( { setNotice } ) {
 		<div style={ { marginTop: '1em' } }>
 			<div style={ { display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 12 } }>
 				<SelectControl
-					label={ __( 'Time range', 'ai-valve' ) }
+					label={ __( 'Time range', 'soderlind-aivalve' ) }
 					value={ timeRange }
 					options={ [
-						{ label: __( 'All time', 'ai-valve' ), value: '' },
-						{ label: __( 'Last 24 hours', 'ai-valve' ), value: '24h' },
-						{ label: __( 'Last 7 days', 'ai-valve' ), value: '7d' },
-						{ label: __( 'Last 30 days', 'ai-valve' ), value: '30d' },
-						{ label: __( 'This month', 'ai-valve' ), value: 'month' },
+						{ label: __( 'All time', 'soderlind-aivalve' ), value: '' },
+						{ label: __( 'Last 24 hours', 'soderlind-aivalve' ), value: '24h' },
+						{ label: __( 'Last 7 days', 'soderlind-aivalve' ), value: '7d' },
+						{ label: __( 'Last 30 days', 'soderlind-aivalve' ), value: '30d' },
+						{ label: __( 'This month', 'soderlind-aivalve' ), value: 'month' },
 					] }
 					onChange={ handleTimeRange }
 					__nextHasNoMarginBottom
@@ -172,7 +172,7 @@ export default function Logs( { setNotice } ) {
 							{ data
 								? `${ data.total.toLocaleString() } ${ __(
 										'entries found.',
-										'ai-valve'
+										'soderlind-aivalve'
 								  ) }`
 								: '' }
 						</strong>
@@ -182,7 +182,7 @@ export default function Logs( { setNotice } ) {
 								href={ csvUrl }
 								style={ { marginLeft: '1em' } }
 							>
-								{ __( 'Export CSV', 'ai-valve' ) }
+								{ __( 'Export CSV', 'soderlind-aivalve' ) }
 							</Button>
 						) }
 					</p>
@@ -220,12 +220,12 @@ export default function Logs( { setNotice } ) {
 			{ /* --- Danger Zone --- */ }
 			<hr style={ { marginTop: 32 } } />
 			<h2 style={ { color: '#d63638' } }>
-				{ __( 'Danger Zone', 'ai-valve' ) }
+				{ __( 'Danger Zone', 'soderlind-aivalve' ) }
 			</h2>
 			<p className="description">
 				{ __(
 					'Permanently delete all logged requests. This action cannot be undone.',
-					'ai-valve'
+					'soderlind-aivalve'
 				) }
 			</p>
 			<p>
@@ -236,7 +236,7 @@ export default function Logs( { setNotice } ) {
 					disabled={ purging }
 					onClick={ handlePurge }
 				>
-					{ __( 'Purge All Logs', 'ai-valve' ) }
+					{ __( 'Purge All Logs', 'soderlind-aivalve' ) }
 				</Button>
 			</p>
 		</div>

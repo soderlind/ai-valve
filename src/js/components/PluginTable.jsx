@@ -66,7 +66,7 @@ export default function PluginTable( {
 			} );
 			setNotice( {
 				type: 'success',
-				message: __( 'Plugin settings saved.', 'ai-valve' ),
+				message: __( 'Plugin settings saved.', 'soderlind-aivalve' ),
 			} );
 			if ( onSaved ) {
 				onSaved();
@@ -74,7 +74,7 @@ export default function PluginTable( {
 		} catch {
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to save plugin settings.', 'ai-valve' ),
+				message: __( 'Failed to save plugin settings.', 'soderlind-aivalve' ),
 			} );
 		}
 		setSaving( false );
@@ -86,7 +86,7 @@ export default function PluginTable( {
 				<em>
 					{ __(
 						'No plugins have made AI requests yet. They will appear here automatically.',
-						'ai-valve'
+						'soderlind-aivalve'
 					) }
 				</em>
 			</p>
@@ -95,33 +95,33 @@ export default function PluginTable( {
 
 	return (
 		<>
-			<h2>{ __( 'Plugins', 'ai-valve' ) }</h2>
+			<h2>{ __( 'Plugins', 'soderlind-aivalve' ) }</h2>
 			<p className="description" style={ { marginBottom: 12 } }>
 				{ __(
 					"Control each plugin's access to the AI connector and set token budgets. Plugins appear automatically after their first AI request. Limits are in tokens — set to 0 for unlimited.",
-					'ai-valve'
+					'soderlind-aivalve'
 				) }
 			</p>
 			<table className="widefat fixed striped">
 				<thead>
 					<tr>
 						<th style={ { width: '22%' } }>
-							{ __( 'Plugin', 'ai-valve' ) }
+							{ __( 'Plugin', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { width: '10%' } }>
-							{ __( 'Access', 'ai-valve' ) }
+							{ __( 'Access', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { width: '14%', textAlign: 'right' } }>
-							{ __( 'Requests', 'ai-valve' ) }
+							{ __( 'Requests', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { width: '14%', textAlign: 'right' } }>
-							{ __( 'Tokens used', 'ai-valve' ) }
+							{ __( 'Tokens used', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { width: '20%' } }>
-							{ __( 'Daily token limit', 'ai-valve' ) }
+							{ __( 'Daily token limit', 'soderlind-aivalve' ) }
 						</th>
 						<th style={ { width: '20%' } }>
-							{ __( 'Monthly token limit', 'ai-valve' ) }
+							{ __( 'Monthly token limit', 'soderlind-aivalve' ) }
 						</th>
 					</tr>
 				</thead>
@@ -153,14 +153,14 @@ export default function PluginTable( {
 											{
 												label: __(
 													'Allow',
-													'ai-valve'
+													'soderlind-aivalve'
 												),
 												value: 'allow',
 											},
 											{
 												label: __(
 													'Deny',
-													'ai-valve'
+													'soderlind-aivalve'
 												),
 												value: 'deny',
 											},
@@ -182,11 +182,11 @@ export default function PluginTable( {
 									{ fmt( usage.total_tokens ) }
 									{ barPct > 0 && (
 										<div
-											className="ai-valve-bar-wrap"
+											className="soderlind-aivalve-bar-wrap"
 											style={ { marginTop: 4 } }
 										>
 											<div
-												className="ai-valve-bar ai-valve-bar--ok"
+												className="soderlind-aivalve-bar soderlind-aivalve-bar--ok"
 												style={ {
 													width: `${ barPct }%`,
 												} }
@@ -216,7 +216,7 @@ export default function PluginTable( {
 										placeholder="0"
 										title={ __(
 											'0 = unlimited',
-											'ai-valve'
+											'soderlind-aivalve'
 										) }
 									/>
 								</td>
@@ -242,7 +242,7 @@ export default function PluginTable( {
 										placeholder="0"
 										title={ __(
 											'0 = unlimited',
-											'ai-valve'
+											'soderlind-aivalve'
 										) }
 									/>
 								</td>
@@ -254,7 +254,7 @@ export default function PluginTable( {
 			<p className="description" style={ { marginTop: 4 } }>
 				{ __(
 					'Token limits: 0 = no limit. When a limit is reached, further AI requests from that plugin are blocked until the next day or month.',
-					'ai-valve'
+					'soderlind-aivalve'
 				) }
 			</p>
 			<p>
@@ -264,7 +264,7 @@ export default function PluginTable( {
 					disabled={ saving }
 					onClick={ handleSave }
 				>
-					{ __( 'Save Changes', 'ai-valve' ) }
+					{ __( 'Save Changes', 'soderlind-aivalve' ) }
 				</Button>
 			</p>
 		</>
