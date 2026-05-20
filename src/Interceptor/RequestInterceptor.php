@@ -28,8 +28,8 @@ final class RequestInterceptor {
 
 	/** Correlation state for the current request. */
 	private static string $current_plugin_slug = '';
-	private static string $current_context = '';
-	private static float $request_start_time = 0.0;
+	private static string $current_context     = '';
+	private static float $request_start_time   = 0.0;
 
 	/** Pending log row ID written in on_before_generate. */
 	private static int $pending_log_id = 0;
@@ -43,12 +43,13 @@ final class RequestInterceptor {
 	) {}
 
 	public function register(): void {
-		add_filter( 'wp_ai_client_prevent_prompt', [ $this, 'maybe_prevent' ], 10, 2 );
-		add_action( 'wp_ai_client_before_generate_result', [ $this, 'on_before_generate' ], 10, 1 );
-		add_action( 'wp_ai_client_after_generate_result', [ $this, 'on_after_generate' ], 10, 1 );
+		add_filter( 'wp_ai_client_prevent_prompt', array( $this, 'maybe_prevent' ), 10, 2 );
+		add_action( 'wp_ai_client_before_generate_result', array( $this, 'on_before_generate' ), 10, 1 );
+		add_action( 'wp_ai_client_after_generate_result', array( $this, 'on_after_generate' ), 10, 1 );
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * 1. Gate — wp_ai_client_prevent_prompt
 	 * ----------------------------------------------------------------*/
 
@@ -77,14 +78,16 @@ final class RequestInterceptor {
 		if ( ! $engine->evaluate( $plugin_slug, $context ) ) {
 			// Log the denied request.
 			$repo = new LogRepository();
-			$repo->insert( [
-				'plugin_slug' => $plugin_slug,
-				'provider_id' => '',
-				'model_id'    => '',
-				'capability'  => '',
-				'context'     => $context,
-				'status'      => 'denied:' . $engine->denial_reason(),
-			] );
+			$repo->insert(
+				array(
+					'plugin_slug' => $plugin_slug,
+					'provider_id' => '',
+					'model_id'    => '',
+					'capability'  => '',
+					'context'     => $context,
+					'status'      => 'denied:' . $engine->denial_reason(),
+				)
+			);
 
 			/**
 			 * Fires when an AI request is denied by AI Valve.
@@ -101,7 +104,8 @@ final class RequestInterceptor {
 		return false;
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * 2. Before generate — insert pending log row
 	 * ----------------------------------------------------------------*/
 
@@ -124,12 +128,16 @@ final class RequestInterceptor {
 
 		try {
 			$provider_id = $model->providerMetadata()->getId();
-		} catch (\Throwable) {
+		} catch ( \Throwable $exception ) {
+			unset( $exception );
+			// Leave blank when provider metadata is unavailable.
 		}
 
 		try {
 			$model_id = $model->metadata()->getId();
-		} catch (\Throwable) {
+		} catch ( \Throwable $exception ) {
+			unset( $exception );
+			// Leave blank when model metadata is unavailable.
 		}
 
 		if ( null !== $event->getCapability() ) {
@@ -138,25 +146,28 @@ final class RequestInterceptor {
 
 		// Write a pending row so the request is visible even if after-event never fires.
 		$repo   = new LogRepository();
-		$row_id = $repo->insert( [
-			'plugin_slug' => self::$current_plugin_slug ?: 'unknown',
-			'provider_id' => $provider_id,
-			'model_id'    => $model_id,
-			'capability'  => $capability,
-			'context'     => self::$current_context ?: CallerDetector::context(),
-			'status'      => 'pending',
-		] );
+		$row_id = $repo->insert(
+			array(
+				'plugin_slug' => self::$current_plugin_slug ? self::$current_plugin_slug : 'unknown',
+				'provider_id' => $provider_id,
+				'model_id'    => $model_id,
+				'capability'  => $capability,
+				'context'     => self::$current_context ? self::$current_context : CallerDetector::context(),
+				'status'      => 'pending',
+			)
+		);
 
 		self::$pending_log_id = is_int( $row_id ) ? $row_id : 0;
 
 		// Register a one-time shutdown handler to catch orphaned pending rows.
 		if ( ! self::$shutdown_registered ) {
 			self::$shutdown_registered = true;
-			register_shutdown_function( [ self::class, 'finalise_on_shutdown' ] );
+			register_shutdown_function( array( self::class, 'finalise_on_shutdown' ) );
 		}
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * 3. After generate — finalise pending row with token usage
 	 * ----------------------------------------------------------------*/
 
@@ -171,14 +182,16 @@ final class RequestInterceptor {
 
 		try {
 			$provider_id = $model->providerMetadata()->getId();
-		} catch (\Throwable) {
-			// Some models may not expose provider metadata gracefully.
+		} catch ( \Throwable $exception ) {
+			unset( $exception );
+			// Leave blank when provider metadata is unavailable.
 		}
 
 		try {
 			$model_id = $model->metadata()->getId();
-		} catch (\Throwable) {
-			// Defensive.
+		} catch ( \Throwable $exception ) {
+			unset( $exception );
+			// Leave blank when model metadata is unavailable.
 		}
 
 		if ( null !== $event->getCapability() ) {
@@ -189,7 +202,7 @@ final class RequestInterceptor {
 		$completion_tokens = $usage->getCompletionTokens();
 		$total_tokens      = $usage->getTotalTokens();
 
-		$plugin_slug = self::$current_plugin_slug ?: 'unknown';
+		$plugin_slug = self::$current_plugin_slug ? self::$current_plugin_slug : 'unknown';
 
 		// Compute request duration.
 		$duration_ms = 0;
@@ -201,30 +214,35 @@ final class RequestInterceptor {
 
 		if ( self::$pending_log_id > 0 ) {
 			// Update the pending row inserted by on_before_generate.
-			$repo->update( self::$pending_log_id, [
-				'provider_id'       => $provider_id,
-				'model_id'          => $model_id,
-				'capability'        => $capability,
-				'prompt_tokens'     => $prompt_tokens,
-				'completion_tokens' => $completion_tokens,
-				'total_tokens'      => $total_tokens,
-				'duration_ms'       => $duration_ms,
-				'status'            => 'allowed',
-			] );
+			$repo->update(
+				self::$pending_log_id,
+				array(
+					'provider_id'       => $provider_id,
+					'model_id'          => $model_id,
+					'capability'        => $capability,
+					'prompt_tokens'     => $prompt_tokens,
+					'completion_tokens' => $completion_tokens,
+					'total_tokens'      => $total_tokens,
+					'duration_ms'       => $duration_ms,
+					'status'            => 'allowed',
+				)
+			);
 		} else {
 			// Fallback: no pending row (unlikely but defensive).
-			$repo->insert( [
-				'plugin_slug'       => $plugin_slug,
-				'provider_id'       => $provider_id,
-				'model_id'          => $model_id,
-				'capability'        => $capability,
-				'context'           => self::$current_context ?: CallerDetector::context(),
-				'prompt_tokens'     => $prompt_tokens,
-				'completion_tokens' => $completion_tokens,
-				'total_tokens'      => $total_tokens,
-				'duration_ms'       => $duration_ms,
-				'status'            => 'allowed',
-			] );
+			$repo->insert(
+				array(
+					'plugin_slug'       => $plugin_slug,
+					'provider_id'       => $provider_id,
+					'model_id'          => $model_id,
+					'capability'        => $capability,
+					'context'           => self::$current_context ? self::$current_context : CallerDetector::context(),
+					'prompt_tokens'     => $prompt_tokens,
+					'completion_tokens' => $completion_tokens,
+					'total_tokens'      => $total_tokens,
+					'duration_ms'       => $duration_ms,
+					'status'            => 'allowed',
+				)
+			);
 		}
 
 		// Update rolling counters.
@@ -262,7 +280,8 @@ final class RequestInterceptor {
 		CallerDetector::reset();
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Shutdown handler — catch orphaned pending rows
 	 * ----------------------------------------------------------------*/
 
@@ -282,10 +301,13 @@ final class RequestInterceptor {
 		}
 
 		$repo = new LogRepository();
-		$repo->update( self::$pending_log_id, [
-			'duration_ms' => $duration_ms,
-			'status'      => 'error',
-		] );
+		$repo->update(
+			self::$pending_log_id,
+			array(
+				'duration_ms' => $duration_ms,
+				'status'      => 'error',
+			)
+		);
 
 		self::$pending_log_id     = 0;
 		self::$request_start_time = 0.0;

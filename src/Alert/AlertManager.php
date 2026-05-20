@@ -23,11 +23,12 @@ final class AlertManager {
 	) {}
 
 	public function register(): void {
-		add_action( 'admin_notices', [ $this, 'maybe_show_notice' ] );
-		add_action( 'wp_dashboard_setup', [ $this, 'register_dashboard_widget' ] );
+		add_action( 'admin_notices', array( $this, 'maybe_show_notice' ) );
+		add_action( 'wp_dashboard_setup', array( $this, 'register_dashboard_widget' ) );
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Admin notices
 	 * ----------------------------------------------------------------*/
 
@@ -41,7 +42,7 @@ final class AlertManager {
 		}
 
 		$threshold = (int) $this->settings->get( 'alert_threshold_pct', 80 );
-		$messages  = [];
+		$messages  = array();
 
 		// Check global daily.
 		$daily_pct = $this->usage_tracker->global_daily_pct();
@@ -78,7 +79,7 @@ final class AlertManager {
 		}
 
 		// Check per-plugin budgets.
-		$plugin_budgets = (array) $this->settings->get( 'plugin_budgets', [] );
+		$plugin_budgets = (array) $this->settings->get( 'plugin_budgets', array() );
 		foreach ( $plugin_budgets as $slug => $limits ) {
 			$slug        = (string) $slug;
 			$p_daily_pct = $this->usage_tracker->plugin_daily_pct( $slug );
@@ -121,12 +122,13 @@ final class AlertManager {
 			printf(
 				'<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
 				esc_attr( $type ),
-				wp_kses( $msg, [ 'strong' => [] ] )
+				wp_kses( $msg, array( 'strong' => array() ) )
 			);
 		}
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Dashboard widget
 	 * ----------------------------------------------------------------*/
 
@@ -138,7 +140,7 @@ final class AlertManager {
 		wp_add_dashboard_widget(
 			'soderlind_aivalve_usage_widget',
 			__( 'AI Valve — AI Token Usage', 'ai-valve' ),
-			[ $this, 'render_dashboard_widget' ],
+			array( $this, 'render_dashboard_widget' ),
 		);
 	}
 
@@ -178,7 +180,8 @@ final class AlertManager {
 		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Helpers
 	 * ----------------------------------------------------------------*/
 

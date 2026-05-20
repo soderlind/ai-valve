@@ -33,99 +33,116 @@ final class UsageController extends WP_REST_Controller {
 	) {}
 
 	public function register_routes(): void {
-		register_rest_route( $this->namespace, '/usage', [
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_usage' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-			],
-		] );
+		register_rest_route(
+			$this->namespace,
+			'/usage',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_usage' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+				),
+			)
+		);
 
-		register_rest_route( $this->namespace, '/logs', [
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_logs' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-				'args'                => [
-					'page'        => [
-						'type'              => 'integer',
-						'default'           => 1,
-						'minimum'           => 1,
-						'sanitize_callback' => 'absint',
-					],
-					'per_page'    => [
-						'type'              => 'integer',
-						'default'           => 20,
-						'minimum'           => 1,
-						'maximum'           => 100,
-						'sanitize_callback' => 'absint',
-					],
-					'plugin_slug' => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_key',
-					],
-					'provider_id' => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_key',
-					],
-					'model_id'    => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'context'     => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_key',
-					],
-					'status'      => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'date_from'   => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'date_to'     => [
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-				],
-			],
-			[
-				'methods'             => WP_REST_Server::DELETABLE,
-				'callback'            => [ $this, 'purge_logs' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-			],
-		] );
+		register_rest_route(
+			$this->namespace,
+			'/logs',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_logs' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+					'args'                => array(
+						'page'        => array(
+							'type'              => 'integer',
+							'default'           => 1,
+							'minimum'           => 1,
+							'sanitize_callback' => 'absint',
+						),
+						'per_page'    => array(
+							'type'              => 'integer',
+							'default'           => 20,
+							'minimum'           => 1,
+							'maximum'           => 100,
+							'sanitize_callback' => 'absint',
+						),
+						'plugin_slug' => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_key',
+						),
+						'provider_id' => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_key',
+						),
+						'model_id'    => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'context'     => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_key',
+						),
+						'status'      => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'date_from'   => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+						'date_to'     => array(
+							'type'              => 'string',
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'purge_logs' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+				),
+			)
+		);
 
-		register_rest_route( $this->namespace, '/logs/filters', [
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_log_filters' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-			],
-		] );
+		register_rest_route(
+			$this->namespace,
+			'/logs/filters',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_log_filters' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+				),
+			)
+		);
 
-		register_rest_route( $this->namespace, '/settings', [
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_settings' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-			],
-			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'update_settings' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-				'args'                => [
-					'settings' => [
-						'type'     => 'object',
-						'required' => true,
-					],
-				],
-			],
-		] );
+		register_rest_route(
+			$this->namespace,
+			'/settings',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_settings' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'update_settings' ),
+					'permission_callback' => array( $this, 'check_permissions' ),
+					'args'                => array(
+						'settings' => array(
+							'type'     => 'object',
+							'required' => true,
+						),
+					),
+				),
+			)
+		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Permission check
 	 * ----------------------------------------------------------------*/
 
@@ -136,11 +153,12 @@ final class UsageController extends WP_REST_Controller {
 		return new WP_Error(
 			'rest_forbidden',
 			__( 'You do not have permission to access AI Valve data.', 'ai-valve' ),
-			[ 'status' => 403 ]
+			array( 'status' => 403 )
 		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * GET /usage
 	 * ----------------------------------------------------------------*/
 
@@ -157,25 +175,28 @@ final class UsageController extends WP_REST_Controller {
 		$table       = LogRepository::table_name();
 		$known_slugs = $wpdb->get_col( "SELECT DISTINCT plugin_slug FROM {$table} ORDER BY plugin_slug" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		return rest_ensure_response( [
-			'daily'             => $repo->totals( $today . ' 00:00:00', $today_end ),
-			'monthly'           => $repo->totals( $month_from, $today_end ),
-			'by_plugin'         => $repo->totals_by_plugin( $month_from, $today_end ),
-			'by_provider'       => $repo->totals_by_provider( $month_from, $today_end ),
-			'by_provider_model' => $repo->totals_by_provider_model( $month_from, $today_end ),
-			'by_context'        => $repo->totals_by_context( $month_from, $today_end ),
-			'recent'            => $repo->query( [ 'per_page' => 10 ] )[ 'items' ],
-			'known_slugs'       => $known_slugs ?: [],
-			'budgets'           => [
-				'global_daily_limit'   => (int) $this->settings->get( 'global_daily_limit', 0 ),
-				'global_monthly_limit' => (int) $this->settings->get( 'global_monthly_limit', 0 ),
-				'global_daily_used'    => $this->usage_tracker->global_tokens_today(),
-				'global_monthly_used'  => $this->usage_tracker->global_tokens_this_month(),
-			],
-		] );
+		return rest_ensure_response(
+			array(
+				'daily'             => $repo->totals( $today . ' 00:00:00', $today_end ),
+				'monthly'           => $repo->totals( $month_from, $today_end ),
+				'by_plugin'         => $repo->totals_by_plugin( $month_from, $today_end ),
+				'by_provider'       => $repo->totals_by_provider( $month_from, $today_end ),
+				'by_provider_model' => $repo->totals_by_provider_model( $month_from, $today_end ),
+				'by_context'        => $repo->totals_by_context( $month_from, $today_end ),
+				'recent'            => $repo->query( array( 'per_page' => 10 ) )['items'],
+				'known_slugs'       => $known_slugs ? $known_slugs : array(),
+				'budgets'           => array(
+					'global_daily_limit'   => (int) $this->settings->get( 'global_daily_limit', 0 ),
+					'global_monthly_limit' => (int) $this->settings->get( 'global_monthly_limit', 0 ),
+					'global_daily_used'    => $this->usage_tracker->global_tokens_today(),
+					'global_monthly_used'  => $this->usage_tracker->global_tokens_this_month(),
+				),
+			)
+		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * GET /logs
 	 * ----------------------------------------------------------------*/
 
@@ -183,14 +204,15 @@ final class UsageController extends WP_REST_Controller {
 		$repo   = new LogRepository();
 		$result = $repo->query( $request->get_params() );
 
-		$response = rest_ensure_response( $result[ 'items' ] );
-		$response->header( 'X-WP-Total', (string) $result[ 'total' ] );
-		$response->header( 'X-WP-TotalPages', (string) ceil( $result[ 'total' ] / max( 1, (int) $request->get_param( 'per_page' ) ) ) );
+		$response = rest_ensure_response( $result['items'] );
+		$response->header( 'X-WP-Total', (string) $result['total'] );
+		$response->header( 'X-WP-TotalPages', (string) ceil( $result['total'] / max( 1, (int) $request->get_param( 'per_page' ) ) ) );
 
 		return $response;
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * GET /logs/filters — distinct filter values
 	 * ----------------------------------------------------------------*/
 
@@ -199,7 +221,8 @@ final class UsageController extends WP_REST_Controller {
 		return rest_ensure_response( $repo->distinct_filter_values() );
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * GET /settings
 	 * ----------------------------------------------------------------*/
 
@@ -207,7 +230,8 @@ final class UsageController extends WP_REST_Controller {
 		return rest_ensure_response( $this->settings->all() );
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * POST /settings
 	 * ----------------------------------------------------------------*/
 
@@ -216,13 +240,16 @@ final class UsageController extends WP_REST_Controller {
 		$sanitized = Settings::sanitize( $input );
 		$this->settings->update( $sanitized );
 
-		return rest_ensure_response( [
-			'updated'  => true,
-			'settings' => $sanitized,
-		] );
+		return rest_ensure_response(
+			array(
+				'updated'  => true,
+				'settings' => $sanitized,
+			)
+		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * DELETE /logs
 	 * ----------------------------------------------------------------*/
 
@@ -230,6 +257,6 @@ final class UsageController extends WP_REST_Controller {
 		$repo = new LogRepository();
 		$repo->purge();
 
-		return rest_ensure_response( [ 'purged' => true ] );
+		return rest_ensure_response( array( 'purged' => true ) );
 	}
 }

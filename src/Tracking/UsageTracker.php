@@ -28,17 +28,18 @@ final class UsageTracker {
 	 * @return list<string>
 	 */
 	private static function legacy_prefixes(): array {
-		return [
-			'aiv' . 'alve_tokens_',
-			'ai' . '_valve_tokens_',
-		];
+		return array(
+			'aivalve_tokens_',
+			'ai_valve_tokens_',
+		);
 	}
 
 	public function __construct(
 		private readonly Settings $settings,
 	) {}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Record usage
 	 * ----------------------------------------------------------------*/
 
@@ -69,7 +70,8 @@ final class UsageTracker {
 		}
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Read counters
 	 * ----------------------------------------------------------------*/
 
@@ -97,7 +99,8 @@ final class UsageTracker {
 		return $this->read( self::monthly_key( UsageClock::current_month(), 'provider:' . $provider_id ) );
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Budget helpers (for AlertManager)
 	 * ----------------------------------------------------------------*/
 
@@ -137,7 +140,8 @@ final class UsageTracker {
 		return ( $this->plugin_tokens_this_month( $slug ) / $limit ) * 100;
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Internal helpers
 	 * ----------------------------------------------------------------*/
 
@@ -171,7 +175,8 @@ final class UsageTracker {
 		return 0;
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Cleanup
 	 * ----------------------------------------------------------------*/
 
@@ -180,7 +185,7 @@ final class UsageTracker {
 	 */
 	public static function delete_all(): void {
 		global $wpdb;
-		foreach ( array_merge( [ self::PREFIX ], self::legacy_prefixes() ) as $prefix ) {
+		foreach ( array_merge( array( self::PREFIX ), self::legacy_prefixes() ) as $prefix ) {
 			$wpdb->query(
 				$wpdb->prepare(
 					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",

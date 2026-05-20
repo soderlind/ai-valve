@@ -16,11 +16,11 @@
  * @param {AivalveConfig} config
  * @returns {Object} API client methods.
  */
-export function createApiClient(config) {
+export function createApiClient( config ) {
 	const { restUrl, nonce } = config;
 
-	if (!restUrl || !nonce) {
-		throw new Error('AI Valve API client requires restUrl and nonce.');
+	if ( ! restUrl || ! nonce ) {
+		throw new Error( 'AI Valve API client requires restUrl and nonce.' );
 	}
 
 	/**
@@ -30,22 +30,25 @@ export function createApiClient(config) {
 	 * @param {RequestInit} [opts]
 	 * @returns {Promise<any>}
 	 */
-	async function apiFetch(endpoint, opts = {}) {
-		const url = `${restUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
-		const response = await fetch(url, {
-			...opts,
-			headers: {
-				'X-WP-Nonce': nonce,
-				'Content-Type': 'application/json',
-				...(opts.headers || {}),
-			},
-		});
+	async function apiFetch( endpoint, opts = {} ) {
+		const url      = `${ restUrl.replace( /\/$/, '' ) }/${ endpoint.replace( /^\//, '' ) }`;
+		const response = await fetch(
+			url,
+			{
+				...opts,
+				headers: {
+					'X-WP-Nonce': nonce,
+					'Content-Type': 'application/json',
+					...(opts.headers || {}),
+				},
+			}
+		);
 
-		if (!response.ok) {
-			const body = await response.json().catch(() => ({}));
-			const error = new Error(body.message || `HTTP ${response.status}`);
+		if ( ! response.ok ) {
+			const body   = await response.json().catch( () => ({}) );
+			const error  = new Error( body.message || `HTTP ${response.status}` );
 			error.status = response.status;
-			error.data = body;
+			error.data   = body;
 			throw error;
 		}
 
@@ -55,10 +58,11 @@ export function createApiClient(config) {
 	return {
 		/**
 		 * Fetch current usage summary.
+		 *
 		 * @returns {Promise<Object>}
 		 */
 		getUsage() {
-			return apiFetch('/usage');
+			return apiFetch( '/usage' );
 		},
 
 		/**
@@ -73,27 +77,30 @@ export function createApiClient(config) {
 		 * @param {string} [params.status]
 		 * @returns {Promise<{items: Array, total: number, totalPages: number}>}
 		 */
-		async getLogs(params = {}) {
+		async getLogs( params = {} ) {
 			const query = new URLSearchParams();
-			for (const [key, value] of Object.entries(params)) {
-				if (value !== undefined && value !== null && value !== '') {
-					query.set(key, String(value));
+			for ( const [ key, value ] of Object.entries( params ) ) {
+				if ( value !== undefined && value !== null && value !== '' ) {
+					query.set( key, String( value ) );
 				}
 			}
-			const qs = query.toString();
-			const endpoint = qs ? `/logs?${qs}` : '/logs';
+			const qs       = query.toString();
+			const endpoint = qs ? `/logs?${ qs }` : '/logs';
 
-			const url = `${restUrl.replace(/\/$/, '')}${endpoint}`;
-			const response = await fetch(url, {
-				headers: {
-					'X-WP-Nonce': nonce,
-					'Content-Type': 'application/json',
-				},
-			});
+			const url      = `${ restUrl.replace( /\/$/, '' ) }${ endpoint }`;
+			const response = await fetch(
+				url,
+				{
+					headers: {
+						'X-WP-Nonce': nonce,
+						'Content-Type': 'application/json',
+					},
+				}
+			);
 
-			if (!response.ok) {
-				const body = await response.json().catch(() => ({}));
-				const error = new Error(body.message || `HTTP ${response.status}`);
+			if ( ! response.ok ) {
+				const body   = await response.json().catch( () => ({}) );
+				const error  = new Error( body.message || `HTTP ${ response.status }` );
 				error.status = response.status;
 				throw error;
 			}
@@ -101,8 +108,8 @@ export function createApiClient(config) {
 			const items = await response.json();
 			return {
 				items,
-				total: parseInt(response.headers.get('X-WP-Total') || '0', 10),
-				totalPages: parseInt(response.headers.get('X-WP-TotalPages') || '0', 10),
+				total: parseInt( response.headers.get( 'X-WP-Total' ) || '0', 10 ),
+				totalPages: parseInt( response.headers.get( 'X-WP-TotalPages' ) || '0', 10 ),
 			};
 		},
 
@@ -112,11 +119,14 @@ export function createApiClient(config) {
 		 * @param {Object} settings - Partial settings object.
 		 * @returns {Promise<{updated: boolean, settings: Object}>}
 		 */
-		updateSettings(settings) {
-			return apiFetch('/settings', {
-				method: 'POST',
-				body: JSON.stringify({ settings }),
-			});
+		updateSettings( settings ) {
+			return apiFetch(
+				'/settings',
+				{
+					method: 'POST',
+					body: JSON.stringify( { settings } ),
+				}
+			);
 		},
 	};
 }
@@ -127,14 +137,14 @@ export function createApiClient(config) {
  * @param {number} tokens
  * @returns {string}
  */
-export function formatTokenCount(tokens) {
-	if (tokens >= 1_000_000) {
-		return `${(tokens / 1_000_000).toFixed(1)}M`;
+export function formatTokenCount( tokens ) {
+	if ( tokens >= 1_000_000 ) {
+		return `${ ( tokens / 1_000_000 ).toFixed( 1 ) }M`;
 	}
-	if (tokens >= 1_000) {
-		return `${(tokens / 1_000).toFixed(1)}K`;
+	if ( tokens >= 1_000 ) {
+		return `${ ( tokens / 1_000 ).toFixed( 1 ) }K`;
 	}
-	return String(tokens);
+	return String( tokens );
 }
 
 /**
@@ -144,11 +154,11 @@ export function formatTokenCount(tokens) {
  * @param {number} limit
  * @returns {number} Percentage (can exceed 100).
  */
-export function budgetPercentage(used, limit) {
-	if (limit <= 0) {
+export function budgetPercentage( used, limit ) {
+	if ( limit <= 0 ) {
 		return 0;
 	}
-	return (used / limit) * 100;
+	return ( used / limit ) * 100;
 }
 
 /**
@@ -158,11 +168,11 @@ export function budgetPercentage(used, limit) {
  * @param {number} [threshold=80]
  * @returns {'ok'|'warning'|'critical'}
  */
-export function severityLevel(pct, threshold = 80) {
-	if (pct >= 100) {
+export function severityLevel( pct, threshold = 80 ) {
+	if ( pct >= 100 ) {
 		return 'critical';
 	}
-	if (pct >= threshold) {
+	if ( pct >= threshold ) {
 		return 'warning';
 	}
 	return 'ok';

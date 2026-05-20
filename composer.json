@@ -17,5 +17,14 @@
 	"require-dev": {
 		"brain/monkey": "^2.6",
 		"phpunit/phpunit": "^11.0"
+	},
+	"scripts": {
+		"test": "phpunit --configuration=phpunit.xml.dist",
+		"lint": "$HOME/.composer/vendor/bin/phpcs --standard=phpcs.xml.dist",
+		"lint:fix": "$HOME/.composer/vendor/bin/phpcbf --standard=phpcs.xml.dist",
+		"check": [
+			"@test",
+			"@lint"
+		]
 	}
 }

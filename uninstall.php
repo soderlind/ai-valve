@@ -47,12 +47,12 @@ $wpdb->query(
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_transient_' . 'ai' . '_valve_alert_sent_' ) . '%'
+		$wpdb->esc_like( '_transient_ai_valve_alert_sent_' ) . '%'
 	)
 );
 $wpdb->query(
 	$wpdb->prepare(
 		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_transient_timeout_' . 'ai' . '_valve_alert_sent_' ) . '%'
+		$wpdb->esc_like( '_transient_timeout_ai_valve_alert_sent_' ) . '%'
 	)
 );

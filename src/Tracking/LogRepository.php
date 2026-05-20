@@ -19,23 +19,24 @@ final class LogRepository {
 	 * @return list<string>
 	 */
 	private static function legacy_table_suffixes(): array {
-		return [
-			'aiv' . 'alve_log',
-			'ai' . '_valve_log',
-		];
+		return array(
+			'aivalve_log',
+			'ai_valve_log',
+		);
 	}
 
 	/**
 	 * @return list<string>
 	 */
 	private static function legacy_version_keys(): array {
-		return [
-			'aiv' . 'alve_db_version',
-			'ai' . '_valve_db_version',
-		];
+		return array(
+			'aivalve_db_version',
+			'ai_valve_db_version',
+		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Table name helper
 	 * ----------------------------------------------------------------*/
 
@@ -56,7 +57,8 @@ final class LogRepository {
 		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Activation — create / upgrade table
 	 * ----------------------------------------------------------------*/
 
@@ -132,12 +134,14 @@ final class LogRepository {
 
 		// v2 → v3: add duration_ms column.
 		if ( $current_version < 3 ) {
-			$col = $wpdb->get_var( $wpdb->prepare(
-				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
-				DB_NAME,
-				$table,
-				'duration_ms'
-			) );
+			$col = $wpdb->get_var(
+				$wpdb->prepare(
+					'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
+					DB_NAME,
+					$table,
+					'duration_ms'
+				)
+			);
 			if ( null === $col ) {
 				$wpdb->query( "ALTER TABLE {$table} ADD COLUMN duration_ms INT UNSIGNED NOT NULL DEFAULT 0 AFTER total_tokens" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
@@ -169,7 +173,8 @@ final class LogRepository {
 		}
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Insert
 	 * ----------------------------------------------------------------*/
 
@@ -189,7 +194,7 @@ final class LogRepository {
 	public function insert( array $row ): int|false {
 		global $wpdb;
 
-		$defaults = [
+		$defaults = array(
 			'plugin_slug'       => '',
 			'provider_id'       => '',
 			'model_id'          => '',
@@ -200,14 +205,14 @@ final class LogRepository {
 			'total_tokens'      => 0,
 			'duration_ms'       => 0,
 			'status'            => 'allowed',
-		];
+		);
 
 		$data = array_merge( $defaults, array_intersect_key( $row, $defaults ) );
 
 		$result = $wpdb->insert(
 			self::table_name(),
 			$data,
-			[
+			array(
 				'%s', // plugin_slug
 				'%s', // provider_id
 				'%s', // model_id
@@ -218,13 +223,14 @@ final class LogRepository {
 				'%d', // total_tokens
 				'%d', // duration_ms
 				'%s', // status
-			]
+			)
 		);
 
 		return false === $result ? false : (int) $wpdb->insert_id;
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Update
 	 * ----------------------------------------------------------------*/
 
@@ -238,7 +244,7 @@ final class LogRepository {
 	public function update( int $id, array $data ): bool {
 		global $wpdb;
 
-		$allowed = [
+		$allowed = array(
 			'plugin_slug'       => '%s',
 			'provider_id'       => '%s',
 			'model_id'          => '%s',
@@ -249,7 +255,7 @@ final class LogRepository {
 			'total_tokens'      => '%d',
 			'duration_ms'       => '%d',
 			'status'            => '%s',
-		];
+		);
 
 		$set     = array_intersect_key( $data, $allowed );
 		$formats = array_map( static fn( string $col ) => $allowed[ $col ], array_keys( $set ) );
@@ -261,13 +267,14 @@ final class LogRepository {
 		return (bool) $wpdb->update(
 			self::table_name(),
 			$set,
-			[ 'id' => $id ],
+			array( 'id' => $id ),
 			$formats,
-			[ '%d' ]
+			array( '%d' )
 		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Queries
 	 * ----------------------------------------------------------------*/
 
@@ -277,48 +284,48 @@ final class LogRepository {
 	 * @param array<string, mixed> $filters  Associative filter params.
 	 * @return array{ items: list<object>, total: int }
 	 */
-	public function query( array $filters = [] ): array {
+	public function query( array $filters = array() ): array {
 		global $wpdb;
 
 		$table    = self::table_name();
-		$where    = [];
-		$values   = [];
-		$per_page = max( 1, min( 100, (int) ( $filters[ 'per_page' ] ?? 20 ) ) );
-		$page     = max( 1, (int) ( $filters[ 'page' ] ?? 1 ) );
+		$where    = array();
+		$values   = array();
+		$per_page = max( 1, min( 100, (int) ( $filters['per_page'] ?? 20 ) ) );
+		$page     = max( 1, (int) ( $filters['page'] ?? 1 ) );
 		$offset   = ( $page - 1 ) * $per_page;
 
-		if ( ! empty( $filters[ 'plugin_slug' ] ) ) {
+		if ( ! empty( $filters['plugin_slug'] ) ) {
 			$where[]  = 'plugin_slug = %s';
-			$values[] = $filters[ 'plugin_slug' ];
+			$values[] = $filters['plugin_slug'];
 		}
-		if ( ! empty( $filters[ 'provider_id' ] ) ) {
+		if ( ! empty( $filters['provider_id'] ) ) {
 			$where[]  = 'provider_id = %s';
-			$values[] = $filters[ 'provider_id' ];
+			$values[] = $filters['provider_id'];
 		}
-		if ( ! empty( $filters[ 'model_id' ] ) ) {
+		if ( ! empty( $filters['model_id'] ) ) {
 			$where[]  = 'model_id = %s';
-			$values[] = $filters[ 'model_id' ];
+			$values[] = $filters['model_id'];
 		}
-		if ( ! empty( $filters[ 'context' ] ) ) {
+		if ( ! empty( $filters['context'] ) ) {
 			$where[]  = 'context = %s';
-			$values[] = $filters[ 'context' ];
+			$values[] = $filters['context'];
 		}
-		if ( ! empty( $filters[ 'status' ] ) ) {
-			if ( 'denied' === $filters[ 'status' ] ) {
+		if ( ! empty( $filters['status'] ) ) {
+			if ( 'denied' === $filters['status'] ) {
 				$where[]  = 'status LIKE %s';
 				$values[] = 'denied%';
 			} else {
 				$where[]  = 'status = %s';
-				$values[] = $filters[ 'status' ];
+				$values[] = $filters['status'];
 			}
 		}
-		if ( ! empty( $filters[ 'date_from' ] ) ) {
+		if ( ! empty( $filters['date_from'] ) ) {
 			$where[]  = 'created_at >= %s';
-			$values[] = $filters[ 'date_from' ];
+			$values[] = $filters['date_from'];
 		}
-		if ( ! empty( $filters[ 'date_to' ] ) ) {
+		if ( ! empty( $filters['date_to'] ) ) {
 			$where[]  = 'created_at <= %s';
-			$values[] = $filters[ 'date_to' ];
+			$values[] = $filters['date_to'];
 		}
 
 		$where_sql = $where ? 'WHERE ' . implode( ' AND ', $where ) : '';
@@ -332,17 +339,18 @@ final class LogRepository {
 
 		// Build the data query.
 		$data_sql = "SELECT * FROM {$table} {$where_sql} ORDER BY created_at DESC LIMIT %d OFFSET %d";
-		$all_vals = array_merge( $values, [ $per_page, $offset ] );
+		$all_vals = array_merge( $values, array( $per_page, $offset ) );
 		$data_sql = $wpdb->prepare( $data_sql, ...$all_vals ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$items    = $wpdb->get_results( $data_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-		return [
-			'items' => $items ?: [],
+		return array(
+			'items' => $items ? $items : array(),
 			'total' => $total,
-		];
+		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Aggregation helpers
 	 * ----------------------------------------------------------------*/
 
@@ -356,11 +364,11 @@ final class LogRepository {
 
 		$table = self::table_name();
 		$where = 'WHERE created_at >= %s AND created_at <= %s AND status = %s';
-		$vals  = [ $from, $to, 'allowed' ];
+		$vals  = array( $from, $to, 'allowed' );
 
 		if ( '' !== $plugin_slug ) {
-			$where  .= ' AND plugin_slug = %s';
-			$vals[]  = $plugin_slug;
+			$where .= ' AND plugin_slug = %s';
+			$vals[] = $plugin_slug;
 		}
 
 		$sql = $wpdb->prepare(
@@ -375,12 +383,12 @@ final class LogRepository {
 
 		$row = $wpdb->get_row( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-		return [
-			'prompt_tokens'     => (int) ( $row[ 'prompt_tokens' ] ?? 0 ),
-			'completion_tokens' => (int) ( $row[ 'completion_tokens' ] ?? 0 ),
-			'total_tokens'      => (int) ( $row[ 'total_tokens' ] ?? 0 ),
-			'request_count'     => (int) ( $row[ 'request_count' ] ?? 0 ),
-		];
+		return array(
+			'prompt_tokens'     => (int) ( $row['prompt_tokens'] ?? 0 ),
+			'completion_tokens' => (int) ( $row['completion_tokens'] ?? 0 ),
+			'total_tokens'      => (int) ( $row['total_tokens'] ?? 0 ),
+			'request_count'     => (int) ( $row['request_count'] ?? 0 ),
+		);
 	}
 
 	/**
@@ -408,12 +416,12 @@ final class LogRepository {
 		$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return array_map(
-			static fn( array $r ) => [
-				'plugin_slug'   => $r[ 'plugin_slug' ],
-				'total_tokens'  => (int) $r[ 'total_tokens' ],
-				'request_count' => (int) $r[ 'request_count' ],
-			],
-			$rows ?: []
+			static fn( array $r ) => array(
+				'plugin_slug'   => $r['plugin_slug'],
+				'total_tokens'  => (int) $r['total_tokens'],
+				'request_count' => (int) $r['request_count'],
+			),
+			$rows ? $rows : array()
 		);
 	}
 
@@ -442,12 +450,12 @@ final class LogRepository {
 		$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return array_map(
-			static fn( array $r ) => [
-				'context'       => $r[ 'context' ],
-				'total_tokens'  => (int) $r[ 'total_tokens' ],
-				'request_count' => (int) $r[ 'request_count' ],
-			],
-			$rows ?: []
+			static fn( array $r ) => array(
+				'context'       => $r['context'],
+				'total_tokens'  => (int) $r['total_tokens'],
+				'request_count' => (int) $r['request_count'],
+			),
+			$rows ? $rows : array()
 		);
 	}
 
@@ -476,12 +484,12 @@ final class LogRepository {
 		$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return array_map(
-			static fn( array $r ) => [
-				'provider_id'   => $r[ 'provider_id' ],
-				'total_tokens'  => (int) $r[ 'total_tokens' ],
-				'request_count' => (int) $r[ 'request_count' ],
-			],
-			$rows ?: []
+			static fn( array $r ) => array(
+				'provider_id'   => $r['provider_id'],
+				'total_tokens'  => (int) $r['total_tokens'],
+				'request_count' => (int) $r['request_count'],
+			),
+			$rows ? $rows : array()
 		);
 	}
 
@@ -510,17 +518,18 @@ final class LogRepository {
 		$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		return array_map(
-			static fn( array $r ) => [
-				'provider_id'   => $r[ 'provider_id' ],
-				'model_id'      => $r[ 'model_id' ],
-				'total_tokens'  => (int) $r[ 'total_tokens' ],
-				'request_count' => (int) $r[ 'request_count' ],
-			],
-			$rows ?: []
+			static fn( array $r ) => array(
+				'provider_id'   => $r['provider_id'],
+				'model_id'      => $r['model_id'],
+				'total_tokens'  => (int) $r['total_tokens'],
+				'request_count' => (int) $r['request_count'],
+			),
+			$rows ? $rows : array()
 		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Distinct filter values
 	 * ----------------------------------------------------------------*/
 
@@ -533,14 +542,15 @@ final class LogRepository {
 		global $wpdb;
 		$table = self::table_name();
 
-		return [
+		return array(
 			'plugins'   => $wpdb->get_col( "SELECT DISTINCT plugin_slug FROM {$table} WHERE plugin_slug != '' ORDER BY plugin_slug" ),   // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			'providers' => $wpdb->get_col( "SELECT DISTINCT provider_id FROM {$table} WHERE provider_id != '' ORDER BY provider_id" ),   // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			'models'    => $wpdb->get_col( "SELECT DISTINCT model_id    FROM {$table} WHERE model_id    != '' ORDER BY model_id" ),      // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		];
+		);
 	}
 
-	/* ------------------------------------------------------------------
+	/*
+	------------------------------------------------------------------
 	 * Cleanup
 	 * ----------------------------------------------------------------*/
 
@@ -560,10 +570,12 @@ final class LogRepository {
 		global $wpdb;
 		$table  = self::table_name();
 		$cutoff = gmdate( 'Y-m-d H:i:s', time() - ( $days * DAY_IN_SECONDS ) );
-		return (int) $wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$table} WHERE created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$cutoff
-		) );
+		return (int) $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table} WHERE created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$cutoff
+			)
+		);
 	}
 
 	/**
@@ -571,7 +583,7 @@ final class LogRepository {
 	 */
 	public static function uninstall(): void {
 		global $wpdb;
-		foreach ( array_merge( [ self::table_name() ], self::legacy_table_names() ) as $table ) {
+		foreach ( array_merge( array( self::table_name() ), self::legacy_table_names() ) as $table ) {
 			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 		delete_option( self::VERSION_KEY );

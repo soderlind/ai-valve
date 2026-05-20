@@ -4,7 +4,7 @@ Tags: ai, governance, tokens, cost-control, connector
 Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,9 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 1. Dashboard with usage summary cards and per-plugin breakdown.
 
 == Changelog ==
+
+= 1.1.6 =
+* Fixed: WordPress.org review issues by correcting repository URLs and restoring the `ai-valve` text domain.
 
 = 1.1.5 =
 * Changed: Plugin-facing slugs, REST namespace, package metadata, docs, and admin UI prefixes from `ai-valve` to `soderlind-aivalve`.

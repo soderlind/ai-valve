@@ -49,23 +49,29 @@ final class Plugin {
 		}
 
 		// REST API endpoints.
-		add_action( 'rest_api_init', static function () use ($settings, $usage_tracker): void {
-			( new UsageController( $settings, $usage_tracker ) )->register_routes();
-		} );
+		add_action(
+			'rest_api_init',
+			static function () use ( $settings, $usage_tracker ): void {
+				( new UsageController( $settings, $usage_tracker ) )->register_routes();
+			}
+		);
 
 		// Log retention cron.
-		add_action( 'soderlind_aivalve_log_retention', static function () use ($settings): void {
-			$days = (int) $settings->get( 'log_retention_days', 0 );
-			if ( $days > 0 ) {
-				( new LogRepository() )->delete_older_than( $days );
+		add_action(
+			'soderlind_aivalve_log_retention',
+			static function () use ( $settings ): void {
+				$days = (int) $settings->get( 'log_retention_days', 0 );
+				if ( $days > 0 ) {
+					( new LogRepository() )->delete_older_than( $days );
+				}
 			}
-		} );
+		);
 
 		if ( ! wp_next_scheduled( 'soderlind_aivalve_log_retention' ) ) {
 			wp_schedule_event( time(), 'daily', 'soderlind_aivalve_log_retention' );
 		}
 
-		wp_clear_scheduled_hook( 'aiv' . 'alve_log_retention' );
-		wp_clear_scheduled_hook( 'ai' . '_valve_log_retention' );
+		wp_clear_scheduled_hook( 'aivalve_log_retention' );
+		wp_clear_scheduled_hook( 'ai_valve_log_retention' );
 	}
 }
