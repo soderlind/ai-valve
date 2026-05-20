@@ -31,8 +31,8 @@ jobs:
             *.git* /*.github/* /*.vscode/* /*node_modules/* /*tests/* /*docs/*
             /src/js/*
             composer.lock package.json package-lock.json patchwork.json
-            phpunit.xml phpunit.xml.dist vitest.config.js vitest.config.mjs
-            .editorconfig .eslintignore .phpunit.result.cache .phpunit.cache .gitignore .gitattributes .DS_Store
+            phpunit.xml phpunit.xml.dist phpcs.xml.dist vitest.config.js vitest.config.mjs
+            .distignore .editorconfig .eslintignore .phpunit.result.cache .phpunit.cache .gitignore .gitattributes .DS_Store
             *.log CHANGELOG.md README.md
 
       - name: Verify Archive Contents
