@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: AI Valve
- * Plugin URI:  https://github.com/soderlind/soderlind-aivalve
+ * Plugin URI:  https://github.com/soderlind/ai-valve
  * Description: Control, meter, and permission-gate AI usage from plugins that connect through the WordPress 7 AI connector.
  * Version:     1.1.5
  * Requires at least: 7.0
@@ -10,7 +10,7 @@
  * Author URI:  https://soderlind.no
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: soderlind-aivalve
+ * Text Domain: ai-valve
  */
 
 declare(strict_types=1);

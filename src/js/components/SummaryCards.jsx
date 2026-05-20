@@ -40,46 +40,46 @@ export default function SummaryCards( { daily, monthly, budgets, threshold } ) {
 	return (
 		<div className="soderlind-aivalve-cards">
 			<div className="soderlind-aivalve-card">
-				<h3>{ __( 'Today', 'soderlind-aivalve' ) }</h3>
+				<h3>{ __( 'Today', 'ai-valve' ) }</h3>
 				<div className="soderlind-aivalve-big">
 					{ fmt( daily.total_tokens ) }
 				</div>
 				<div className="soderlind-aivalve-sub">
-					{ `${ __( 'tokens across', 'soderlind-aivalve' ) } ${ fmt(
+					{ `${ __( 'tokens across', 'ai-valve' ) } ${ fmt(
 						daily.request_count
-					) } ${ __( 'requests', 'soderlind-aivalve' ) }` }
+					) } ${ __( 'requests', 'ai-valve' ) }` }
 				</div>
 				<div className="soderlind-aivalve-sub">
 					{ `${ fmt( daily.prompt_tokens ) } ${ __(
 						'prompt',
-						'soderlind-aivalve'
+						'ai-valve'
 					) } · ${ fmt( daily.completion_tokens ) } ${ __(
 						'completion',
-						'soderlind-aivalve'
+						'ai-valve'
 					) }` }
 				</div>
 				<BudgetBar
 					used={ daily.total_tokens }
 					limit={ budgets.global_daily_limit }
-					label={ __( 'daily budget', 'soderlind-aivalve' ) }
+					label={ __( 'daily budget', 'ai-valve' ) }
 					threshold={ threshold }
 				/>
 			</div>
 
 			<div className="soderlind-aivalve-card">
-				<h3>{ __( 'This Month', 'soderlind-aivalve' ) }</h3>
+				<h3>{ __( 'This Month', 'ai-valve' ) }</h3>
 				<div className="soderlind-aivalve-big">
 					{ fmt( monthly.total_tokens ) }
 				</div>
 				<div className="soderlind-aivalve-sub">
-					{ `${ __( 'tokens across', 'soderlind-aivalve' ) } ${ fmt(
+					{ `${ __( 'tokens across', 'ai-valve' ) } ${ fmt(
 						monthly.request_count
-					) } ${ __( 'requests', 'soderlind-aivalve' ) }` }
+					) } ${ __( 'requests', 'ai-valve' ) }` }
 				</div>
 				<BudgetBar
 					used={ monthly.total_tokens }
 					limit={ budgets.global_monthly_limit }
-					label={ __( 'monthly budget', 'soderlind-aivalve' ) }
+					label={ __( 'monthly budget', 'ai-valve' ) }
 					threshold={ threshold }
 				/>
 			</div>

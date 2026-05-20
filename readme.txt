@@ -55,7 +55,7 @@ Yes. AI Valve relies only on the stable public hooks (`wp_ai_client_prevent_prom
 
 = Are there developer hooks? =
 
-Yes. See the [developer hooks documentation](https://github.com/soderlind/soderlind-aivalve/blob/main/docs/hooks.md) for available filters and actions.
+Yes. See the [developer hooks documentation](https://github.com/soderlind/ai-valve/blob/main/docs/hooks.md) for available filters and actions.
 
 = Does AI Valve work on multisite? =
 
@@ -63,7 +63,7 @@ Yes. Each subsite has its own log table, settings, and budgets.
 
 = What happens when a plugin is blocked? =
 
-The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/soderlind-aivalve/blob/main/docs/how-blocking-works.md) for the full explanation.
+The plugin receives a `WP_Error` with code `prompt_prevented` instead of an AI response. The denied request is logged with the reason. See [how-blocking-works.md](https://github.com/soderlind/ai-valve/blob/main/docs/how-blocking-works.md) for the full explanation.
 
 = How do I block all plugins and only allow specific ones? =
 

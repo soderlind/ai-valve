@@ -17,7 +17,7 @@ export default function ContextTable( { data } ) {
 			} }
 		>
 			<h2 style={ { marginTop: 0 } }>
-				{ __( 'Contexts (This Month)', 'soderlind-aivalve' ) }
+				{ __( 'Contexts (This Month)', 'ai-valve' ) }
 			</h2>
 			<table
 				className="widefat striped"
@@ -25,12 +25,12 @@ export default function ContextTable( { data } ) {
 			>
 				<thead>
 					<tr>
-						<th>{ __( 'Context', 'soderlind-aivalve' ) }</th>
+						<th>{ __( 'Context', 'ai-valve' ) }</th>
 						<th style={ { textAlign: 'right' } }>
-							{ __( 'Requests', 'soderlind-aivalve' ) }
+							{ __( 'Requests', 'ai-valve' ) }
 						</th>
 						<th style={ { textAlign: 'right' } }>
-							{ __( 'Tokens', 'soderlind-aivalve' ) }
+							{ __( 'Tokens', 'ai-valve' ) }
 						</th>
 					</tr>
 				</thead>

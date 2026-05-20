@@ -239,15 +239,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - REST API endpoints for usage and log data.
 - Workaround for WordPress 7.0 event dispatcher bug.
 
-[1.1.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/1.1.0
-[1.0.4]: https://github.com/soderlind/soderlind-aivalve/releases/tag/1.0.4
-[1.0.3]: https://github.com/soderlind/soderlind-aivalve/releases/tag/1.0.3
-[1.0.2]: https://github.com/soderlind/soderlind-aivalve/releases/tag/1.0.2
-[1.0.1]: https://github.com/soderlind/soderlind-aivalve/releases/tag/1.0.1
-[1.0.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/1.0.0
-[0.6.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/0.6.0
-[0.5.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/0.5.0
-[0.4.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/0.4.0
-[0.3.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/0.3.0
-[0.2.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/0.2.0
-[0.1.0]: https://github.com/soderlind/soderlind-aivalve/releases/tag/0.1.0
+[1.1.0]: https://github.com/soderlind/ai-valve/releases/tag/1.1.0
+[1.0.4]: https://github.com/soderlind/ai-valve/releases/tag/1.0.4
+[1.0.3]: https://github.com/soderlind/ai-valve/releases/tag/1.0.3
+[1.0.2]: https://github.com/soderlind/ai-valve/releases/tag/1.0.2
+[1.0.1]: https://github.com/soderlind/ai-valve/releases/tag/1.0.1
+[1.0.0]: https://github.com/soderlind/ai-valve/releases/tag/1.0.0
+[0.6.0]: https://github.com/soderlind/ai-valve/releases/tag/0.6.0
+[0.5.0]: https://github.com/soderlind/ai-valve/releases/tag/0.5.0
+[0.4.0]: https://github.com/soderlind/ai-valve/releases/tag/0.4.0
+[0.3.0]: https://github.com/soderlind/ai-valve/releases/tag/0.3.0
+[0.2.0]: https://github.com/soderlind/ai-valve/releases/tag/0.2.0
+[0.1.0]: https://github.com/soderlind/ai-valve/releases/tag/0.1.0

@@ -135,7 +135,7 @@ final class UsageController extends WP_REST_Controller {
 		}
 		return new WP_Error(
 			'rest_forbidden',
-			__( 'You do not have permission to access AI Valve data.', 'soderlind-aivalve' ),
+			__( 'You do not have permission to access AI Valve data.', 'ai-valve' ),
 			[ 'status' => 403 ]
 		);
 	}
