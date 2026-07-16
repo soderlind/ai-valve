@@ -4,6 +4,7 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 > Inspired by [WordPress AI Connectors Need More Friction, Not Less](https://thewp.world/wordpress-ai-connectors-need-more-friction-not-less/). Works with WordPress 7 RC2. Tested with [WordPress AI](https://wordpress.org/plugins/ai/), [Virtual Media Folders AI Organizer](https://github.com/soderlind/vmfa-ai-organizer), and [AI Provider for Azure AI Foundry](https://github.com/soderlind/ai-provider-for-azure-ai-foundry).
 
+
 <img width="100%" alt="AI Valve dashboard" src=".wordpress-org/screenshot-1.png" />
 
 ## Features
@@ -24,6 +25,13 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 
 ## Installation
 
+### From [WordPress.org](https://wordpress.org/plugins/ai-valve/)
+
+1. Go to **Plugins > Add New**
+2. Search for "AI Valve"
+3. Click **Install Now** and **Activate**
+
+### From GitHub
 
 1. Download [`soderlind-aivalve.zip`](https://github.com/soderlind/ai-valve/releases/latest/download/soderlind-aivalve.zip)
 2. Upload via  `Plugins → Add New → Upload Plugin`
