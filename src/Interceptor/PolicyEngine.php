@@ -43,10 +43,17 @@ final class PolicyEngine {
 		// 2. Per-plugin policy.
 		// Filterable so external code can override the stored policy for a slug.
 		$policy = (string) apply_filters(
-			'soderlind_aivalve_plugin_policy',
+			'aivalve_plugin_policy',
 			$this->settings->plugin_policy( $plugin_slug ),
 			$plugin_slug,
 			$context
+		);
+		// Deprecated alias (since 1.3.0): keeps `soderlind_aivalve_plugin_policy` working.
+		$policy = (string) apply_filters_deprecated(
+			'soderlind_aivalve_plugin_policy',
+			array( $policy, $plugin_slug, $context ),
+			'1.3.0',
+			'aivalve_plugin_policy'
 		);
 		if ( 'deny' === $policy ) {
 			$this->denial_reason = 'plugin_denied';

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-08-06
+
+### Changed
+
+- Developer hooks renamed to the `aivalve_` prefix (`aivalve_plugin_policy`, `aivalve_request_denied`, `aivalve_request_completed`, `aivalve_ability_invoked`, `aivalve_ability_denied`).
+
+### Deprecated
+
+- The former `soderlind_aivalve_` hook names still fire as deprecated aliases (via `apply_filters_deprecated()` / `do_action_deprecated()`) and will be removed in a future major version.
+
 ## [1.2.0] - 2026-08-06
 
 ### Added

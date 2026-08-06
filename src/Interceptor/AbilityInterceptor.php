@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * The ability namespace (the part before the slash in `namespace/ability-name`)
  * is treated as the policy subject, so existing per-plugin allow/deny rules and
- * the `soderlind_aivalve_plugin_policy` filter apply to ability namespaces too.
+ * the `aivalve_plugin_policy` filter apply to ability namespaces too.
  */
 final class AbilityInterceptor {
 
@@ -82,7 +82,9 @@ final class AbilityInterceptor {
 		 * @param string $context      Execution context: admin|frontend|cron|rest|ajax|cli.
 		 * @param string $reason       Denial reason code.
 		 */
-		do_action( 'soderlind_aivalve_ability_denied', $ability_name, $namespace, $context, $reason );
+		do_action( 'aivalve_ability_denied', $ability_name, $namespace, $context, $reason );
+		// Deprecated alias (since 1.3.0).
+		do_action_deprecated( 'soderlind_aivalve_ability_denied', array( $ability_name, $namespace, $context, $reason ), '1.3.0', 'aivalve_ability_denied' );
 
 		return new WP_Error(
 			'ability_prevented',
@@ -122,7 +124,9 @@ final class AbilityInterceptor {
 		 * @param string $namespace    Ability namespace.
 		 * @param string $context      Execution context: admin|frontend|cron|rest|ajax|cli.
 		 */
-		do_action( 'soderlind_aivalve_ability_invoked', $ability_name, $namespace, $context );
+		do_action( 'aivalve_ability_invoked', $ability_name, $namespace, $context );
+		// Deprecated alias (since 1.3.0).
+		do_action_deprecated( 'soderlind_aivalve_ability_invoked', array( $ability_name, $namespace, $context ), '1.3.0', 'aivalve_ability_invoked' );
 	}
 
 	/**

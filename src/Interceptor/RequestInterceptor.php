@@ -96,7 +96,9 @@ final class RequestInterceptor {
 			 * @param string $context    Execution context: admin|frontend|cron|rest|ajax|cli.
 			 * @param string $reason     Denial reason code.
 			 */
-			do_action( 'soderlind_aivalve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
+			do_action( 'aivalve_request_denied', $plugin_slug, $context, $engine->denial_reason() );
+			// Deprecated alias (since 1.3.0).
+			do_action_deprecated( 'soderlind_aivalve_request_denied', array( $plugin_slug, $context, $engine->denial_reason() ), '1.3.0', 'aivalve_request_denied' );
 
 			return true; // Prevent the prompt.
 		}
@@ -261,7 +263,7 @@ final class RequestInterceptor {
 		 * @param int    $duration_ms       Request duration in milliseconds.
 		 */
 		do_action(
-			'soderlind_aivalve_request_completed',
+			'aivalve_request_completed',
 			$plugin_slug,
 			$provider_id,
 			$model_id,
@@ -270,6 +272,13 @@ final class RequestInterceptor {
 			$completion_tokens,
 			$total_tokens,
 			$duration_ms
+		);
+		// Deprecated alias (since 1.3.0).
+		do_action_deprecated(
+			'soderlind_aivalve_request_completed',
+			array( $plugin_slug, $provider_id, $model_id, $capability, $prompt_tokens, $completion_tokens, $total_tokens, $duration_ms ),
+			'1.3.0',
+			'aivalve_request_completed'
 		);
 
 		// Clear correlation state for the next request.
