@@ -46,6 +46,7 @@ final class Settings {
 	public static function defaults(): array {
 		return array(
 			'enabled'              => true,
+			'abilities_guard_enabled' => false,
 			'plugin_policies'      => array(),
 			'default_policy'       => 'allow',
 			'allow_admin'          => true,
@@ -214,7 +215,8 @@ final class Settings {
 
 		$clean = self::defaults();
 
-		$clean['enabled']        = ! empty( $input['enabled'] );
+		$clean['enabled']                 = ! empty( $input['enabled'] );
+		$clean['abilities_guard_enabled'] = ! empty( $input['abilities_guard_enabled'] );
 		$clean['default_policy'] = in_array( $input['default_policy'] ?? '', array( 'allow', 'deny' ), true )
 			? $input['default_policy']
 			: 'allow';

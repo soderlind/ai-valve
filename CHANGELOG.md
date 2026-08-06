@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-08-06
+
+### Added
+
+- Optional WordPress Abilities API guard (WordPress 7.1+): enforces the same allow/deny/budget policy on ability execution via `wp_pre_execute_ability`, keyed by ability namespace. Off by default.
+- Denied ability calls are logged (status `denied:<reason>`) and shown with an "Ability" badge in the Logs tab.
+- Developer hooks: `soderlind_aivalve_ability_invoked` and `soderlind_aivalve_ability_denied`.
+- Admin notice when the guard is enabled but the site predates the Abilities API.
+
 ## [1.1.6] - 2026-05-20
 
 ### Fixed
