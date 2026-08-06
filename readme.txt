@@ -77,6 +77,7 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 ==  Screenshots ==
 
 1. Dashboard with usage summary cards and per-plugin breakdown.
+2. Settings tab with global and per-plugin budgets, context restrictions, and default policy.
 
 == Changelog ==
 
