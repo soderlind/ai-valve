@@ -68,3 +68,16 @@ if ( ! class_exists( 'WP_Error' ) ) {
 // Stub WordPress\AiClient SDK classes used by RequestInterceptor.
 require_once __DIR__ . '/stubs/ai-client-sdk.php';
 
+// Brain Monkey does not provide the deprecated-hook wrappers; forward them so
+// deprecated aliases still fire their target hook during tests.
+if ( ! function_exists( 'apply_filters_deprecated' ) ) {
+	function apply_filters_deprecated( $hook_name, $args, $version = '', $replacement = '' ) {
+		return apply_filters( $hook_name, ...$args );
+	}
+}
+if ( ! function_exists( 'do_action_deprecated' ) ) {
+	function do_action_deprecated( $hook_name, $args, $version = '', $replacement = '' ): void {
+		do_action( $hook_name, ...$args );
+	}
+}
+

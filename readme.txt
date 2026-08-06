@@ -4,7 +4,7 @@ Tags: ai, governance, tokens, cost-control, connector
 Requires at least: 7.0
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,11 +34,13 @@ AI Valve gives site administrators visibility and control over how plugins use t
 
 AI Valve exposes filters and actions so you can extend its behaviour without editing the plugin. Full signatures, parameters, and examples are in the [developer hooks documentation](https://github.com/soderlind/ai-valve/blob/main/docs/hooks.md).
 
-* `soderlind_aivalve_plugin_policy` (filter) — Override the allow/deny decision for any plugin.
-* `soderlind_aivalve_request_denied` (action) — React when an AI request is blocked.
-* `soderlind_aivalve_request_completed` (action) — React when an AI request succeeds (token counts available).
-* `soderlind_aivalve_ability_invoked` (action) — React when an Abilities API call is invoked (WP 7.1+).
-* `soderlind_aivalve_ability_denied` (action) — React when an Abilities API call is blocked (WP 7.1+).
+* `aivalve_plugin_policy` (filter) — Override the allow/deny decision for any plugin.
+* `aivalve_request_denied` (action) — React when an AI request is blocked.
+* `aivalve_request_completed` (action) — React when an AI request succeeds (token counts available).
+* `aivalve_ability_invoked` (action) — React when an Abilities API call is invoked (WP 7.1+).
+* `aivalve_ability_denied` (action) — React when an Abilities API call is blocked (WP 7.1+).
+
+Renamed in 1.3.0 from the `soderlind_aivalve_` prefix; the old names still fire as deprecated aliases and will be removed in a future major version.
 
 == Installation ==
 
@@ -95,6 +97,9 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 2. Settings tab with global and per-plugin budgets, context restrictions, and default policy.
 
 == Changelog ==
+
+= 1.3.0 =
+* Changed: Developer hooks renamed to the `aivalve_` prefix (e.g. `aivalve_plugin_policy`). The old `soderlind_aivalve_` names still fire as deprecated aliases and will be removed in a future major version.
 
 = 1.2.0 =
 * Added optional WordPress Abilities API guard (WP 7.1+): per-namespace policy enforcement on ability execution, denial logging with an "Ability" badge, and new developer hooks.

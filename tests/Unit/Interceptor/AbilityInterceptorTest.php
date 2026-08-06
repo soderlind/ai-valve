@@ -130,7 +130,7 @@ final class AbilityInterceptorTest extends TestCase {
 
 		$this->assertSame(
 			1,
-			Actions\did( 'soderlind_aivalve_ability_invoked' )
+			Actions\did( 'aivalve_ability_invoked' )
 		);
 	}
 
@@ -147,7 +147,7 @@ final class AbilityInterceptorTest extends TestCase {
 		$this->mock_wpdb();
 
 		$captured = null;
-		Actions\expectDone( 'soderlind_aivalve_ability_denied' )
+		Actions\expectDone( 'aivalve_ability_denied' )
 			->once()
 			->with( 'no-namespace', 'unknown', 'admin', 'plugin_denied' );
 

@@ -2,11 +2,13 @@
 
 AI Valve exposes hooks that let you extend or react to its decisions without touching the plugin's source code.
 
+> **Renamed in 1.3.0.** Hooks now use the `aivalve_` prefix. The former `soderlind_aivalve_` names still fire as deprecated aliases (via `apply_filters_deprecated()` / `do_action_deprecated()`) and will be removed in a future major version. Update to the new names when convenient.
+
 ---
 
 ## Filters
 
-### `soderlind_aivalve_plugin_policy`
+### `aivalve_plugin_policy`
 
 Dynamically override the allow/deny policy for any plugin.
 
@@ -15,7 +17,7 @@ Fires during the policy evaluation step, after the stored setting is read but be
 **Signature**
 
 ```php
-apply_filters( 'soderlind_aivalve_plugin_policy', string $policy, string $plugin_slug, string $context )
+apply_filters( 'aivalve_plugin_policy', string $policy, string $plugin_slug, string $context )
 ```
 
 | Parameter | Type | Description |
@@ -29,7 +31,7 @@ apply_filters( 'soderlind_aivalve_plugin_policy', string $policy, string $plugin
 Deny a specific plugin regardless of what the Settings UI says:
 
 ```php
-add_filter( 'soderlind_aivalve_plugin_policy', function ( string $policy, string $slug ): string {
+add_filter( 'aivalve_plugin_policy', function ( string $policy, string $slug ): string {
     if ( 'my-untrusted-plugin' === $slug ) {
         return 'deny';
     }
@@ -40,7 +42,7 @@ add_filter( 'soderlind_aivalve_plugin_policy', function ( string $policy, string
 Allow a plugin only when running in the admin context:
 
 ```php
-add_filter( 'soderlind_aivalve_plugin_policy', function ( string $policy, string $slug, string $context ): string {
+add_filter( 'aivalve_plugin_policy', function ( string $policy, string $slug, string $context ): string {
     if ( 'my-plugin' === $slug && 'admin' !== $context ) {
         return 'deny';
     }
@@ -51,14 +53,14 @@ add_filter( 'soderlind_aivalve_plugin_policy', function ( string $policy, string
 Allow all plugins unconditionally (effectively disable the deny list):
 
 ```php
-add_filter( 'soderlind_aivalve_plugin_policy', fn() => 'allow' );
+add_filter( 'aivalve_plugin_policy', fn() => 'allow' );
 ```
 
 ---
 
 ## Actions
 
-### `soderlind_aivalve_request_denied`
+### `aivalve_request_denied`
 
 Fires immediately after AI Valve blocks an AI request.
 
@@ -67,7 +69,7 @@ Use this to log denials to an external system, trigger a notification, or increm
 **Signature**
 
 ```php
-do_action( 'soderlind_aivalve_request_denied', string $plugin_slug, string $context, string $reason )
+do_action( 'aivalve_request_denied', string $plugin_slug, string $context, string $reason )
 ```
 
 | Parameter | Type | Description |
@@ -81,7 +83,7 @@ do_action( 'soderlind_aivalve_request_denied', string $plugin_slug, string $cont
 | Code | Cause |
 |---|---|
 | `soderlind_aivalve_disabled` | The master switch is off. |
-| `plugin_denied` | The plugin's policy is `deny` (including via the `soderlind_aivalve_plugin_policy` filter). |
+| `plugin_denied` | The plugin's policy is `deny` (including via the `aivalve_plugin_policy` filter). |
 | `context_denied` | The execution context is not allowed in Settings. |
 | `plugin_daily_budget_exceeded` | Plugin hit its per-day token limit. |
 | `plugin_monthly_budget_exceeded` | Plugin hit its per-month token limit. |
@@ -93,7 +95,7 @@ do_action( 'soderlind_aivalve_request_denied', string $plugin_slug, string $cont
 Send a Slack message when a plugin is blocked:
 
 ```php
-add_action( 'soderlind_aivalve_request_denied', function ( string $slug, string $context, string $reason ): void {
+add_action( 'aivalve_request_denied', function ( string $slug, string $context, string $reason ): void {
     if ( str_starts_with( $reason, 'plugin_' ) ) {
         wp_remote_post( SLACK_WEBHOOK_URL, [
             'body' => wp_json_encode( [
@@ -107,7 +109,7 @@ add_action( 'soderlind_aivalve_request_denied', function ( string $slug, string 
 Write denials to a custom log table:
 
 ```php
-add_action( 'soderlind_aivalve_request_denied', function ( string $slug, string $context, string $reason ): void {
+add_action( 'aivalve_request_denied', function ( string $slug, string $context, string $reason ): void {
     global $wpdb;
     $wpdb->insert(
         $wpdb->prefix . 'my_ai_denials',
@@ -124,7 +126,7 @@ add_action( 'soderlind_aivalve_request_denied', function ( string $slug, string 
 
 ---
 
-### `soderlind_aivalve_request_completed`
+### `aivalve_request_completed`
 
 Fires after every successful AI request, once the token usage has been recorded.
 
@@ -134,7 +136,7 @@ Use this to push token data to analytics, enforce additional post-request logic,
 
 ```php
 do_action(
-    'soderlind_aivalve_request_completed',
+    'aivalve_request_completed',
     string $plugin_slug,
     string $provider_id,
     string $model_id,
@@ -163,7 +165,7 @@ Push token usage to a monitoring endpoint:
 
 ```php
 add_action(
-    'soderlind_aivalve_request_completed',
+    'aivalve_request_completed',
     function (
         string $slug,
         string $provider,
@@ -187,7 +189,7 @@ Emit a warning if a single request is unusually expensive:
 
 ```php
 add_action(
-    'soderlind_aivalve_request_completed',
+    'aivalve_request_completed',
     function ( string $slug, string $provider, string $model, string $capability, int $prompt, int $completion, int $total ): void {
         if ( $total > 10000 ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -205,14 +207,14 @@ add_action(
 
 These fire only when the **Guard Abilities API** setting is enabled (requires WordPress 7.1+). AI Valve evaluates the same policy against the ability **namespace** via the `wp_pre_execute_ability` lifecycle filter.
 
-### `soderlind_aivalve_ability_invoked`
+### `aivalve_ability_invoked`
 
 Fires for every ability invocation, before validation or permission checks. Raw input is intentionally **not** passed, as it may contain credentials or personal data.
 
 **Signature**
 
 ```php
-do_action( 'soderlind_aivalve_ability_invoked', string $ability_name, string $namespace, string $context )
+do_action( 'aivalve_ability_invoked', string $ability_name, string $namespace, string $context )
 ```
 
 | Parameter | Type | Description |
@@ -221,14 +223,14 @@ do_action( 'soderlind_aivalve_ability_invoked', string $ability_name, string $na
 | `$namespace` | `string` | Ability namespace used as the policy subject. |
 | `$context` | `string` | Execution context: `admin`, `frontend`, `cron`, `rest`, `ajax`, or `cli`. |
 
-### `soderlind_aivalve_ability_denied`
+### `aivalve_ability_denied`
 
 Fires when AI Valve blocks an ability invocation. The caller receives a `WP_Error` with code `ability_prevented` (HTTP 403).
 
 **Signature**
 
 ```php
-do_action( 'soderlind_aivalve_ability_denied', string $ability_name, string $namespace, string $context, string $reason )
+do_action( 'aivalve_ability_denied', string $ability_name, string $namespace, string $context, string $reason )
 ```
 
 | Parameter | Type | Description |
@@ -236,14 +238,14 @@ do_action( 'soderlind_aivalve_ability_denied', string $ability_name, string $nam
 | `$ability_name` | `string` | Full ability name (`namespace/ability-name`). |
 | `$namespace` | `string` | Ability namespace used as the policy subject. |
 | `$context` | `string` | Execution context at the time of the call. |
-| `$reason` | `string` | Denial reason code (same codes as `soderlind_aivalve_request_denied`). |
+| `$reason` | `string` | Denial reason code (same codes as `aivalve_request_denied`). |
 
 **Example**
 
 Notify when an ability is blocked:
 
 ```php
-add_action( 'soderlind_aivalve_ability_denied', function ( string $ability, string $namespace, string $context, string $reason ): void {
+add_action( 'aivalve_ability_denied', function ( string $ability, string $namespace, string $context, string $reason ): void {
     // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
     error_log( "AI Valve blocked ability {$ability} ({$reason}) in {$context}" );
 }, 10, 4 );

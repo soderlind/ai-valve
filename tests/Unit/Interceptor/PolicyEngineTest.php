@@ -253,7 +253,7 @@ final class PolicyEngineTest extends TestCase {
 	}
 
 	/* ------------------------------------------------------------------
-	 * soderlind_aivalve_plugin_policy filter
+	 * aivalve_plugin_policy filter
 	 * ----------------------------------------------------------------*/
 
 	public function test_filter_can_deny_an_allowed_plugin(): void {
@@ -265,7 +265,7 @@ final class PolicyEngineTest extends TestCase {
 		$tracker  = new UsageTracker( $settings );
 		$engine   = new PolicyEngine( $settings, $tracker );
 
-		Filters\expectApplied( 'soderlind_aivalve_plugin_policy' )
+		Filters\expectApplied( 'aivalve_plugin_policy' )
 			->once()
 			->with( 'allow', 'trusted-plugin', 'admin' )
 			->andReturn( 'deny' );
@@ -283,7 +283,7 @@ final class PolicyEngineTest extends TestCase {
 		$tracker  = new UsageTracker( $settings );
 		$engine   = new PolicyEngine( $settings, $tracker );
 
-		Filters\expectApplied( 'soderlind_aivalve_plugin_policy' )
+		Filters\expectApplied( 'aivalve_plugin_policy' )
 			->once()
 			->with( 'deny', 'bad-plugin', 'admin' )
 			->andReturn( 'allow' );
@@ -295,7 +295,7 @@ final class PolicyEngineTest extends TestCase {
 	public function test_filter_receives_plugin_slug_and_context(): void {
 		$engine = new PolicyEngine( $this->settings, $this->usage_tracker );
 
-		Filters\expectApplied( 'soderlind_aivalve_plugin_policy' )
+		Filters\expectApplied( 'aivalve_plugin_policy' )
 			->once()
 			->with( 'allow', 'my-plugin', 'cron' )
 			->andReturnFirstArg();
