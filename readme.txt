@@ -2,9 +2,9 @@
 Contributors: PerS
 Tags: ai, governance, tokens, cost-control, connector
 Requires at least: 7.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.1.6
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,9 @@ Only explicitly allowed plugins will be able to make AI requests; everything els
 1. Dashboard with usage summary cards and per-plugin breakdown.
 
 == Changelog ==
+
+= 1.2.0 =
+* Added optional WordPress Abilities API guard (WP 7.1+): per-namespace policy enforcement on ability execution, denial logging with an "Ability" badge, and new developer hooks.
 
 = 1.1.6 =
 * Fixed: WordPress.org review issues by correcting repository URLs and restoring the `ai-valve` text domain.

@@ -39,6 +39,13 @@ final class SettingsTest extends TestCase {
 		$this->assertSame( 0, $defaults['global_daily_limit'] );
 	}
 
+	public function test_abilities_guard_defaults_to_false(): void {
+		$defaults = Settings::defaults();
+
+		$this->assertArrayHasKey( 'abilities_guard_enabled', $defaults );
+		$this->assertFalse( $defaults['abilities_guard_enabled'] );
+	}
+
 	/* ------------------------------------------------------------------
 	 * all() / get()
 	 * ----------------------------------------------------------------*/
@@ -214,6 +221,18 @@ final class SettingsTest extends TestCase {
 
 		$result = Settings::sanitize( [ 'default_policy' => 'maybe' ] );
 		$this->assertSame( 'allow', $result['default_policy'] );
+	}
+
+	public function test_sanitize_persists_abilities_guard_toggle(): void {
+		Functions\when( 'absint' )->alias( fn( $v ) => abs( (int) $v ) );
+		Functions\when( 'sanitize_email' )->returnArg();
+		Functions\when( 'sanitize_key' )->returnArg();
+
+		$on = Settings::sanitize( [ 'abilities_guard_enabled' => '1' ] );
+		$this->assertTrue( $on['abilities_guard_enabled'] );
+
+		$off = Settings::sanitize( [ 'abilities_guard_enabled' => '' ] );
+		$this->assertFalse( $off['abilities_guard_enabled'] );
 	}
 
 	/* ------------------------------------------------------------------
