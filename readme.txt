@@ -17,6 +17,7 @@ AI Valve gives site administrators visibility and control over how plugins use t
 = Features =
 
 * **Per-plugin access control** — Allow or deny individual plugins from making AI requests.
+* **Abilities API guard** — Optionally apply the same policy to WordPress Abilities API calls (WordPress 7.1+), keyed by ability namespace.
 * **Token budgets** — Set daily and monthly token limits per plugin and globally.
 * **Context restrictions** — Control which execution contexts (admin, frontend, cron, REST, AJAX, CLI) may trigger AI calls.
 * **Usage dashboard** — See token consumption at a glance with summary cards, progress bars, and per-plugin breakdowns.
@@ -28,6 +29,16 @@ AI Valve gives site administrators visibility and control over how plugins use t
 * WordPress 7.0 or later
 * PHP 8.3 or later
 * A configured AI provider in Settings → Connectors
+
+= Developer Hooks =
+
+AI Valve exposes filters and actions so you can extend its behaviour without editing the plugin. Full signatures, parameters, and examples are in the [developer hooks documentation](https://github.com/soderlind/ai-valve/blob/main/docs/hooks.md).
+
+* `soderlind_aivalve_plugin_policy` (filter) — Override the allow/deny decision for any plugin.
+* `soderlind_aivalve_request_denied` (action) — React when an AI request is blocked.
+* `soderlind_aivalve_request_completed` (action) — React when an AI request succeeds (token counts available).
+* `soderlind_aivalve_ability_invoked` (action) — React when an Abilities API call is invoked (WP 7.1+).
+* `soderlind_aivalve_ability_denied` (action) — React when an Abilities API call is blocked (WP 7.1+).
 
 == Installation ==
 
@@ -56,6 +67,10 @@ Yes. AI Valve relies only on the stable public hooks (`wp_ai_client_prevent_prom
 = Are there developer hooks? =
 
 Yes. See the [developer hooks documentation](https://github.com/soderlind/ai-valve/blob/main/docs/hooks.md) for available filters and actions.
+
+= What is the Abilities API guard? =
+
+On WordPress 7.1+, AI Valve can optionally enforce the same allow/deny/budget policy on the WordPress Abilities API. Enable **Guard Abilities API** in Settings; denied ability calls are logged and shown with an "Ability" badge in the Logs tab. The ability namespace is used as the policy subject, so per-plugin rules apply to abilities too. See the [developer hooks documentation](https://github.com/soderlind/ai-valve/blob/main/docs/hooks.md) for the related hooks.
 
 = Does AI Valve work on multisite? =
 
