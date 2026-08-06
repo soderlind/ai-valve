@@ -37,6 +37,34 @@ if ( ! class_exists( 'WP_AI_Client_Prompt_Builder' ) ) {
 	class WP_AI_Client_Prompt_Builder {}
 }
 
+if ( ! class_exists( 'WP_Error' ) ) {
+	// @phpcs:ignore
+	class WP_Error {
+		/** @var array<string, list<string>> */
+		public array $errors = array();
+		/** @var array<string, mixed> */
+		public array $error_data = array();
+
+		public function __construct( string $code = '', string $message = '', mixed $data = '' ) {
+			if ( '' !== $code ) {
+				$this->errors[ $code ][] = $message;
+				if ( '' !== $data ) {
+					$this->error_data[ $code ] = $data;
+				}
+			}
+		}
+
+		public function get_error_code(): string {
+			return (string) ( array_key_first( $this->errors ) ?? '' );
+		}
+
+		public function get_error_message(): string {
+			$code = $this->get_error_code();
+			return $this->errors[ $code ][0] ?? '';
+		}
+	}
+}
+
 // Stub WordPress\AiClient SDK classes used by RequestInterceptor.
 require_once __DIR__ . '/stubs/ai-client-sdk.php';
 

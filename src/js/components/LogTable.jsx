@@ -54,13 +54,33 @@ export default function LogTable( { items } ) {
 								<code>{ row.plugin_slug }</code>
 							</td>
 							<td>
-								{ row.provider_id }
-								{ row.model_id && (
+								{ row.provider_id === 'wp-abilities' ? (
+									<span
+										style={ {
+											display: 'inline-block',
+											padding: '1px 6px',
+											borderRadius: '3px',
+											background: '#f0f0f1',
+											border: '1px solid #c3c4c7',
+											fontSize: '11px',
+											fontWeight: 600,
+										} }
+									>
+										{ __( 'Ability', 'ai-valve' ) }
+									</span>
+								) : (
 									<>
-										<br />
-										<small style={ { opacity: 0.7 } }>
-											{ row.model_id }
-										</small>
+										{ row.provider_id }
+										{ row.model_id && (
+											<>
+												<br />
+												<small
+													style={ { opacity: 0.7 } }
+												>
+													{ row.model_id }
+												</small>
+											</>
+										) }
 									</>
 								) }
 							</td>

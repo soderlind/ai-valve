@@ -9,6 +9,7 @@ Control, meter, and permission-gate AI usage from plugins that connect through t
 ## Features
 
 - **Per-plugin access control** — Allow or deny individual plugins from making AI requests.
+- **Abilities API guard** *(optional, WordPress 7.1+)* — Apply the same policy to WordPress Abilities API calls, keyed by ability namespace.
 - **Token budgets** — Set daily and monthly token limits per plugin and globally.
 - **Context restrictions** — Control which execution contexts (admin, frontend, cron, REST, AJAX, CLI) may trigger AI calls.
 - **Usage dashboard** — Token consumption at a glance: summary cards, progress bars, and per-plugin breakdowns.
@@ -63,6 +64,10 @@ Caller attribution uses `debug_backtrace()` to identify which plugin initiated t
 
 When a request is blocked the calling plugin receives a `WP_Error` with code `prompt_prevented`. See [docs/how-blocking-works.md](docs/how-blocking-works.md) for the full explanation.
 
+### Abilities API (WordPress 7.1+)
+
+Optionally, enable **Guard Abilities API** in Settings to apply the same policy to the WordPress Abilities API. AI Valve hooks `wp_pre_execute_ability` and denies before validation, permission checks, or the callback run, using the ability namespace as the policy subject. This guard is off by default and works independently of the AI connector. See [docs/how-blocking-works.md](docs/how-blocking-works.md).
+
 ## Developer Hooks
 
 AI Valve exposes hooks so you can extend its behaviour from another plugin or `functions.php` without editing the source.
@@ -72,6 +77,8 @@ AI Valve exposes hooks so you can extend its behaviour from another plugin or `f
 | `soderlind_aivalve_plugin_policy` | filter | Override the allow/deny decision for any plugin |
 | `soderlind_aivalve_request_denied` | action | React when a request is blocked |
 | `soderlind_aivalve_request_completed` | action | React when a request succeeds (token counts available) |
+| `soderlind_aivalve_ability_invoked` | action | React when an Abilities API call is invoked (7.1+) |
+| `soderlind_aivalve_ability_denied` | action | React when an Abilities API call is blocked (7.1+) |
 
 See **[docs/hooks.md](docs/hooks.md)** for signatures, parameter descriptions, and examples.
 
@@ -156,3 +163,7 @@ See [docs/README.md](docs/README.md) for a full index.
 ## License
 
 GPL-2.0-or-later — see [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html).
+
+## AI Contribution Attribution
+
+Assisted-by: GitHub Copilot:Claude-Opus-4.8

@@ -90,6 +90,30 @@ export default function Settings( { setNotice } ) {
 					</tr>
 					<tr>
 						<th scope="row">
+							{ __( 'Guard Abilities API', 'ai-valve' ) }
+						</th>
+						<td>
+							<ToggleControl
+								checked={ !! settings.abilities_guard_enabled }
+								onChange={ ( val ) =>
+									update( 'abilities_guard_enabled', val )
+								}
+								label={ __(
+									'Apply policy to WordPress Abilities API calls',
+									'ai-valve'
+								) }
+								__nextHasNoMarginBottom
+							/>
+							<p className="description">
+								{ __(
+									'Requires WordPress 7.1+. The ability namespace is used as the policy subject, so per-plugin allow/deny rules apply to abilities too.',
+									'ai-valve'
+								) }
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
 							{ __( 'Default policy', 'ai-valve' ) }
 						</th>
 						<td>

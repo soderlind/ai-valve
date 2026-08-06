@@ -6,6 +6,7 @@ namespace Soderlind\AiValve;
 
 use Soderlind\AiValve\Admin\AdminPage;
 use Soderlind\AiValve\Alert\AlertManager;
+use Soderlind\AiValve\Interceptor\AbilityInterceptor;
 use Soderlind\AiValve\Interceptor\RequestInterceptor;
 use Soderlind\AiValve\REST\UsageController;
 use Soderlind\AiValve\Settings\Settings;
@@ -27,6 +28,17 @@ final class Plugin {
 		$settings = new Settings();
 		$settings->all();
 
+		$usage_tracker = new UsageTracker( $settings );
+
+		// Abilities API guard (WP 7.1+) — opt-in, independent of the AI connector.
+		if ( $settings->get( 'abilities_guard_enabled', false ) ) {
+			if ( function_exists( 'wp_get_ability' ) ) {
+				( new AbilityInterceptor( $settings, $usage_tracker ) )->register();
+			} elseif ( is_admin() ) {
+				add_action( 'admin_notices', array( self::class, 'render_abilities_unsupported_notice' ) );
+			}
+		}
+
 		// Bail early if AI support is absent (pre-WP 7) or disabled.
 		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
 			return;
@@ -35,7 +47,6 @@ final class Plugin {
 			return;
 		}
 
-		$usage_tracker = new UsageTracker( $settings );
 		$interceptor   = new RequestInterceptor( $settings, $usage_tracker );
 		$alert_manager = new AlertManager( $settings, $usage_tracker );
 
@@ -73,5 +84,24 @@ final class Plugin {
 
 		wp_clear_scheduled_hook( 'aivalve_log_retention' );
 		wp_clear_scheduled_hook( 'ai_valve_log_retention' );
+	}
+
+	/**
+	 * Warn when the Abilities API guard is enabled but the site predates WordPress 7.1.
+	 *
+	 * @internal Hooked to admin_notices.
+	 */
+	public static function render_abilities_unsupported_notice(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-warning"><p>%s</p></div>',
+			esc_html__(
+				'AI Valve: the Abilities API guard is enabled, but this WordPress version does not provide the Abilities API (requires WordPress 7.1+). The guard is inactive.',
+				'ai-valve'
+			)
+		);
 	}
 }

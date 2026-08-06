@@ -1,6 +1,6 @@
 # AI Valve — Developer Hooks
 
-AI Valve exposes three hooks that let you extend or react to its decisions without touching the plugin's source code.
+AI Valve exposes hooks that let you extend or react to its decisions without touching the plugin's source code.
 
 ---
 
@@ -21,7 +21,7 @@ apply_filters( 'soderlind_aivalve_plugin_policy', string $policy, string $plugin
 | Parameter | Type | Description |
 |---|---|---|
 | `$policy` | `string` | Current policy: `'allow'` or `'deny'` (from settings). |
-| `$plugin_slug` | `string` | Slug of the plugin making the AI request. |
+| `$plugin_slug` | `string` | Slug of the plugin making the AI request. When the Abilities API guard is enabled, this is the ability namespace (the part before the slash in `namespace/ability-name`). |
 | `$context` | `string` | Execution context: `admin`, `frontend`, `cron`, `rest`, `ajax`, or `cli`. |
 
 **Examples**
@@ -197,4 +197,54 @@ add_action(
     10,
     7
 );
+```
+
+---
+
+## Abilities API hooks
+
+These fire only when the **Guard Abilities API** setting is enabled (requires WordPress 7.1+). AI Valve evaluates the same policy against the ability **namespace** via the `wp_pre_execute_ability` lifecycle filter.
+
+### `soderlind_aivalve_ability_invoked`
+
+Fires for every ability invocation, before validation or permission checks. Raw input is intentionally **not** passed, as it may contain credentials or personal data.
+
+**Signature**
+
+```php
+do_action( 'soderlind_aivalve_ability_invoked', string $ability_name, string $namespace, string $context )
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `$ability_name` | `string` | Full ability name (`namespace/ability-name`). |
+| `$namespace` | `string` | Ability namespace used as the policy subject. |
+| `$context` | `string` | Execution context: `admin`, `frontend`, `cron`, `rest`, `ajax`, or `cli`. |
+
+### `soderlind_aivalve_ability_denied`
+
+Fires when AI Valve blocks an ability invocation. The caller receives a `WP_Error` with code `ability_prevented` (HTTP 403).
+
+**Signature**
+
+```php
+do_action( 'soderlind_aivalve_ability_denied', string $ability_name, string $namespace, string $context, string $reason )
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `$ability_name` | `string` | Full ability name (`namespace/ability-name`). |
+| `$namespace` | `string` | Ability namespace used as the policy subject. |
+| `$context` | `string` | Execution context at the time of the call. |
+| `$reason` | `string` | Denial reason code (same codes as `soderlind_aivalve_request_denied`). |
+
+**Example**
+
+Notify when an ability is blocked:
+
+```php
+add_action( 'soderlind_aivalve_ability_denied', function ( string $ability, string $namespace, string $context, string $reason ): void {
+    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+    error_log( "AI Valve blocked ability {$ability} ({$reason}) in {$context}" );
+}, 10, 4 );
 ```

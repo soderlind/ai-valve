@@ -38,6 +38,19 @@ Go to **Settings → AI Valve → Logs** and filter by **Status → Denied**. Ea
 
 The **Dashboard** tab also shows denied requests in the context breakdown table.
 
+## Abilities API (WordPress 7.1+)
+
+When **Guard Abilities API** is enabled in Settings, AI Valve also evaluates policy on the WordPress Abilities API execution lifecycle:
+
+1. On `wp_pre_execute_ability`, the ability **namespace** (the part before the slash in `namespace/ability-name`) is used as the policy subject and passed through the same `PolicyEngine`.
+2. If policy denies it, execution is short-circuited **before** input validation, permission checks, or the ability callback run — no callback side effects occur.
+3. The caller receives a `WP_Error` with code `ability_prevented` (HTTP 403), and the denial is logged with `provider_id = wp-abilities` and the ability name in the capability column.
+
+The same seven denial reason codes apply. Because the namespace is the policy subject, per-plugin allow/deny rules and the `soderlind_aivalve_plugin_policy` filter govern abilities too. Token budgets only affect an ability namespace if that namespace also consumed tokens through the AI connector.
+
+This guard is **off by default** and independent of the AI connector, so it works even when `wp_ai_client_prompt()` is unavailable.
+
+
 ## Tips for plugin developers
 
 If your plugin calls `wp_ai_client_prompt()`, always check for `WP_Error`:
